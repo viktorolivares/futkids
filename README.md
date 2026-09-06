@@ -62,53 +62,75 @@ docker compose down
 
 ---
 
-## 💻 Opción 2: Ejecución Local para Desarrollo (Paso a Paso)
+## 💻 Opción 2: Ejecución Local para Desarrollo (Paso a Paso - Sin Docker Obligatorio)
 
-Para desarrollo activo y depuración con hot-reload en cada componente:
+Para desarrollo activo y depuración con hot-reload en cada componente, puedes trabajar directamente con tu **PostgreSQL local** y **Redis instalado de forma nativa en tu máquina (Windows / Mac / Linux)** sin necesidad de encender Docker.
 
 ### Requisitos Previos
 - **Node.js**: `>= 20.x` LTS
 - **npm**: `>= 10.x`
-- **Docker** (para PostgreSQL y Redis locales)
+- **PostgreSQL**: Instalado localmente en tu máquina (puerto `5432`)
+- **Redis**: Instalado localmente en tu máquina (puerto `6379`)
 
 ---
 
-### Paso 1: Levantar Bases de Datos (PostgreSQL & Redis)
-Puedes usar Docker para tener rápidamente las dependencias de base de datos sin instalar software adicional:
+### Paso 1: Configurar PostgreSQL y Redis Locales (Sin Docker)
 
-```bash
-# Levanta únicamente Postgres y Redis
-docker compose up -d postgres redis
-```
+#### 1.1 Configurar tu PostgreSQL Local:
+1. Abre tu gestor de base de datos preferido (pgAdmin, DBeaver o consola `psql`) y crea la base de datos:
+   ```sql
+   CREATE DATABASE academy_db;
+   ```
+
+#### 1.2 Instalar Redis Nativo en Windows (Sin WSL ni Docker):
+Puedes instalar Redis directamente como servicio nativo de Windows:
+1. Descarga el instalador ejecutable `.msi` (o archivo `.zip`) desde el repositorio de lanzamientos de Redis para Windows:
+   - **Repositorio recomendado:** [https://github.com/tporadowski/redis/releases](https://github.com/tporadowski/redis/releases) (o [Microsoft Archive Redis Releases](https://github.com/microsoftarchive/redis/releases)).
+2. Ejecuta el instalador `.msi` y marca la opción **"Set the Redis service to start automatically on Windows boot"** (Iniciar automáticamente como servicio de Windows).
+3. Finaliza la instalación. Redis quedará corriendo de inmediato como servicio nativo de Windows en el puerto predeterminado **`6379`** sin contraseña.
+*(Nota: Si usas Linux o macOS, puedes instalarlo con `sudo apt install redis-server` o `brew install redis`).*
+
+*(Nota alternativa: Si en algún momento prefieres usar Docker solo para Postgres y Redis, basta con ejecutar `docker compose up -d postgres redis`).*
 
 ---
 
 ### Paso 2: Configurar y Ejecutar `academy-api` (Backend)
 
-```bash
-cd academy-api
+1. Ingresa a la carpeta del backend y configura tus credenciales locales en `.env`:
+   ```bash
+   cd academy-api
+   cp .env.example .env
+   ```
 
-# 1. Instalar dependencias
-npm install
+2. Abre `academy-api/.env` y coloca tu usuario y contraseña de tu PostgreSQL local:
+   ```env
+   # Reemplaza 'tu_password_aqui' con la clave de tu usuario postgres local
+   DATABASE_URL="postgresql://postgres:tu_password_aqui@localhost:5432/academy_db?schema=public"
 
-# 2. Configurar variables de entorno
-cp .env.example .env
+   # Redis local (por defecto puerto 6379 sin contraseña)
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   REDIS_PASSWORD=
+   ```
 
-# 3. Generar cliente de Prisma y ejecutar migraciones
-npm run prisma:generate
-npm run prisma:migrate
+3. Instala dependencias, genera el cliente de Prisma y ejecuta las migraciones sobre tu PostgreSQL local:
+   ```bash
+   npm install
+   npm run prisma:generate
+   npm run prisma:migrate
+   ```
 
-# 4. Iniciar API en modo desarrollo (Watch Mode)
-npm run start:dev
-```
-- La API responderá en: **`http://localhost:3001/api/v1`**
-- Swagger estará disponible en: **`http://localhost:3001/api/docs`**
+4. Iniciar la API en modo desarrollo (Watch Mode):
+   ```bash
+   npm run start:dev
+   ```
+   - La API responderá en: **`http://localhost:3001/api/v1`**
+   - Swagger interactivo estará disponible en: **`http://localhost:3001/api/docs`**
 
-#### Ejecutar el Worker de Tareas Asíncronas (SUNAT / WhatsApp):
-En una terminal separada dentro de `academy-api`:
-```bash
-npm run worker
-```
+5. En una terminal separada dentro de `academy-api`, inicia el worker de colas (SUNAT / WhatsApp):
+   ```bash
+   npm run worker
+   ```
 
 ---
 
