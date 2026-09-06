@@ -18,7 +18,7 @@ import {
 } from '../sunat/types/sunat.types';
 import { Queue } from 'bullmq';
 import { QUEUE_NAMES } from '../bullmq/bullmq.module';
-import { Decimal } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class InvoicesService {
@@ -160,9 +160,9 @@ export class InvoicesService {
         clientDocNum: createDto.clientDocNum,
         clientName: createDto.clientName,
         clientAddress: createDto.clientAddress || null,
-        subtotal: new Decimal(subtotalAcc),
-        igv: new Decimal(igvAcc),
-        total: new Decimal(totalAcc),
+        subtotal: new Prisma.Decimal(subtotalAcc),
+        igv: new Prisma.Decimal(igvAcc),
+        total: new Prisma.Decimal(totalAcc),
         items: formattedItems as any,
         referenceSeries: createDto.referenceSeries || null,
         referenceCorrelative: createDto.referenceCorrelative || null,

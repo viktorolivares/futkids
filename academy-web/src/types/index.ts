@@ -260,6 +260,7 @@ export interface WebPayment {
   invoiceNumber?: string;
   invoiceStatus?: 'ACCEPTED' | 'PENDING' | 'REJECTED' | 'ISSUED';
   studentPhone?: string;
+  studentId?: string;
   allocations?: WebPaymentAllocation[];
 }
 
@@ -358,6 +359,7 @@ export interface WebAcademyProfile {
     solPassConfigured: boolean;
     solPassword?: string;
     environment: 'BETA' | 'PRODUCTION';
+    establishmentCode?: string;
     certificateStatus: 'VALID' | 'EXPIRING' | 'MISSING';
     certificateExpiresAt: string;
     defaultSeriesBoleta: string;

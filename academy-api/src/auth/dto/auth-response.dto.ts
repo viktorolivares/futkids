@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class MembershipDto {
-  @ApiProperty({ example: 'acad-alianza-01' })
+  @ApiProperty({ example: 'acad-demo-01' })
   academyId: string;
 
-  @ApiProperty({ example: 'Academia Alianza Lima - Sede Matute' })
+  @ApiProperty({ example: 'Academia Deportiva Demo Central' })
   academyName: string;
 
   @ApiProperty({ example: 'OWNER', enum: ['OWNER', 'ADMIN', 'COACH', 'CASHIER', 'STAFF', 'PARENT'] })
@@ -15,10 +15,10 @@ export class MembershipDto {
 }
 
 export class UserProfileDto {
-  @ApiProperty({ example: 'usr-001' })
+  @ApiProperty({ example: 'usr-admin-demo' })
   id: string;
 
-  @ApiProperty({ example: 'carlos.mendoza@alianzalima.pe' })
+  @ApiProperty({ example: 'admin@demo.pe' })
   email: string;
 
   @ApiProperty({ example: 'Carlos' })
@@ -26,6 +26,9 @@ export class UserProfileDto {
 
   @ApiProperty({ example: 'Mendoza' })
   lastName: string;
+
+  @ApiProperty({ example: false, description: 'Indica si el usuario es Super Admin del sistema' })
+  isSuperAdmin: boolean;
 
   @ApiProperty({ type: [MembershipDto] })
   memberships: MembershipDto[];

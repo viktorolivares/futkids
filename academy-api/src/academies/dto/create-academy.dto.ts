@@ -2,23 +2,23 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsOptional, Matches, IsEmail } from 'class-validator';
 
 export class CreateAcademyDto {
-  @ApiProperty({ example: 'Academia Alianza Lima - Sede Matute' })
+  @ApiProperty({ example: 'Academia Deportiva Demo Central' })
   @IsString()
   @IsNotEmpty({ message: 'El nombre de la academia es obligatorio' })
   name: string;
 
-  @ApiProperty({ example: 'alianza-lima-matute' })
+  @ApiPropertyOptional({ example: 'demo' })
   @IsString()
-  @IsNotEmpty({ message: 'El slug identificador es obligatorio' })
+  @IsOptional()
   @Matches(/^[a-z0-9-]+$/, { message: 'El slug solo puede contener letras minúsculas, números y guiones' })
-  slug: string;
+  slug?: string;
 
-  @ApiPropertyOptional({ example: 'CLUB ALIANZA LIMA S.A.' })
+  @ApiPropertyOptional({ example: 'ACADEMIA DEPORTIVA DEMO S.A.C.' })
   @IsString()
   @IsOptional()
   legalName?: string;
 
-  @ApiPropertyOptional({ example: '20100123456' })
+  @ApiPropertyOptional({ example: '20123456789' })
   @IsString()
   @IsOptional()
   @Matches(/^\d{11}$/, { message: 'El RUC debe tener 11 dígitos numéricos válidos' })
@@ -29,12 +29,12 @@ export class CreateAcademyDto {
   @IsOptional()
   phone?: string;
 
-  @ApiPropertyOptional({ example: 'contacto@alianzalima.pe' })
+  @ApiPropertyOptional({ example: 'contacto@demo.pe' })
   @IsEmail()
   @IsOptional()
   email?: string;
 
-  @ApiPropertyOptional({ example: 'Jr. Isabel La Católica 840, La Victoria' })
+  @ApiPropertyOptional({ example: 'Av. Javier Prado Este 2500, San Borja' })
   @IsString()
   @IsOptional()
   address?: string;
@@ -43,4 +43,9 @@ export class CreateAcademyDto {
   @IsString()
   @IsOptional()
   city?: string;
+
+  @ApiPropertyOptional({ example: 'Lima' })
+  @IsString()
+  @IsOptional()
+  department?: string;
 }

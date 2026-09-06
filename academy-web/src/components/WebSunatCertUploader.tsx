@@ -54,6 +54,7 @@ export const WebSunatCertUploader: React.FC<WebSunatCertUploaderProps> = ({
   const [solPass, setSolPass] = useState(currentConfig.solPassword || '');
   const [showSolPass, setShowSolPass] = useState(false);
   const [environment, setEnvironment] = useState<'BETA' | 'PRODUCTION'>(currentConfig.environment);
+  const [establishmentCode, setEstablishmentCode] = useState(currentConfig.establishmentCode || '0000');
   const [seriesBoleta, setSeriesBoleta] = useState(currentConfig.defaultSeriesBoleta || 'B001');
   const [seriesFactura, setSeriesFactura] = useState(currentConfig.defaultSeriesFactura || 'F001');
 
@@ -134,6 +135,7 @@ export const WebSunatCertUploader: React.FC<WebSunatCertUploaderProps> = ({
         certificatePasswordConfigured: true,
         useCustomCertificate: true,
         environment,
+        establishmentCode,
         solUser,
         solPassword: solPass,
         solPassConfigured: Boolean(solPass.trim() || currentConfig.solPassConfigured),
@@ -587,8 +589,25 @@ export const WebSunatCertUploader: React.FC<WebSunatCertUploaderProps> = ({
             </div>
           </div>
 
-          {/* Series Configuration */}
-          <div className="pt-1">
+          {/* Multi-Establishment Code & Series Configuration */}
+          <div className="pt-1 space-y-2">
+            <div>
+              <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">
+                Código de Establecimiento Anexo SUNAT:
+              </label>
+              <input
+                type="text"
+                value={establishmentCode}
+                onChange={(e) => setEstablishmentCode(e.target.value)}
+                className="w-full bg-[#161B22] border border-slate-700 rounded px-2.5 py-1.5 text-amber-400 font-bold text-xs font-mono"
+                placeholder="0000 (0000 = Principal, 0001 = Sucursal 1)"
+                maxLength={4}
+              />
+              <span className="text-[9px] text-slate-500 block mt-0.5">
+                Código de 4 dígitos registrado en el RUC ante SUNAT para esta sede.
+              </span>
+            </div>
+
             <label className="text-[10px] text-slate-400 uppercase font-bold block mb-1">
               Series Electrónicas por Defecto:
             </label>
@@ -625,19 +644,20 @@ export const WebSunatCertUploader: React.FC<WebSunatCertUploaderProps> = ({
               onUpdateSunatConfig({
                 ...currentConfig,
                 environment,
+                establishmentCode,
                 solUser,
                 solPassword: solPass || currentConfig.solPassword,
                 solPassConfigured: Boolean(solPass.trim() || currentConfig.solPassConfigured),
                 defaultSeriesBoleta: seriesBoleta,
                 defaultSeriesFactura: seriesFactura,
               });
-              setFeedbackToast('Configuración de Credenciales SOL y Ambiente SUNAT guardada.');
+              setFeedbackToast('Configuración de Establecimiento Anexo SUNAT y Credenciales guardada.');
               setTimeout(() => setFeedbackToast(null), 3000);
             }}
             className="w-full mt-2 py-2 rounded bg-sky-600 hover:bg-sky-500 text-white font-bold flex items-center justify-center gap-1.5 transition text-[11px] cursor-pointer"
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Guardar Parámetros SOL & Series</span>
+            <span>Guardar Parámetros SUNAT & Establecimiento</span>
           </button>
         </div>
       </div>
