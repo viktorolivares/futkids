@@ -89,40 +89,40 @@ export const VoucherTicketModal: React.FC<VoucherTicketModalProps> = ({
     : `https://wa.me/?text=${generateWhatsAppMessage()}`;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white text-black max-w-sm w-full p-5 rounded-lg shadow-2xl font-mono text-xs space-y-3 my-auto border border-gray-300 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white text-slate-900 max-w-sm w-full p-6 rounded-3xl shadow-xl text-xs space-y-3.5 my-auto border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Top Close */}
-        <div className="flex justify-between items-start border-b border-gray-300 pb-2 relative">
+        <div className="flex justify-between items-start border-b border-slate-200 pb-3 relative">
           <div className="text-center w-full pr-4">
-            <div className="font-extrabold text-sm uppercase tracking-tight text-slate-900">
+            <div className="font-bold text-sm uppercase tracking-tight text-slate-900">
               {academyName}
             </div>
-            <div className="text-[10px] text-gray-600 mt-0.5">
+            <div className="text-[11px] text-slate-500 mt-0.5">
               {isRecibo ? 'Control Administrativo de Academia' : `RUC: ${academyRuc}`}
             </div>
-            <div className="text-[9px] text-gray-500 leading-tight mt-0.5">
+            <div className="text-[10px] text-slate-400 leading-tight mt-0.5">
               {academyAddress}
             </div>
 
             {/* Document Box Header */}
             <div
-              className={`text-xs font-bold mt-2 uppercase border py-1 px-2 rounded-sm ${
+              className={`text-xs font-bold mt-2.5 uppercase border py-1.5 px-3 rounded-xl ${
                 isRecibo
-                  ? 'border-emerald-600 bg-emerald-50 text-emerald-950'
-                  : 'border-slate-800 bg-slate-50 text-slate-900'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+                  : 'border-slate-200 bg-slate-50 text-slate-900'
               }`}
             >
-              <div className="text-[10px] tracking-wider">{titleText}</div>
-              <div className="text-sm font-black tracking-widest">{docNumber}</div>
+              <div className="text-[10px] tracking-wider text-slate-500">{titleText}</div>
+              <div className="text-sm font-bold tracking-wider font-mono mt-0.5">{docNumber}</div>
               {isRecibo && (
-                <div className="text-[8px] text-emerald-700 uppercase font-semibold">
-                  * Comprobante No Tributario / Control Interno *
+                <div className="text-[9px] text-emerald-700 uppercase font-medium mt-0.5">
+                  Comprobante No Tributario / Control Interno
                 </div>
               )}
               {isNotaCredito && (
-                <div className="text-[9px] text-purple-800 bg-purple-100/70 p-1.5 rounded mt-1 text-left border border-purple-200">
+                <div className="text-[10px] text-purple-800 bg-purple-100/70 p-2 rounded-lg mt-1.5 text-left border border-purple-200 font-normal">
                   <div><strong>DOC. MODIFICADO:</strong> {invoice.referenceVoucherType || 'COMPROBANTE'} {invoice.referenceVoucherNumber}</div>
-                  <div><strong>MOTIVO SUNAT [{invoice.creditNoteReasonCode || '01'}]:</strong> {invoice.creditNoteReasonDesc || 'Anulación de la operación'}</div>
+                  <div><strong>MOTIVO:</strong> [{invoice.creditNoteReasonCode || '01'}] {invoice.creditNoteReasonDesc || 'Anulación de la operación'}</div>
                 </div>
               )}
             </div>
@@ -130,7 +130,7 @@ export const VoucherTicketModal: React.FC<VoucherTicketModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-black absolute right-0 top-0 p-1 rounded transition"
+            className="text-slate-400 hover:text-slate-700 absolute right-0 top-0 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer"
             title="Cerrar"
           >
             <X className="w-4 h-4" />
@@ -264,13 +264,13 @@ export const VoucherTicketModal: React.FC<VoucherTicketModalProps> = ({
         )}
 
         {/* Actions buttons */}
-        <div className="pt-2 border-t border-gray-300 space-y-2">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="pt-3 border-t border-slate-200 space-y-2.5">
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               onClick={() => window.print()}
-              className="px-3 py-1.5 bg-slate-900 hover:bg-black text-white rounded text-[10px] font-bold flex items-center justify-center gap-1.5 transition shadow-sm"
+              className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-4 h-4" />
               <span>Imprimir Ticket</span>
             </button>
 
@@ -278,9 +278,9 @@ export const VoucherTicketModal: React.FC<VoucherTicketModalProps> = ({
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-bold flex items-center justify-center gap-1.5 transition shadow-sm text-center"
+              className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-xs text-center cursor-pointer"
             >
-              <Smartphone className="w-3.5 h-3.5" />
+              <Smartphone className="w-4 h-4" />
               <span>WhatsApp</span>
             </a>
           </div>
@@ -288,24 +288,24 @@ export const VoucherTicketModal: React.FC<VoucherTicketModalProps> = ({
           <div className="flex justify-between items-center pt-1">
             <button
               onClick={handleCopyText}
-              className="text-[10px] text-gray-600 hover:text-black flex items-center gap-1 py-1"
+              className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1.5 py-1 cursor-pointer transition"
             >
               {copied ? (
                 <>
-                  <Check className="w-3 h-3 text-emerald-600" />
-                  <span className="text-emerald-700 font-bold">¡Copiado al portapapeles!</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700 font-semibold">¡Copiado al portapapeles!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3 h-3" />
-                  <span>Copiar resumen de constancia</span>
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Copiar resumen</span>
                 </>
               )}
             </button>
 
             <button
               onClick={onClose}
-              className="px-2.5 py-1 text-[10px] text-gray-500 hover:text-black font-semibold rounded"
+              className="px-3 py-1 text-xs text-slate-500 hover:text-slate-900 font-semibold rounded-lg hover:bg-slate-100 transition cursor-pointer"
             >
               Cerrar
             </button>

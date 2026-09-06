@@ -453,76 +453,78 @@ export const WebClasses: React.FC<WebClassesProps> = ({
   const attendancePct = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
 
   return (
-    <div className="space-y-4 font-mono text-xs">
+    <div className="space-y-6 text-sm text-slate-800">
       {/* Header Principal */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-md">
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
         <div>
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-sky-500/10 border border-sky-500/30 rounded-lg text-sky-400">
-              <Calendar className="w-5 h-5" />
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-2xl text-blue-600">
+              <Calendar className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                <span>Control de Clases, Aforo y Asistencia en Cancha</span>
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-semibold">
-                  PASO C: EN VIVO
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+                  Control de Clases y Asistencia
+                </h1>
+                <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-semibold">
+                  En Vivo
                 </span>
-              </h1>
-              <p className="text-slate-400 text-[11px] mt-0.5">
-                Pase de lista táctil para entrenadores, control de capacidad máxima de cancha, gestión de recuperaciones/pruebas y avisos WhatsApp a apoderados.
+              </div>
+              <p className="text-slate-500 text-sm mt-1">
+                Pase de lista táctil, control de aforo en cancha y avisos directos por WhatsApp a apoderados.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2.5 flex-wrap">
           <button
             onClick={() => setIsNotifyAbsentsOpen(true)}
-            className="px-3 py-2 rounded-lg bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 font-bold uppercase tracking-wider text-[11px] flex items-center gap-1.5 transition cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-2 transition cursor-pointer"
             title="Abrir panel de notificación de inasistencias por WhatsApp a apoderados"
           >
-            <MessageCircle className="w-4 h-4 text-emerald-400" />
+            <MessageCircle className="w-4 h-4 text-emerald-600" />
             <span>Notificar Faltas ({absentCount})</span>
           </button>
 
           <button
             onClick={() => setIsAddStudentOpen(true)}
-            className="px-3 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-black font-bold uppercase tracking-wider text-[11px] flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-2 transition shadow-xs cursor-pointer"
             title="Añadir un alumno a esta sesión (Recuperación, Clase de Prueba o Invitado)"
           >
             <UserPlus className="w-4 h-4" />
-            <span>+ Incorporar a Cancha</span>
+            <span>Incorporar a Cancha</span>
           </button>
         </div>
       </div>
 
       {/* Floating Notices */}
       {notificationSuccessNotice && (
-        <div className="bg-emerald-950/60 border border-emerald-500/60 rounded-lg p-3 text-emerald-200 text-xs flex items-center justify-between animate-fade-in">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-900 text-sm flex items-center justify-between animate-fade-in shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
             <span>{notificationSuccessNotice}</span>
           </div>
-          <button onClick={() => setNotificationSuccessNotice(null)} className="text-emerald-400 hover:text-white font-bold">
-            ×
+          <button onClick={() => setNotificationSuccessNotice(null)} className="text-emerald-700 hover:text-emerald-900 font-bold p-1 cursor-pointer">
+            <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Main Grid: Left Sessions Selector / Right Attendance Roster */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Sessions List & Court Capacities */}
-        <div className="lg:col-span-4 space-y-3">
-          <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-3.5 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[11px] text-slate-300 uppercase tracking-wider font-bold flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-sky-400" />
-                <span>Sesiones de Hoy ({sessions.length})</span>
+        <div className="lg:col-span-4 space-y-4">
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
+            <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-blue-600" />
+                <span>Sesiones del Día ({sessions.length})</span>
               </h2>
-              <span className="text-[9px] text-slate-500 font-mono">FECHA: {currentSession?.date}</span>
+              <span className="text-xs text-slate-400 font-medium">Fecha: {currentSession?.date}</span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {sessions.map((sess) => {
                 const isActive = sess.id === activeSessionId;
                 const sessGroup = groups.find((g) => g.id === sess.groupId);
@@ -535,58 +537,58 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                   <button
                     key={sess.id}
                     onClick={() => setActiveSessionId(sess.id)}
-                    className={`w-full p-3 rounded-lg border text-left transition relative cursor-pointer ${
+                    className={`w-full p-4 rounded-2xl border text-left transition relative cursor-pointer ${
                       isActive
-                        ? 'border-sky-500 bg-sky-950/20 text-white shadow-sm'
-                        : 'border-slate-800 bg-[#161B22] text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                        ? 'border-emerald-500 bg-emerald-50/40 text-slate-900 shadow-xs'
+                        : 'border-slate-200/70 bg-slate-50/50 text-slate-700 hover:bg-slate-100/70 hover:border-slate-300'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-white flex items-center gap-1.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-sm text-slate-900 flex items-center gap-2">
                         <span>{sess.groupName}</span>
                         {sessTotal >= sessCap && (
-                          <span className="text-[9px] bg-rose-950 text-rose-300 border border-rose-500/40 px-1 py-0.2 rounded font-mono font-bold">
-                            LLENO
+                          <span className="text-[11px] bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full font-semibold">
+                            Lleno
                           </span>
                         )}
                       </span>
-                      <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300 font-bold">
+                      <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-medium">
                         {sess.sport}
                       </span>
                     </div>
 
-                    <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-2">
-                      <span className="flex items-center gap-1 text-slate-300">
-                        <Clock className="w-3 h-3 text-slate-500" />
+                    <div className="text-xs text-slate-500 flex items-center gap-2">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-slate-400" />
                         {sess.startTime} - {sess.endTime}
                       </span>
                       <span>•</span>
-                      <span className="text-slate-400">{sess.court}</span>
+                      <span>{sess.court}</span>
                     </div>
 
                     {/* Aforo gauge bar */}
-                    <div className="mt-2.5 space-y-1">
-                      <div className="flex items-center justify-between text-[10px]">
+                    <div className="mt-3 space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
                         <span className="text-slate-500">
-                          Prof: <strong className="text-slate-300">{sess.coachName}</strong>
+                          Prof: <strong className="text-slate-700 font-medium">{sess.coachName}</strong>
                         </span>
-                        <span className="font-mono font-bold text-slate-300">
+                        <span className="font-semibold text-slate-700">
                           {sessTotal}/{sessCap} aforo ({sessPct}%)
                         </span>
                       </div>
-                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200/70 rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all duration-300 ${
-                            sessPct >= 100 ? 'bg-rose-500' : sessPct >= 80 ? 'bg-amber-400' : 'bg-emerald-400'
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            sessPct >= 100 ? 'bg-rose-500' : sessPct >= 80 ? 'bg-amber-400' : 'bg-emerald-500'
                           }`}
                           style={{ width: `${sessPct}%` }}
                         />
                       </div>
                     </div>
 
-                    <div className="mt-2 flex items-center justify-between text-[10px] pt-1.5 border-t border-slate-800/80">
-                      <span className="text-slate-500 font-mono">Presentes:</span>
-                      <span className="text-emerald-400 font-bold font-mono">
+                    <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-200/50">
+                      <span className="text-slate-400">Presentes:</span>
+                      <span className="text-emerald-700 font-semibold">
                         {sessPresent} de {sessTotal} ({sessTotal > 0 ? Math.round((sessPresent / sessTotal) * 100) : 0}%)
                       </span>
                     </div>
@@ -597,24 +599,24 @@ export const WebClasses: React.FC<WebClassesProps> = ({
           </div>
 
           {/* Canchas y Aforos de Sede */}
-          <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-3.5 space-y-2">
-            <h2 className="text-[11px] text-slate-300 uppercase tracking-wider font-bold flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Capacidades de Cancha por Categoría</span>
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-5 sm:p-6 space-y-3 shadow-xs">
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-emerald-600" />
+              <span>Capacidades por Categoría</span>
             </h2>
-            <div className="space-y-1.5 text-[11px]">
+            <div className="space-y-2">
               {groups.map((grp) => (
-                <div key={grp.id} className="p-2.5 bg-[#161B22] rounded-lg border border-slate-800/80 flex items-center justify-between">
+                <div key={grp.id} className="p-3 bg-slate-50 rounded-2xl border border-slate-200/60 flex items-center justify-between">
                   <div>
-                    <div className="text-white font-bold text-xs">{grp.name}</div>
-                    <div className="text-[10px] text-slate-400">{grp.court}</div>
-                    <div className="text-[9px] text-slate-500 mt-0.5">
+                    <div className="text-slate-900 font-bold text-xs">{grp.name}</div>
+                    <div className="text-xs text-slate-500">{grp.court}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5">
                       {grp.scheduleText} • {grp.startTime} - {grp.endTime}
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[9px] text-slate-500 block uppercase">CAPACIDAD MÁX</span>
-                    <span className="font-bold text-sky-400 font-mono text-xs">{grp.capacity} cupos</span>
+                    <span className="text-[10px] text-slate-400 block uppercase font-medium">Capacidad</span>
+                    <span className="font-bold text-blue-700 text-xs">{grp.capacity} cupos</span>
                   </div>
                 </div>
               ))}
@@ -623,81 +625,81 @@ export const WebClasses: React.FC<WebClassesProps> = ({
         </div>
 
         {/* Right: Interactive Attendance Table & Operations */}
-        <div className="lg:col-span-8 space-y-3">
+        <div className="lg:col-span-8 space-y-4">
           {currentSession && (
-            <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-4 space-y-3.5 shadow-md">
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 space-y-5 shadow-xs">
               {/* Session Meta Header with Live Capacity Meter */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between pb-3 border-b border-slate-800 gap-3">
+              <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-100 gap-4">
                 <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="bg-sky-500/10 text-sky-400 border border-sky-500/30 text-[9px] px-2 py-0.5 rounded font-bold uppercase">
-                      EN CANCHA
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-semibold uppercase">
+                      En Cancha
                     </span>
-                    <h2 className="text-base font-bold text-white uppercase">
+                    <h2 className="text-xl font-bold text-slate-900">
                       {currentSession.groupName}
                     </h2>
-                    <span className="text-slate-400 text-xs">({currentSession.sport})</span>
+                    <span className="text-slate-500 text-sm">({currentSession.sport})</span>
                   </div>
-                  <div className="text-slate-400 text-[10px] mt-1 flex items-center gap-2 flex-wrap">
-                    <span>Profesor: <strong className="text-white">{currentSession.coachName}</strong></span>
+                  <div className="text-slate-500 text-xs mt-1.5 flex items-center gap-2 flex-wrap">
+                    <span>Profesor: <strong className="text-slate-800">{currentSession.coachName}</strong></span>
                     <span>•</span>
                     <span>Horario: {currentSession.startTime} - {currentSession.endTime}</span>
                     <span>•</span>
-                    <span>Cancha: <strong className="text-slate-200">{currentSession.court}</strong></span>
+                    <span>Cancha: <strong className="text-slate-800">{currentSession.court}</strong></span>
                   </div>
                 </div>
 
                 {/* Live Capacity Gauge */}
-                <div className="bg-[#161B22] border border-slate-800 rounded-lg p-3 min-w-[220px]">
-                  <div className="flex items-center justify-between text-[10px] font-mono">
-                    <span className="text-slate-400 uppercase font-bold flex items-center gap-1">
-                      <Users className="w-3 h-3 text-sky-400" />
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 min-w-[230px]">
+                  <div className="flex items-center justify-between text-xs font-medium">
+                    <span className="text-slate-600 flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-blue-600" />
                       <span>Control de Aforo</span>
                     </span>
-                    <span className={`font-bold ${isFullCapacity ? 'text-rose-400' : capacityPct > 80 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                    <span className={`font-bold ${isFullCapacity ? 'text-rose-600' : capacityPct > 80 ? 'text-amber-600' : 'text-emerald-700'}`}>
                       {totalEnrolled} / {sessionCapacity} ({capacityPct}%)
                     </span>
                   </div>
-                  <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mt-1.5">
+                  <div className="w-full h-2.5 bg-slate-200/80 rounded-full overflow-hidden mt-2">
                     <div
-                      className={`h-full transition-all duration-300 ${
-                        isFullCapacity ? 'bg-rose-500' : capacityPct > 80 ? 'bg-amber-400' : 'bg-emerald-400'
+                      className={`h-full rounded-full transition-all duration-300 ${
+                        isFullCapacity ? 'bg-rose-500' : capacityPct > 80 ? 'bg-amber-400' : 'bg-emerald-500'
                       }`}
                       style={{ width: `${capacityPct}%` }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[9px] text-slate-500 mt-1">
-                    <span>{isFullCapacity ? 'Aforo completo' : `${sessionCapacity - totalEnrolled} cupos disponibles`}</span>
-                    <span className="text-emerald-400 font-bold">{presentCount} en cancha</span>
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5">
+                    <span>{isFullCapacity ? 'Aforo completo' : `${sessionCapacity - totalEnrolled} cupos libres`}</span>
+                    <span className="text-emerald-700 font-semibold">{presentCount} en cancha</span>
                   </div>
                 </div>
               </div>
 
               {/* Banner de Políticas de Sede aplicadas a la Cancha */}
-              <div className="bg-[#161B22] border border-slate-800/90 rounded-lg p-2.5 flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="text-slate-300">
-                    <strong>Política de Sede:</strong>{' '}
+              <div className="bg-slate-50/70 border border-slate-200/70 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span className="text-slate-600">
+                    <strong className="text-slate-800">Política de Sede:</strong>{' '}
                     {policy.allowTrainingWithDebt ? (
-                      <span className="text-amber-300">
-                        Entrenamiento permitido con deuda (alerta visual si &gt; S/ {policy.debtWarningThreshold.toFixed(2)})
+                      <span className="text-amber-700">
+                        Entrenamiento permitido con deuda (aviso visual si &gt; S/ {policy.debtWarningThreshold.toFixed(2)})
                       </span>
                     ) : (
-                      <span className="text-rose-400 font-bold">
-                        Bloqueo estricto a cancha por deuda &gt; S/ {policy.debtWarningThreshold.toFixed(2)}
+                      <span className="text-rose-700 font-semibold">
+                        Bloqueo de cancha por deuda &gt; S/ {policy.debtWarningThreshold.toFixed(2)}
                       </span>
                     )}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-slate-400">
+                <div className="flex items-center gap-2 text-slate-500">
                   <span>
                     Compensación Falta:{' '}
-                    <strong className="text-sky-300 font-mono">
+                    <strong className="text-slate-800">
                       {policy.cancellationPolicy === 'CREDIT'
-                        ? 'Crédito Automático a Favor'
+                        ? 'Crédito a Favor'
                         : policy.cancellationPolicy === 'MAKEUP'
-                        ? 'Clase de Recuperación'
+                        ? 'Recuperación'
                         : 'Sin Compensación'}
                     </strong>
                   </span>
@@ -705,75 +707,75 @@ export const WebClasses: React.FC<WebClassesProps> = ({
               </div>
 
               {/* Acciones Rápidas y Filtros */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
                 {/* Search Bar */}
                 <div className="relative flex-1">
-                  <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Buscar alumno por nombre o DNI..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-8 pr-3 py-1.5 bg-[#161B22] border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
-                      ×
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
                 {/* Filter Pills */}
-                <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
                   <button
                     onClick={() => setStatusFilter('ALL')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                       statusFilter === 'ALL'
-                        ? 'bg-slate-700 text-white'
-                        : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-800'
+                        ? 'bg-slate-900 text-white'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
                     Todos ({totalCount})
                   </button>
                   <button
                     onClick={() => setStatusFilter('PRESENT')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                       statusFilter === 'PRESENT'
-                        ? 'bg-emerald-500 text-black'
-                        : 'bg-[#161B22] text-emerald-400 hover:text-white border border-slate-800'
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
                     }`}
                   >
                     Presentes ({presentCount})
                   </button>
                   <button
                     onClick={() => setStatusFilter('ABSENT')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                       statusFilter === 'ABSENT'
-                        ? 'bg-rose-500 text-white'
-                        : 'bg-[#161B22] text-rose-400 hover:text-white border border-slate-800'
+                        ? 'bg-rose-600 text-white'
+                        : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
                     }`}
                   >
                     Faltas ({absentCount})
                   </button>
                   <button
                     onClick={() => setStatusFilter('SPECIAL')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                       statusFilter === 'SPECIAL'
-                        ? 'bg-purple-500 text-white'
-                        : 'bg-[#161B22] text-purple-400 hover:text-white border border-slate-800'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
                     }`}
                   >
-                    Recup/Trial ({specialCount})
+                    Especiales ({specialCount})
                   </button>
                   <button
                     onClick={() => setStatusFilter('DEBT')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                       statusFilter === 'DEBT'
-                        ? 'bg-amber-500 text-black'
-                        : 'bg-[#161B22] text-amber-400 hover:text-white border border-slate-800'
+                        ? 'bg-amber-600 text-white'
+                        : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                     }`}
                   >
                     Con Deuda ({debtCount})
@@ -783,24 +785,24 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                 {/* Bulk Check-in Button */}
                 <button
                   onClick={handleMarkAllPresent}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase text-[10px] flex items-center gap-1.5 transition shrink-0 cursor-pointer shadow-sm"
+                  className="px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-semibold text-xs flex items-center gap-1.5 transition shrink-0 cursor-pointer"
                   title="Marcar todos los alumnos habilitados como Presentes de una sola vez"
                 >
-                  <CheckCheck className="w-3.5 h-3.5 stroke-[2.5]" />
-                  <span>Marcar Todos Presentes</span>
+                  <CheckCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Marcar Todos</span>
                 </button>
               </div>
 
               {/* Alerts */}
               {debtBlockedNotice && (
-                <div className="bg-rose-950/40 border border-rose-500/50 rounded-lg p-3 flex items-start justify-between gap-2">
-                  <div className="flex items-start gap-2">
-                    <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-2.5">
+                    <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs font-bold text-rose-200">
+                      <div className="text-xs font-bold text-rose-900">
                         Acceso a Cancha Bloqueado por Deuda Pendiente
                       </div>
-                      <p className="text-[11px] text-rose-300/90 mt-0.5">
+                      <p className="text-xs text-rose-700 mt-0.5">
                         El alumno <strong>{debtBlockedNotice.studentName}</strong> mantiene una deuda de{' '}
                         <strong>S/ {debtBlockedNotice.balance.toFixed(2)}</strong>. Según la política activa de la academia,
                         no se le permite entrenar hasta regularizar su situación en Caja.
@@ -809,7 +811,7 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                   </div>
                   <button
                     onClick={() => setDebtBlockedNotice(null)}
-                    className="text-rose-400 hover:text-white text-xs font-bold"
+                    className="text-rose-400 hover:text-rose-700 p-1 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -817,16 +819,16 @@ export const WebClasses: React.FC<WebClassesProps> = ({
               )}
 
               {creditNotice && (
-                <div className="bg-emerald-950/40 border border-emerald-500/50 rounded-lg p-2.5 flex items-center justify-between gap-2 text-emerald-200 text-xs">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-emerald-900 text-xs">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>{creditNotice}</span>
                   </div>
                   <button
                     onClick={() => setCreditNotice(null)}
-                    className="text-emerald-400 hover:text-white"
+                    className="text-emerald-700 hover:text-emerald-900 cursor-pointer"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               )}
@@ -835,18 +837,18 @@ export const WebClasses: React.FC<WebClassesProps> = ({
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-800 text-slate-400 text-[10px] uppercase tracking-wider">
-                      <th className="pb-2">Alumno</th>
-                      <th className="pb-2">Modalidad</th>
-                      <th className="pb-2">Marcación de Asistencia</th>
-                      <th className="pb-2">Avisos Apoderado</th>
-                      <th className="pb-2">Observaciones Técnicas</th>
+                    <tr className="border-b border-slate-100 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                      <th className="pb-3 pr-4">Alumno</th>
+                      <th className="pb-3 pr-4">Modalidad</th>
+                      <th className="pb-3 pr-4">Marcación de Asistencia</th>
+                      <th className="pb-3 pr-4">Avisos Apoderado</th>
+                      <th className="pb-3">Observaciones Técnicas</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100">
                     {filteredAttendances.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="py-8 text-center text-slate-500">
+                        <td colSpan={5} className="py-10 text-center text-slate-400 text-sm">
                           No se encontraron alumnos para este filtro.
                         </td>
                       </tr>
@@ -867,27 +869,27 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                         const contact = getParentContact(att.studentId);
 
                         return (
-                          <tr key={att.studentId} className="hover:bg-slate-800/20">
+                          <tr key={att.studentId} className="hover:bg-slate-50/70 transition">
                             {/* Alumno Info */}
-                            <td className="py-2.5 pr-2">
-                              <div className="font-bold text-white text-xs flex items-center gap-1.5 flex-wrap">
+                            <td className="py-3.5 pr-4">
+                              <div className="font-bold text-slate-900 text-sm flex items-center gap-2 flex-wrap">
                                 <span>{att.studentName}</span>
                                 {isDebtBlocked && (
-                                  <span className="bg-rose-950/80 text-rose-300 border border-rose-600/50 text-[9px] px-1.5 py-0.2 rounded font-mono font-bold">
-                                    🚫 Bloq. Deuda (S/ {stu?.balance.toFixed(2)})
+                                  <span className="bg-rose-50 text-rose-700 border border-rose-200 text-xs px-2 py-0.5 rounded-full font-semibold">
+                                    Bloq. Deuda (S/ {stu?.balance.toFixed(2)})
                                   </span>
                                 )}
                                 {hasDebtWarning && (
-                                  <span className="bg-amber-950/70 text-amber-300 border border-amber-600/50 text-[9px] px-1.5 py-0.2 rounded font-mono">
-                                    ⚠️ Debe: S/ {stu?.balance.toFixed(2)}
+                                  <span className="bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2 py-0.5 rounded-full font-medium">
+                                    Debe: S/ {stu?.balance.toFixed(2)}
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[9px] text-slate-500 flex items-center gap-2 mt-0.5">
+                              <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
                                 <span>DNI: {att.documentNumber}</span>
                                 {pkgCredit && (
-                                  <span className="text-purple-400 flex items-center gap-1 font-semibold">
-                                    <Ticket className="w-2.5 h-2.5" />
+                                  <span className="text-purple-700 flex items-center gap-1 font-semibold">
+                                    <Ticket className="w-3 h-3" />
                                     Tiquetera: {pkgCredit.usedClasses}/{pkgCredit.totalClasses} (
                                     {pkgCredit.totalClasses - pkgCredit.usedClasses} disp.)
                                   </span>
@@ -896,21 +898,21 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                             </td>
 
                             {/* Modalidad & Conversión de Trial */}
-                            <td className="py-2.5 pr-2">
-                              <div className="space-y-1">
+                            <td className="py-3.5 pr-4">
+                              <div className="space-y-1.5">
                                 <select
                                   value={att.participationType}
                                   onChange={(e) =>
                                     handleParticipationTypeChange(att.studentId, e.target.value as any)
                                   }
-                                  className={`border rounded px-1.5 py-0.5 text-[10px] font-semibold ${
+                                  className={`border rounded-xl px-2.5 py-1 text-xs font-semibold focus:outline-none transition ${
                                     att.participationType === 'TRIAL'
-                                      ? 'bg-purple-950/60 border-purple-500/50 text-purple-300'
+                                      ? 'bg-purple-50 border-purple-200 text-purple-800'
                                       : att.participationType === 'MAKEUP'
-                                      ? 'bg-sky-950/60 border-sky-500/50 text-sky-300'
+                                      ? 'bg-blue-50 border-blue-200 text-blue-800'
                                       : att.participationType === 'GUEST'
-                                      ? 'bg-amber-950/60 border-amber-500/50 text-amber-300'
-                                      : 'bg-[#161B22] border-slate-700 text-slate-200'
+                                      ? 'bg-amber-50 border-amber-200 text-amber-800'
+                                      : 'bg-slate-50 border-slate-200 text-slate-700'
                                   }`}
                                 >
                                   <option value="REGULAR">Regular</option>
@@ -928,18 +930,18 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                         studentName: att.studentName,
                                       })
                                     }
-                                    className="block text-[9px] bg-purple-500 hover:bg-purple-400 text-black font-bold px-1.5 py-0.5 rounded transition cursor-pointer"
+                                    className="block text-[11px] bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold px-2 py-0.5 rounded-lg transition cursor-pointer"
                                     title="Convertir a este alumno de prueba en alumno regular matriculado"
                                   >
-                                    ★ Matricular Regular
+                                    ★ Matricular
                                   </button>
                                 )}
                               </div>
                             </td>
 
                             {/* Marcación de Asistencia */}
-                            <td className="py-2.5 pr-2">
-                              <div className="flex items-center gap-1 flex-wrap">
+                            <td className="py-3.5 pr-4">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 {/* Presente */}
                                 {isDebtBlocked ? (
                                   <button
@@ -949,18 +951,18 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                         balance: stu?.balance || 0,
                                       })
                                     }
-                                    className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-rose-950/40 text-rose-400 border border-rose-800/60 hover:bg-rose-900/50 cursor-pointer"
+                                    className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 cursor-pointer"
                                     title="Entrenamiento bloqueado por deuda según la política de la sede"
                                   >
-                                    🚫 Bloq. Deuda
+                                    Bloqueado
                                   </button>
                                 ) : (
                                   <button
                                     onClick={() => handleStatusChange(att.studentId, 'PRESENT')}
-                                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${
+                                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                                       att.status === 'PRESENT'
-                                        ? 'bg-emerald-500 text-black shadow-sm'
-                                        : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-700'
+                                        ? 'bg-emerald-600 text-white shadow-xs'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
                                     }`}
                                     title="Marcar Presente"
                                   >
@@ -972,10 +974,10 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                 {!isDebtBlocked && (
                                   <button
                                     onClick={() => handleStatusChange(att.studentId, 'LATE')}
-                                    className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${
+                                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                                       att.status === 'LATE'
-                                        ? 'bg-amber-500 text-black shadow-sm'
-                                        : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-700'
+                                        ? 'bg-amber-500 text-white shadow-xs'
+                                        : 'bg-slate-100 text-slate-600 hover:bg-amber-50 hover:text-amber-700'
                                     }`}
                                     title="Marcar Llegada Tarde"
                                   >
@@ -986,10 +988,10 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                 {/* Ausente */}
                                 <button
                                   onClick={() => handleStatusChange(att.studentId, 'ABSENT')}
-                                  className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                                     att.status === 'ABSENT'
-                                      ? 'bg-rose-500 text-white shadow-sm'
-                                      : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-700'
+                                      ? 'bg-rose-500 text-white shadow-xs'
+                                      : 'bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-700'
                                   }`}
                                   title="Marcar Falta Injustificada"
                                 >
@@ -999,10 +1001,10 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                 {/* Justificado */}
                                 <button
                                   onClick={() => handleStatusChange(att.studentId, 'JUSTIFIED')}
-                                  className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition cursor-pointer ${
+                                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                                     att.status === 'JUSTIFIED'
-                                      ? 'bg-sky-500 text-black shadow-sm'
-                                      : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-700'
+                                      ? 'bg-blue-600 text-white shadow-xs'
+                                      : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-700'
                                   }`}
                                   title="Marcar Falta Justificada"
                                 >
@@ -1011,44 +1013,44 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                               </div>
 
                               {att.justificationReason && (
-                                <div className="text-[9px] text-sky-400 mt-1 flex items-center gap-1 font-semibold">
-                                  <span>📝 Motivo: {att.justificationReason}</span>
+                                <div className="text-xs text-blue-700 mt-1 font-medium">
+                                  <span>Motivo: {att.justificationReason}</span>
                                 </div>
                               )}
 
                               {att.checkInTime && (
-                                <div className="text-[9px] text-emerald-400 mt-0.5">
-                                  Ingreso registrado: {att.checkInTime}
+                                <div className="text-xs text-emerald-700 mt-0.5">
+                                  Ingreso: {att.checkInTime}
                                 </div>
                               )}
                             </td>
 
                             {/* WhatsApp Direct Notification */}
-                            <td className="py-2.5 pr-2">
+                            <td className="py-3.5 pr-4">
                               {att.status === 'ABSENT' || att.status === 'LATE' || att.status === 'JUSTIFIED' ? (
                                 <a
                                   href={generateWhatsAppUrl(att, att.status as any)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 px-2 py-1 rounded bg-emerald-950/40 hover:bg-emerald-900/50 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold transition"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-semibold transition"
                                   title={`Enviar aviso WhatsApp por ${att.status === 'ABSENT' ? 'Inasistencia' : att.status === 'LATE' ? 'Tardanza' : 'Justificación'}`}
                                 >
-                                  <MessageCircle className="w-3 h-3 text-emerald-400" />
+                                  <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                                   <span>WhatsApp</span>
                                 </a>
                               ) : (
-                                <span className="text-[10px] text-slate-600">—</span>
+                                <span className="text-xs text-slate-300">—</span>
                               )}
                             </td>
 
                             {/* Observaciones Técnicas */}
-                            <td className="py-2.5">
+                            <td className="py-3.5">
                               <input
                                 type="text"
-                                placeholder="Anotar progreso, actitud, uniforme..."
+                                placeholder="Progreso, actitud, notas..."
                                 value={att.remarks || ''}
                                 onChange={(e) => handleRemarksChange(att.studentId, e.target.value)}
-                                className="w-full bg-[#161B22] border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-300 placeholder-slate-600 focus:border-sky-500 focus:outline-none"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                               />
                             </td>
                           </tr>
@@ -1060,11 +1062,11 @@ export const WebClasses: React.FC<WebClassesProps> = ({
               </div>
 
               {/* Botón de Guardar en la base de la tabla */}
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
-                <div className="text-[10px] text-slate-500">
-                  Total de alumnos en planilla: <strong className="text-slate-300">{totalCount}</strong> | Presentes:{' '}
-                  <strong className="text-emerald-400">{presentCount}</strong> | Faltas:{' '}
-                  <strong className="text-rose-400">{absentCount}</strong>
+              <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="text-xs text-slate-500">
+                  Total alumnos: <strong className="text-slate-800">{totalCount}</strong> | Presentes:{' '}
+                  <strong className="text-emerald-700">{presentCount}</strong> | Faltas:{' '}
+                  <strong className="text-rose-700">{absentCount}</strong>
                 </div>
 
                 <button
@@ -1072,7 +1074,7 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                     setSaveSuccess(true);
                     setTimeout(() => setSaveSuccess(false), 2000);
                   }}
-                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase tracking-wider text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-2 transition shadow-xs cursor-pointer"
                 >
                   {saveSuccess ? (
                     <>
@@ -1090,36 +1092,38 @@ export const WebClasses: React.FC<WebClassesProps> = ({
 
               {/* Modal / Selector de Falta Justificada */}
               {justifyingStudent && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-                  <div className="bg-[#161B22] border border-slate-700 rounded-xl max-w-md w-full p-4 space-y-3 font-mono">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <FileCheck className="w-4 h-4 text-sky-400" />
-                        <h3 className="text-sm font-bold text-white">
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+                  <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                          <FileCheck className="w-5 h-5" />
+                        </div>
+                        <h3 className="text-base font-bold text-slate-900">
                           Registrar Asistencia Justificada
                         </h3>
                       </div>
                       <button
                         onClick={() => setJustifyingStudent(null)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </button>
                     </div>
 
-                    <div className="text-xs text-slate-300">
-                      Alumno: <strong className="text-white">{justifyingStudent.studentName}</strong> (DNI:{' '}
+                    <div className="text-sm text-slate-600">
+                      Alumno: <strong className="text-slate-900">{justifyingStudent.studentName}</strong> (DNI:{' '}
                       {justifyingStudent.documentNumber})
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] text-slate-400 uppercase tracking-wider block">
+                      <label className="text-xs font-semibold text-slate-700 block">
                         Motivo de la Justificación:
                       </label>
                       <select
                         value={justificationReason}
                         onChange={(e) => setJustificationReason(e.target.value)}
-                        className="w-full bg-[#0D1117] border border-slate-700 rounded p-2 text-xs text-white"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
                       >
                         <option value="Descanso Médico / Salud">Descanso Médico / Salud</option>
                         <option value="Viaje Familiar Programado">Viaje Familiar Programado</option>
@@ -1130,45 +1134,45 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                     </div>
 
                     {/* Resumen de Política Aplicable */}
-                    <div className="bg-[#0F1219] border border-slate-800 rounded p-2.5 text-[11px] space-y-1">
-                      <div className="text-slate-400 font-bold uppercase text-[9px]">
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 text-xs space-y-1.5">
+                      <div className="text-slate-500 font-semibold text-[11px] uppercase tracking-wider">
                         Efecto de la Política de Sede:
                       </div>
                       {policy.cancellationPolicy === 'CREDIT' ? (
-                        <div className="text-emerald-300 flex items-start gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <div className="text-emerald-800 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                           <span>
-                            <strong>Crédito a Favor Automático:</strong> Se generará un saldo a favor
+                            <strong>Crédito a Favor:</strong> Se generará un saldo a favor
                             de ~S/ 22.50 a la familia para descontar en su próxima mensualidad o compra de indumentaria.
                           </span>
                         </div>
                       ) : policy.cancellationPolicy === 'MAKEUP' ? (
-                        <div className="text-sky-300 flex items-start gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-sky-400 shrink-0 mt-0.5" />
+                        <div className="text-blue-800 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                           <span>
                             <strong>Clase de Recuperación:</strong> El alumno queda habilitado para
                             recuperar esta clase en otro grupo o día disponible.
                           </span>
                         </div>
                       ) : (
-                        <div className="text-slate-400">
+                        <div className="text-slate-600">
                           Sin compensación económica ni reprogramación (política estricta).
                         </div>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                       <button
                         onClick={() => setJustifyingStudent(null)}
-                        className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs"
+                        className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition"
                       >
                         Cancelar
                       </button>
                       <button
                         onClick={handleConfirmJustification}
-                        className="px-3 py-1.5 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition"
                       >
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        <Check className="w-4 h-4 stroke-[2.5]" />
                         <span>Confirmar Justificación</span>
                       </button>
                     </div>
@@ -1178,45 +1182,47 @@ export const WebClasses: React.FC<WebClassesProps> = ({
 
               {/* Modal de Incorporación Dinámica de Alumno a Cancha */}
               {isAddStudentOpen && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-                  <div className="bg-[#161B22] border border-slate-700 rounded-xl max-w-lg w-full p-4 space-y-4 font-mono">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <UserPlus className="w-5 h-5 text-sky-400" />
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+                  <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                          <UserPlus className="w-5 h-5" />
+                        </div>
                         <div>
-                          <h3 className="text-sm font-bold text-white">
+                          <h3 className="text-base font-bold text-slate-900">
                             Incorporar Alumno a Cancha
                           </h3>
-                          <p className="text-[10px] text-slate-400">
+                          <p className="text-xs text-slate-500">
                             Sesión: {currentSession.groupName} ({currentSession.court})
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => setIsAddStudentOpen(false)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </button>
                     </div>
 
                     {/* Alerta de Aforo Si está Lleno */}
                     {isFullCapacity && (
-                      <div className="p-2.5 bg-amber-950/50 border border-amber-500/40 rounded-lg text-amber-200 text-[11px] flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                      <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs flex items-start gap-2.5">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                         <div>
                           <strong>Advertencia de Capacidad Máxima:</strong> La cancha ya tiene {totalEnrolled} de {sessionCapacity} alumnos registrados. Al agregar este alumno, se registrará como <strong>sobrecupo autorizado</strong> por el entrenador.
                         </div>
                       </div>
                     )}
 
-                    <div className="space-y-3 text-xs">
+                    <div className="space-y-3.5 text-xs">
                       {/* Modalidad de Participación */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-slate-400 uppercase font-bold block">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-slate-700 block">
                           Modalidad de Participación:
                         </label>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           {[
                             { id: 'MAKEUP', label: 'Recuperación', desc: 'Clase pendiente' },
                             { id: 'TRIAL', label: 'Clase Prueba', desc: 'Postulante' },
@@ -1227,28 +1233,28 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                               key={t.id}
                               type="button"
                               onClick={() => setAddParticipationType(t.id as any)}
-                              className={`p-2 rounded-lg border text-left transition cursor-pointer ${
+                              className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
                                 addParticipationType === t.id
-                                  ? 'bg-sky-500/20 border-sky-400 text-white font-bold'
-                                  : 'bg-[#0D1117] border-slate-800 text-slate-400 hover:border-slate-700'
+                                  ? 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold shadow-xs'
+                                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100/70'
                               }`}
                             >
-                              <div className="text-[11px]">{t.label}</div>
-                              <div className="text-[9px] text-slate-500">{t.desc}</div>
+                              <div className="text-xs font-semibold">{t.label}</div>
+                              <div className="text-[10px] text-slate-400 mt-0.5">{t.desc}</div>
                             </button>
                           ))}
                         </div>
                       </div>
 
                       {/* Selector de Alumno Existente o Nuevo */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-slate-400 uppercase font-bold block">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-slate-700 block">
                           Seleccionar Alumno:
                         </label>
                         <select
                           value={selectedAddStudentId}
                           onChange={(e) => setSelectedAddStudentId(e.target.value)}
-                          className="w-full bg-[#0D1117] border border-slate-700 rounded p-2 text-xs text-white"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
                         >
                           <option value="">-- Seleccione Alumno Matriculado --</option>
                           {students.map((st) => {
@@ -1265,58 +1271,58 @@ export const WebClasses: React.FC<WebClassesProps> = ({
 
                       {/* Campos manuales si seleccionó CUSTOM_NEW */}
                       {selectedAddStudentId === 'CUSTOM_NEW' && (
-                        <div className="p-3 bg-[#0D1117] rounded-lg border border-slate-800 space-y-2">
+                        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5">
                           <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">Nombre Completo del Postulante/Invitado:</label>
+                            <label className="text-xs text-slate-600 font-medium block mb-1">Nombre Completo del Postulante/Invitado:</label>
                             <input
                               type="text"
                               value={addCustomName}
                               onChange={(e) => setAddCustomName(e.target.value)}
                               placeholder="Ej. Matías Paredes Rivas"
-                              className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-sky-500"
+                              className="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-500"
                             />
                           </div>
                           <div>
-                            <label className="text-[10px] text-slate-400 block mb-1">DNI / Teléfono de Contacto:</label>
+                            <label className="text-xs text-slate-600 font-medium block mb-1">DNI / Teléfono de Contacto:</label>
                             <input
                               type="text"
                               value={addCustomDoc}
                               onChange={(e) => setAddCustomDoc(e.target.value)}
                               placeholder="Ej. 74892011 / 987654321"
-                              className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-sky-500"
+                              className="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-500"
                             />
                           </div>
                         </div>
                       )}
 
                       {/* Observación */}
-                      <div className="space-y-1">
-                        <label className="text-[10px] text-slate-400 uppercase font-bold block">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-slate-700 block">
                           Nota u Observación Técnica:
                         </label>
                         <input
                           type="text"
                           value={addRemarks}
                           onChange={(e) => setAddRemarks(e.target.value)}
-                          placeholder="Ej. Autorizado por Prof. Juan para recuperar clase del 24/02"
-                          className="w-full bg-[#0D1117] border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-sky-500"
+                          placeholder="Ej. Autorizado para recuperar clase del 24/02"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-500"
                         />
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                       <button
                         onClick={() => setIsAddStudentOpen(false)}
-                        className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs"
+                        className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition"
                       >
                         Cancelar
                       </button>
                       <button
                         onClick={handleAddStudentToSession}
-                        className="px-3.5 py-1.5 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition"
                       >
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>Confirmar e Ingresar a Cancha</span>
+                        <Check className="w-4 h-4 stroke-[2.5]" />
+                        <span>Confirmar e Ingresar</span>
                       </button>
                     </div>
                   </div>
@@ -1325,57 +1331,59 @@ export const WebClasses: React.FC<WebClassesProps> = ({
 
               {/* Modal de Conversión de Trial a Alumno Regular */}
               {convertingTrialStudent && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-                  <div className="bg-[#161B22] border border-purple-500/50 rounded-xl max-w-md w-full p-4 space-y-3.5 font-mono">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <Award className="w-5 h-5 text-purple-400" />
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+                  <div className="bg-white border border-purple-200 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 bg-purple-50 text-purple-700 rounded-xl">
+                          <Award className="w-5 h-5" />
+                        </div>
                         <div>
-                          <h3 className="text-sm font-bold text-white">
-                            Convertir Clase de Prueba a Matrícula
+                          <h3 className="text-base font-bold text-slate-900">
+                            Convertir a Matrícula Regular
                           </h3>
-                          <p className="text-[10px] text-purple-300">
+                          <p className="text-xs text-purple-700">
                             Alumno: {convertingTrialStudent.studentName}
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => setConvertingTrialStudent(null)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </button>
                     </div>
 
-                    <p className="text-xs text-slate-300">
-                      El alumno ha culminado su clase de prueba satisfactoriamente. Al matricularlo, pasará a la lista regular de este grupo ({currentSession.groupName}) y se le asignará su tarifa mensual formativa.
+                    <p className="text-xs text-slate-600">
+                      El alumno ha culminado su clase de prueba. Al matricularlo, pasará a la lista regular de este grupo ({currentSession.groupName}) y se le asignará su tarifa mensual formativa.
                     </p>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] text-slate-400 uppercase font-bold block">
+                      <label className="text-xs font-semibold text-slate-700 block">
                         Pensión Mensual a Asignar (S/):
                       </label>
                       <input
                         type="number"
                         value={conversionMonthlyFee}
                         onChange={(e) => setConversionMonthlyFee(Number(e.target.value) || 0)}
-                        className="w-full bg-[#0D1117] border border-slate-700 rounded p-2 text-sm text-white font-bold"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-sm text-slate-900 font-bold focus:bg-white focus:outline-none focus:border-purple-500"
                       />
                     </div>
 
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
                       <button
                         onClick={() => setConvertingTrialStudent(null)}
-                        className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs"
+                        className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer transition"
                       >
                         Cancelar
                       </button>
                       <button
                         onClick={handleConfirmConvertTrial}
-                        className="px-3.5 py-1.5 rounded bg-purple-500 hover:bg-purple-400 text-black font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs transition"
                       >
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>Confirmar Matrícula Regular</span>
+                        <Check className="w-4 h-4 stroke-[2.5]" />
+                        <span>Confirmar Matrícula</span>
                       </button>
                     </div>
                   </div>
@@ -1384,33 +1392,35 @@ export const WebClasses: React.FC<WebClassesProps> = ({
 
               {/* Modal de Notificaciones Masivas WhatsApp a Inasistentes */}
               {isNotifyAbsentsOpen && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-                  <div className="bg-[#161B22] border border-emerald-500/40 rounded-xl max-w-xl w-full p-4 space-y-3.5 font-mono max-h-[90vh] overflow-y-auto">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <MessageCircle className="w-5 h-5 text-emerald-400" />
+                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+                  <div className="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
+                          <MessageCircle className="w-5 h-5" />
+                        </div>
                         <div>
-                          <h3 className="text-sm font-bold text-white">
-                            Centro de Notificación WhatsApp de Inasistencias
+                          <h3 className="text-base font-bold text-slate-900">
+                            Avisos WhatsApp de Inasistencias
                           </h3>
-                          <p className="text-[10px] text-slate-400">
+                          <p className="text-xs text-slate-500">
                             Sesión: {currentSession.groupName} ({currentSession.date})
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => setIsNotifyAbsentsOpen(false)}
-                        className="text-slate-400 hover:text-white"
+                        className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </button>
                     </div>
 
-                    <p className="text-xs text-slate-300">
-                      A continuación se listan los alumnos que registraron falta o tardanza en la sesión de hoy. Puede hacer clic en el botón de WhatsApp de cada apoderado para despachar el aviso oficial pre-redactado:
+                    <p className="text-xs text-slate-600">
+                      A continuación se listan los alumnos que registraron falta o tardanza en la sesión de hoy. Haga clic para enviar el aviso pre-redactado:
                     </p>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {currentSession.attendances
                         .filter((a) => a.status === 'ABSENT' || a.status === 'LATE' || a.status === 'JUSTIFIED')
                         .map((att) => {
@@ -1420,27 +1430,27 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                           return (
                             <div
                               key={att.studentId}
-                              className="p-2.5 bg-[#0D1117] border border-slate-800 rounded-lg flex items-center justify-between gap-3 text-xs"
+                              className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl flex items-center justify-between gap-3 text-xs"
                             >
                               <div>
-                                <div className="font-bold text-white flex items-center gap-1.5">
+                                <div className="font-bold text-slate-900 flex items-center gap-2">
                                   <span>{att.studentName}</span>
                                   <span
-                                    className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                                    className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
                                       att.status === 'ABSENT'
-                                        ? 'bg-rose-950 text-rose-300'
+                                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
                                         : att.status === 'LATE'
-                                        ? 'bg-amber-950 text-amber-300'
-                                        : 'bg-sky-950 text-sky-300'
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                        : 'bg-blue-50 text-blue-700 border border-blue-200'
                                     }`}
                                   >
-                                    {att.status === 'ABSENT' ? 'FALTA' : att.status === 'LATE' ? 'TARDE' : 'JUSTIF.'}
+                                    {att.status === 'ABSENT' ? 'Falta' : att.status === 'LATE' ? 'Tardanza' : 'Justif.'}
                                   </span>
                                 </div>
-                                <div className="text-[10px] text-slate-400 mt-0.5">
+                                <div className="text-xs text-slate-500 mt-1">
                                   Apoderado:{' '}
-                                  <strong className="text-slate-200">{contact?.fullName || 'Registrado en ficha'}</strong>{' '}
-                                  ({contact?.phone || 'Sin cel'})
+                                  <strong className="text-slate-700">{contact?.fullName || 'Registrado en ficha'}</strong>{' '}
+                                  ({contact?.phone || 'Sin número'})
                                 </div>
                               </div>
 
@@ -1448,9 +1458,9 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                                 href={waUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-3 py-1.5 rounded bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs flex items-center gap-1.5 transition shadow-sm shrink-0"
+                                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs flex items-center gap-1.5 transition shadow-xs shrink-0"
                               >
-                                <Send className="w-3 h-3 text-black" />
+                                <Send className="w-3.5 h-3.5 text-white" />
                                 <span>Enviar WhatsApp</span>
                               </a>
                             </div>
@@ -1460,16 +1470,16 @@ export const WebClasses: React.FC<WebClassesProps> = ({
                       {currentSession.attendances.filter(
                         (a) => a.status === 'ABSENT' || a.status === 'LATE' || a.status === 'JUSTIFIED',
                       ).length === 0 && (
-                        <div className="py-6 text-center text-emerald-400 font-bold">
+                        <div className="py-8 text-center text-emerald-700 font-semibold text-sm">
                           ¡Excelente! No hay inasistencias registradas en esta sesión. Asistencia 100%.
                         </div>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-end pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-end pt-3 border-t border-slate-100">
                       <button
                         onClick={() => setIsNotifyAbsentsOpen(false)}
-                        className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs"
+                        className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs cursor-pointer transition"
                       >
                         Cerrar Panel
                       </button>

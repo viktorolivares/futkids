@@ -16,28 +16,26 @@ export const SaaSTrialBanner: React.FC<SaaSTrialBannerProps> = ({
 
   if (isTrial) {
     return (
-      <div className="bg-gradient-to-r from-purple-950/80 via-indigo-950/80 to-slate-900 border-b border-purple-500/30 px-4 py-2 text-xs font-mono text-purple-200 flex flex-wrap items-center justify-between gap-3 shadow-inner">
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <span className="flex items-center gap-1 bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/40 text-[10px] font-bold uppercase tracking-wider">
-            <Sparkles className="w-3 h-3 text-purple-400" />
+      <div className="bg-purple-50 border border-purple-200 rounded-2xl p-4 text-xs sm:text-sm text-purple-950 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="flex items-center gap-1.5 bg-purple-100 text-purple-800 px-2.5 py-1 rounded-lg border border-purple-200 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
             14 DÍAS DE PRUEBA PRO
           </span>
 
-          <div className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-purple-600 shrink-0" />
             <span>
-              Te quedan <strong className="text-white">{subscription.trial.remainingDays} días de prueba</strong>.
-              Disfrutas de <strong>Facturación SUNAT</strong>, <strong>WhatsApp</strong> y{' '}
-              <strong>Alumnos Ilimitados</strong> sin costo.
+              Te quedan <strong className="font-bold text-purple-900">{subscription.trial.remainingDays} días de prueba</strong> con Facturación SUNAT y alumnos ilimitados.
             </span>
           </div>
         </div>
 
         <button
           onClick={onOpenPlansModal}
-          className="px-3 py-1 bg-purple-500 hover:bg-purple-400 text-black font-bold rounded text-[11px] flex items-center gap-1.5 transition shadow-sm"
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
         >
-          <Zap className="w-3 h-3" /> Ver Planes y Activar Pro <ArrowRight className="w-3 h-3" />
+          <Zap className="w-3.5 h-3.5" /> Ver Planes y Activar Pro <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
     );
@@ -45,20 +43,20 @@ export const SaaSTrialBanner: React.FC<SaaSTrialBannerProps> = ({
 
   if (!isPro && subscription.overLimit) {
     return (
-      <div className="bg-amber-950/80 border-b border-amber-500/40 px-4 py-2 text-xs font-mono text-amber-200 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs sm:text-sm text-amber-950 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-3 flex-wrap">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
           <span>
-            <strong>Plan FREE (Límite Superado):</strong> Tienes {subscription.usage.students} alumnos activos (máximo 30).
-            Tus clases y datos siguen 100% operativos. Actualiza a Pro para matricular nuevos alumnos.
+            <strong>Plan Free (Límite Superado):</strong> Tienes {subscription.usage.students} alumnos activos (máximo 30).
+            Tus clases siguen 100% operativas. Actualiza a Pro para matricular nuevos alumnos.
           </span>
         </div>
 
         <button
           onClick={onOpenPlansModal}
-          className="px-3 py-1 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded text-[11px] flex items-center gap-1 transition shadow-sm"
+          className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
         >
-          <Zap className="w-3 h-3" /> Actualizar a PRO (S/ 99/mes)
+          <Zap className="w-3.5 h-3.5" /> Actualizar a PRO (S/ 99/mes)
         </button>
       </div>
     );
@@ -67,21 +65,21 @@ export const SaaSTrialBanner: React.FC<SaaSTrialBannerProps> = ({
   if (!isPro) {
     const studentsRemaining = Math.max(0, (subscription.limits.students || 30) - subscription.usage.students);
     return (
-      <div className="bg-[#0B1017] border-b border-slate-800 px-4 py-1.5 text-xs font-mono text-slate-400 flex flex-wrap items-center justify-between gap-2">
+      <div className="bg-white border border-slate-200 rounded-2xl p-3.5 text-xs sm:text-sm text-slate-700 flex flex-wrap items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-3">
-          <span className="text-slate-500 uppercase text-[10px]">PLAN PERMANENTE:</span>
-          <span className="text-slate-200 font-bold">FREE (S/ 0.00)</span>
-          <span className="text-slate-600">•</span>
+          <span className="text-slate-400 font-semibold uppercase text-xs">Plan Actual:</span>
+          <span className="text-slate-900 font-bold">Free</span>
+          <span className="text-slate-300">•</span>
           <span>
-            Alumnos: <strong className="text-sky-400">{subscription.usage.students} / {subscription.limits.students || 30}</strong> ({studentsRemaining} cupos restantes)
+            Alumnos: <strong className="text-emerald-700">{subscription.usage.students} / {subscription.limits.students || 30}</strong> ({studentsRemaining} cupos disponibles)
           </span>
         </div>
 
         <button
           onClick={onOpenPlansModal}
-          className="text-[11px] text-amber-400 hover:text-amber-300 underline flex items-center gap-1 font-semibold"
+          className="text-xs text-emerald-700 hover:text-emerald-900 font-semibold flex items-center gap-1 cursor-pointer"
         >
-          <Zap className="w-3 h-3" /> Desbloquear alumnos ilimitados y SUNAT
+          <Zap className="w-3.5 h-3.5" /> Desbloquear alumnos ilimitados y SUNAT
         </button>
       </div>
     );

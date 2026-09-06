@@ -227,34 +227,34 @@ export const SunatTester: React.FC = () => {
 </soapenv:Envelope>`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded p-4">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-2 font-mono">
-              <span className="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded border border-amber-500/30 font-bold uppercase">
-                SUNAT BETA ACTIVE
+            <div className="flex items-center gap-2">
+              <span className="bg-amber-50 text-amber-800 text-[10px] px-2.5 py-0.5 rounded-full border border-amber-200 font-semibold">
+                SUNAT BETA
               </span>
-              <span className="bg-sky-500/10 text-sky-400 text-[10px] px-2 py-0.5 rounded border border-sky-500/30 font-bold uppercase">
+              <span className="bg-blue-50 text-blue-800 text-[10px] px-2.5 py-0.5 rounded-full border border-blue-200 font-semibold">
                 UBL 2.1 COMPLIANT
               </span>
-              <span className="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded border border-emerald-500/30 font-bold uppercase">
-                XML-DSIG SHA-256 SIGNED
+              <span className="bg-emerald-50 text-emerald-800 text-[10px] px-2.5 py-0.5 rounded-full border border-emerald-200 font-semibold">
+                XML-DSIG SHA-256
               </span>
             </div>
-            <h2 className="text-base font-bold text-white mt-1.5 font-mono uppercase tracking-wide">
-              Integración Nativa con SUNAT Beta (Facturación Electrónica Perú)
+            <h2 className="text-base font-bold text-slate-900 mt-2 tracking-tight">
+              Transmisor & Banco de Pruebas SUNAT
             </h2>
-            <p className="text-[11px] text-slate-400 mt-1 max-w-4xl leading-relaxed">
-              Generación de comprobantes bajo estándar OASIS UBL 2.1, firma digital con clave RSA 2048 y certificado X.509, empaquetado ZIP con nomenclatura SUNAT, y transmisión SOAP con autenticación WS-Security hacia <code className="text-sky-400 font-mono">e-beta.sunat.gob.pe</code>.
+            <p className="text-xs text-slate-500 mt-1 max-w-3xl leading-relaxed">
+              Generación de comprobantes bajo estándar OASIS UBL 2.1, firma digital con clave RSA 2048 y certificado X.509, empaquetado ZIP con nomenclatura oficial y transmisión SOAP hacia <code className="text-blue-600 font-mono">e-beta.sunat.gob.pe</code>.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="bg-[#161B22] border border-slate-700/60 rounded px-3 py-1.5 text-right font-mono text-[11px]">
-              <div className="text-slate-500 text-[9px] uppercase">WebService Beta URL</div>
-              <div className="text-slate-300 truncate max-w-[220px]">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 text-right text-xs">
+              <div className="text-slate-400 text-[10px] uppercase font-semibold">WebService Beta</div>
+              <div className="text-slate-700 truncate max-w-[220px] font-mono text-[11px] mt-0.5">
                 https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService
               </div>
             </div>
@@ -263,131 +263,131 @@ export const SunatTester: React.FC = () => {
       </div>
 
       {/* Main Grid: Left Form / Right Inspector */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Form Controls */}
-        <div className="lg:col-span-5 space-y-3">
-          <div className="bg-[#0F1219] border border-slate-800 rounded p-4 space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span className="font-bold text-white text-xs uppercase tracking-wider">
-                1. Configuración del Comprobante
+        <div className="lg:col-span-5 space-y-4">
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 space-y-4 shadow-xs text-xs">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <span className="font-bold text-slate-900 text-sm">
+                Configuración del Comprobante
               </span>
-              <span className="text-[10px] text-slate-400">RUC: 20000000001 (BETA)</span>
+              <span className="text-[11px] text-slate-400 font-mono">RUC: 20000000001 (BETA)</span>
             </div>
 
             {/* Document Type Selector */}
             <div>
-              <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+              <label className="text-xs font-semibold text-slate-700 block mb-1.5">
                 Tipo de Comprobante
               </label>
-              <div className="grid grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-2 gap-2">
                 {[
                   { id: '03', label: 'Boleta de Venta (03)', sub: 'B001 - DNI' },
                   { id: '01', label: 'Factura Electrónica (01)', sub: 'F001 - RUC' },
                   { id: '07', label: 'Nota de Crédito (07)', sub: 'FC01 - Anulación' },
-                  { id: '08', label: 'Nota de Débito (08)', sub: 'FD01 - Ajuste/Mora' },
+                  { id: '08', label: 'Nota de Débito (08)', sub: 'FD01 - Ajuste' },
                 ].map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleDocTypeChange(item.id as any)}
-                    className={`p-2 rounded border text-left transition ${
+                    className={`p-2.5 rounded-2xl border text-left transition cursor-pointer ${
                       docType === item.id
-                        ? 'border-sky-500 bg-sky-500/10 text-white'
-                        : 'border-slate-800 bg-[#161B22] text-slate-400 hover:text-slate-200'
+                        ? 'border-blue-500 bg-blue-50/80 text-blue-900 shadow-xs'
+                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
                     }`}
                   >
-                    <div className="font-bold text-[11px]">{item.label}</div>
-                    <div className="text-[9px] text-slate-500">{item.sub}</div>
+                    <div className="font-semibold text-xs">{item.label}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5">{item.sub}</div>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Serie y Correlativo */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-semibold text-slate-700 block mb-1">
                   Serie
                 </label>
                 <input
                   type="text"
                   value={series}
                   onChange={(e) => setSeries(e.target.value.toUpperCase())}
-                  className="w-full bg-[#161B22] border border-slate-700/60 rounded px-2.5 py-1.5 text-white font-mono text-xs focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono text-xs focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-semibold text-slate-700 block mb-1">
                   Correlativo
                 </label>
                 <input
                   type="number"
                   value={correlative}
                   onChange={(e) => setCorrelative(Number(e.target.value))}
-                  className="w-full bg-[#161B22] border border-slate-700/60 rounded px-2.5 py-1.5 text-white font-mono text-xs focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono text-xs focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             {/* Cliente */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">
                     Tipo Doc
                   </label>
-                  <div className="bg-[#161B22] border border-slate-700/60 rounded px-2 py-1.5 text-slate-300 text-xs">
+                  <div className="bg-slate-100 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-600 text-xs text-center font-medium">
                     {docType === '01' ? '6 (RUC)' : '1 (DNI)'}
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">
                     Número de Documento
                   </label>
                   <input
                     type="text"
                     value={clientDocNum}
                     onChange={(e) => setClientDocNum(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700/60 rounded px-2.5 py-1.5 text-white font-mono text-xs focus:border-sky-500 focus:outline-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono text-xs focus:bg-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
+                <label className="text-xs font-semibold text-slate-700 block mb-1">
                   Razón Social / Nombre del Cliente
                 </label>
                 <input
                   type="text"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700/60 rounded px-2.5 py-1.5 text-white font-mono text-xs focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs focus:bg-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
 
             {/* Referencia si es NC o ND */}
             {(docType === '07' || docType === '08') && (
-              <div className="p-2.5 bg-amber-500/5 border border-amber-500/20 rounded space-y-2">
-                <div className="text-[10px] font-bold text-amber-400 uppercase">
+              <div className="p-3 bg-amber-50 border border-amber-200/80 rounded-2xl space-y-2">
+                <div className="text-xs font-semibold text-amber-900">
                   Datos de Referencia ({docType === '07' ? 'Catálogo 09' : 'Catálogo 10'})
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[9px] text-slate-400 block mb-0.5">Doc. Modificado</label>
+                    <label className="text-[11px] text-slate-500 block mb-0.5">Doc. Modificado</label>
                     <input
                       type="text"
                       value={refDoc}
                       onChange={(e) => setRefDoc(e.target.value)}
-                      className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-slate-800 font-mono text-xs focus:outline-none focus:border-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] text-slate-400 block mb-0.5">Motivo / Sustento</label>
+                    <label className="text-[11px] text-slate-500 block mb-0.5">Motivo</label>
                     <input
                       type="text"
                       value={refReason}
                       onChange={(e) => setRefReason(e.target.value)}
-                      className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs"
+                      className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-slate-800 text-xs focus:outline-none focus:border-amber-500"
                     />
                   </div>
                 </div>
@@ -396,39 +396,39 @@ export const SunatTester: React.FC = () => {
 
             {/* Concepto & Importes */}
             <div>
-              <label className="text-[10px] text-slate-400 uppercase tracking-wider block mb-1">
-                Descripción / Concepto Deportivo
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Descripción / Concepto
               </label>
               <input
                 type="text"
                 value={concept}
                 onChange={(e) => setConcept(e.target.value)}
-                className="w-full bg-[#161B22] border border-slate-700/60 rounded px-2.5 py-1.5 text-white font-mono text-xs focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs focus:bg-white focus:outline-none focus:border-blue-500"
               />
             </div>
 
             {/* Cálculo Tributario */}
-            <div className="p-3 bg-[#161B22] border border-slate-800 rounded space-y-1.5">
-              <div className="flex justify-between items-center text-slate-400 text-[11px]">
-                <span>Total a Cobrar (PEN):</span>
+            <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-semibold text-slate-700">Total a Cobrar (PEN):</span>
                 <input
                   type="number"
                   value={priceTotal}
                   onChange={(e) => setPriceTotal(Number(e.target.value))}
-                  className="w-24 text-right bg-[#0F1219] border border-slate-700 rounded px-2 py-0.5 text-white font-bold"
+                  className="w-28 text-right bg-white border border-slate-300 rounded-xl px-2.5 py-1 text-slate-900 font-bold shadow-xs focus:outline-none focus:border-blue-500"
                 />
               </div>
-              <div className="flex justify-between text-slate-500 text-[10px]">
-                <span>Valor Venta (Subtotal sin IGV):</span>
-                <span className="font-mono text-slate-300">S/ {subtotal.toFixed(2)}</span>
+              <div className="flex justify-between text-slate-500 text-xs">
+                <span>Valor Venta (sin IGV):</span>
+                <span className="font-mono text-slate-700">S/ {subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-slate-500 text-[10px]">
-                <span>IGV (18% Catálogo 07 Código 10):</span>
-                <span className="font-mono text-slate-300">S/ {igv.toFixed(2)}</span>
+              <div className="flex justify-between text-slate-500 text-xs">
+                <span>IGV (18% Catálogo 07):</span>
+                <span className="font-mono text-slate-700">S/ {igv.toFixed(2)}</span>
               </div>
-              <div className="pt-1.5 border-t border-slate-800 flex justify-between font-bold text-xs text-white">
+              <div className="pt-2 border-t border-slate-200 flex justify-between font-bold text-xs text-slate-900">
                 <span>Importe Total:</span>
-                <span className="text-emerald-400 font-mono">S/ {priceTotal.toFixed(2)}</span>
+                <span className="text-emerald-700 font-mono text-sm">S/ {priceTotal.toFixed(2)}</span>
               </div>
             </div>
 
@@ -436,17 +436,17 @@ export const SunatTester: React.FC = () => {
             <button
               onClick={handleEmit}
               disabled={isSubmitting}
-              className="w-full py-2.5 px-4 rounded bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-black font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 transition disabled:opacity-50"
+              className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-xs transition disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Firmando y Transmitiendo a SUNAT...</span>
+                  <span>Transmitiendo a SUNAT...</span>
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Emitir y Enviar a SUNAT Beta</span>
+                  <span>Transmitir Comprobante a SUNAT</span>
                 </>
               )}
             </button>
@@ -454,26 +454,26 @@ export const SunatTester: React.FC = () => {
         </div>
 
         {/* Right Column: Output Inspector */}
-        <div className="lg:col-span-7 space-y-3">
-          <div className="bg-[#0F1219] border border-slate-800 rounded p-4 flex flex-col font-mono text-xs">
+        <div className="lg:col-span-7 space-y-4">
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 flex flex-col text-xs shadow-xs">
             {/* Top Sub-tabs */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
-              <div className="flex space-x-1">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4 flex-wrap gap-2">
+              <div className="flex bg-slate-100 p-1 rounded-xl gap-1">
                 {[
-                  { id: 'result', label: 'Respuesta SUNAT & CDR', icon: CheckCircle2 },
-                  { id: 'signedXml', label: 'XML UBL 2.1 Firmado', icon: FileCode },
-                  { id: 'soap', label: 'SOAP & WS-Security', icon: ShieldCheck },
-                  { id: 'faults', label: 'Simulador de Errores', icon: Bug },
+                  { id: 'result', label: 'Respuesta & CDR', icon: CheckCircle2 },
+                  { id: 'signedXml', label: 'XML UBL 2.1', icon: FileCode },
+                  { id: 'soap', label: 'Sobre SOAP', icon: ShieldCheck },
+                  { id: 'faults', label: 'Errores', icon: Bug },
                 ].map((t) => {
                   const Icon = t.icon;
                   return (
                     <button
                       key={t.id}
                       onClick={() => setActiveSubTab(t.id as any)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer ${
                         activeSubTab === t.id
-                          ? 'bg-slate-800 text-sky-400 border border-slate-700'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-white text-slate-900 shadow-xs'
+                          : 'text-slate-500 hover:text-slate-900'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -483,69 +483,69 @@ export const SunatTester: React.FC = () => {
                 })}
               </div>
 
-              <span className="text-[10px] text-slate-500">
-                Archivo: {zipFileName}
+              <span className="text-xs text-slate-400 font-mono">
+                {zipFileName}
               </span>
             </div>
 
             {/* TAB 1: RESULT & CDR */}
             {activeSubTab === 'result' && (
-              <div className="space-y-3">
-                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="space-y-4">
+                <div className="p-4 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-emerald-300 text-xs">
+                      <span className="font-bold text-emerald-900 text-xs">
                         ESTADO SUNAT: ACEPTADO (CÓDIGO {responseState.sunatCode})
                       </span>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded font-mono">
+                      <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">
                         200 OK
                       </span>
                     </div>
-                    <div className="text-slate-300 text-xs mt-1">
+                    <div className="text-emerald-800 text-xs mt-1">
                       {responseState.sunatMessage}
                     </div>
-                    <div className="text-[10px] text-slate-500 mt-1">
+                    <div className="text-[11px] text-emerald-700/70 mt-1">
                       Hora de recepción en servidor SUNAT: {responseState.sentAt}
                     </div>
                   </div>
                 </div>
 
                 {/* Technical Meta Card */}
-                <div className="grid grid-cols-2 gap-2 text-[11px]">
-                  <div className="bg-[#161B22] p-2.5 rounded border border-slate-800">
-                    <div className="text-slate-500 text-[10px] uppercase">Documento Identificador</div>
-                    <div className="text-white font-bold">{documentId}</div>
-                    <div className="text-slate-400 text-[10px] mt-1">
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                    <div className="text-slate-400 text-[10px] uppercase font-semibold">Documento</div>
+                    <div className="text-slate-900 font-bold font-mono mt-0.5">{documentId}</div>
+                    <div className="text-slate-500 text-[11px] mt-1">
                       Tipo SUNAT: {docType} ({docType === '01' ? 'Factura' : docType === '03' ? 'Boleta' : docType === '07' ? 'Nota Crédito' : 'Nota Débito'})
                     </div>
                   </div>
-                  <div className="bg-[#161B22] p-2.5 rounded border border-slate-800">
-                    <div className="text-slate-500 text-[10px] uppercase">Firma Digital (Hash Digest)</div>
-                    <div className="text-sky-400 font-mono text-[10px] truncate">{responseState.digestValue}</div>
-                    <div className="text-slate-400 text-[10px] mt-1">Algoritmo: RSA-SHA256 (XML-DSig)</div>
+                  <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                    <div className="text-slate-400 text-[10px] uppercase font-semibold">Firma Digital (Hash)</div>
+                    <div className="text-blue-600 font-mono text-[11px] truncate mt-0.5">{responseState.digestValue}</div>
+                    <div className="text-slate-500 text-[11px] mt-1">Algoritmo: RSA-SHA256 (XML-DSig)</div>
                   </div>
                 </div>
 
                 {/* CDR Notes */}
-                <div className="bg-[#161B22] p-3 rounded border border-slate-800 space-y-1">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase">
-                    Observaciones y Trazas en Constancia de Recepción (CDR):
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-1.5">
+                  <div className="text-xs font-semibold text-slate-700">
+                    Constancia de Recepción (CDR):
                   </div>
                   {responseState.notes.map((note, idx) => (
-                    <div key={idx} className="text-[11px] text-slate-300 flex items-center gap-1.5">
-                      <ChevronRight className="w-3 h-3 text-sky-400" />
+                    <div key={idx} className="text-xs text-slate-600 flex items-center gap-1.5">
+                      <ChevronRight className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                       <span>{note}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Prisma Database Storage Preview */}
-                <div className="bg-[#161B22] p-3 rounded border border-slate-800">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">
-                    Persistencia en Modelo Prisma <code className="text-sky-400">Invoice</code>:
+                {/* Database Storage Preview */}
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+                  <div className="text-xs font-semibold text-slate-700 mb-2">
+                    Registro en Base de Datos:
                   </div>
-                  <pre className="text-[10px] text-slate-400 bg-[#0B0E14] p-2 rounded overflow-x-auto">
+                  <pre className="text-[11px] text-slate-700 bg-white border border-slate-200 p-3 rounded-xl overflow-x-auto font-mono">
 {`{
   id: "inv-${formattedCorrelative}",
   series: "${series}",
@@ -553,9 +553,6 @@ export const SunatTester: React.FC = () => {
   status: "ACCEPTED",
   sunatCode: "0",
   sunatMessage: "${responseState.sunatMessage}",
-  ublXml: "<Invoice>...</Invoice>",
-  signedXml: "<Invoice><ds:Signature/>...</Invoice>",
-  sunatCdr: "<ApplicationResponse>...</ApplicationResponse>",
   sentAt: "${new Date().toISOString()}"
 }`}
                   </pre>
@@ -565,20 +562,20 @@ export const SunatTester: React.FC = () => {
 
             {/* TAB 2: SIGNED XML */}
             {activeSubTab === 'signedXml' && (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">
-                    Estructura OASIS UBL 2.1 con bloque <code className="text-sky-400">&lt;ds:Signature&gt;</code> incrustado:
+                  <span className="text-xs text-slate-500">
+                    Estructura OASIS UBL 2.1 con bloque <code className="text-blue-600 font-mono">&lt;ds:Signature&gt;</code>:
                   </span>
                   <button
                     onClick={() => copyToClipboard(sampleXmlOutput, 'xml')}
-                    className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-700"
+                    className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-900 px-3 py-1 rounded-lg bg-white border border-slate-200 shadow-xs cursor-pointer"
                   >
-                    {copied === 'xml' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied === 'xml' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied === 'xml' ? 'Copiado' : 'Copiar XML'}</span>
                   </button>
                 </div>
-                <pre className="p-3 bg-[#0B0E14] border border-slate-800 rounded text-[10px] text-slate-300 font-mono overflow-x-auto max-h-[380px] leading-relaxed">
+                <pre className="p-4 bg-slate-900 border border-slate-800 rounded-2xl text-[11px] text-slate-300 font-mono overflow-x-auto max-h-[380px] leading-relaxed">
                   {sampleXmlOutput}
                 </pre>
               </div>
@@ -586,20 +583,20 @@ export const SunatTester: React.FC = () => {
 
             {/* TAB 3: SOAP & WS-SECURITY */}
             {activeSubTab === 'soap' && (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">
-                    Sobre SOAP 1.1 con cabecera <code className="text-sky-400">wsse:UsernameToken</code> enviada a SUNAT:
+                  <span className="text-xs text-slate-500">
+                    Sobre SOAP 1.1 con autenticación <code className="text-blue-600 font-mono">wsse:UsernameToken</code>:
                   </span>
                   <button
                     onClick={() => copyToClipboard(sampleSoapEnvelope, 'soap')}
-                    className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-800 border border-slate-700"
+                    className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-900 px-3 py-1 rounded-lg bg-white border border-slate-200 shadow-xs cursor-pointer"
                   >
-                    {copied === 'soap' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied === 'soap' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied === 'soap' ? 'Copiado' : 'Copiar SOAP'}</span>
                   </button>
                 </div>
-                <pre className="p-3 bg-[#0B0E14] border border-slate-800 rounded text-[10px] text-slate-300 font-mono overflow-x-auto max-h-[380px] leading-relaxed">
+                <pre className="p-4 bg-slate-900 border border-slate-800 rounded-2xl text-[11px] text-slate-300 font-mono overflow-x-auto max-h-[380px] leading-relaxed">
                   {sampleSoapEnvelope}
                 </pre>
               </div>
@@ -608,52 +605,52 @@ export const SunatTester: React.FC = () => {
             {/* TAB 4: ERROR SIMULATOR */}
             {activeSubTab === 'faults' && (
               <div className="space-y-3">
-                <div className="text-[11px] text-slate-300 leading-relaxed">
-                  Prueba de resiliencia: Excepciones de dominio mapeadas a los códigos de rechazo y SOAP Faults oficiales de SUNAT:
+                <div className="text-xs text-slate-600 leading-relaxed">
+                  Códigos de rechazo y excepciones oficiales de SUNAT mapeadas en el sistema:
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {[
                     {
                       code: '1033',
                       name: 'SunatDuplicateException',
-                      fault: 'soapenv:Client.1033',
+                      fault: 'Client.1033',
                       msg: 'El comprobante fue registrado previamente con otros datos.',
-                      action: 'Idempotencia: se detecta comprobante existente y no se vuelve a crear.',
+                      action: 'Idempotencia: se detecta comprobante existente y no se vuelve a emitir.',
                     },
                     {
                       code: '0100',
                       name: 'SunatAuthenticationException',
-                      fault: 'soapenv:Client.0100',
+                      fault: 'Client.0100',
                       msg: 'El RUC no coincide con el usuario SOL ingresado.',
-                      action: 'Valida credenciales SOL en BillingSetting antes del reintento.',
+                      action: 'Valida credenciales SOL en Ajustes antes del reintento.',
                     },
                     {
                       code: '2015',
                       name: 'SunatRejectionException',
-                      fault: 'soapenv:Client.2015',
+                      fault: 'Client.2015',
                       msg: 'El RUC del receptor no está activo en el padrón de SUNAT.',
-                      action: 'Marca invoice como REJECTED e informa el motivo legal al usuario.',
+                      action: 'Marca el comprobante como rechazado e informa al usuario.',
                     },
                     {
                       code: 'TIMEOUT',
                       name: 'SunatTimeoutException',
-                      fault: 'Network Timeout > 30000ms',
+                      fault: 'Timeout > 30s',
                       msg: 'El servicio de SUNAT Beta no respondió a tiempo.',
-                      action: 'Encola reintento automático con backoff exponencial en BullMQ.',
+                      action: 'Encola reintento automático con reenvío en segundo plano.',
                     },
                   ].map((fault, idx) => (
-                    <div key={idx} className="p-2.5 bg-[#161B22] border border-slate-800 rounded">
+                    <div key={idx} className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-rose-400 text-[11px]">
+                        <span className="font-bold text-rose-700 text-xs">
                           [{fault.code}] {fault.name}
                         </span>
-                        <span className="text-[10px] bg-rose-500/10 text-rose-400 px-1.5 py-0.2 rounded font-mono">
+                        <span className="text-[10px] bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full font-mono font-medium">
                           {fault.fault}
                         </span>
                       </div>
-                      <div className="text-slate-300 text-[11px] mt-1">{fault.msg}</div>
-                      <div className="text-slate-500 text-[10px] mt-0.5">{fault.action}</div>
+                      <div className="text-slate-700 text-xs mt-1">{fault.msg}</div>
+                      <div className="text-slate-400 text-[11px] mt-0.5">{fault.action}</div>
                     </div>
                   ))}
                 </div>

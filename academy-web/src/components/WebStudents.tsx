@@ -241,29 +241,29 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
     switch (student.scholarshipType) {
       case 'FULL_SCHOLARSHIP':
         return (
-          <span className="inline-flex items-center gap-1 bg-purple-500/15 text-purple-300 border border-purple-500/40 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap">
-            <Award className="w-2.5 h-2.5 text-purple-400 shrink-0" />
-            Beca 100% Exonerado
+          <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-800 border border-purple-200 text-xs px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+            <Award className="w-3 h-3 text-purple-600 shrink-0" />
+            Beca 100%
           </span>
         );
       case 'HALF_SCHOLARSHIP':
         return (
-          <span className="inline-flex items-center gap-1 bg-amber-500/15 text-amber-300 border border-amber-500/40 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap">
-            <Percent className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+            <Percent className="w-3 h-3 text-amber-600 shrink-0" />
             Semibeca 50%
           </span>
         );
       case 'SIBLING_DISCOUNT':
         return (
-          <span className="inline-flex items-center gap-1 bg-sky-500/15 text-sky-300 border border-sky-500/40 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap">
-            <Tag className="w-2.5 h-2.5 text-sky-400 shrink-0" />
-            Desc. Hermano (-{student.scholarshipDiscountPct || 15}%)
+          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 text-xs px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+            <Tag className="w-3 h-3 text-blue-600 shrink-0" />
+            Hermano (-{student.scholarshipDiscountPct || 15}%)
           </span>
         );
       case 'CUSTOM_DISCOUNT':
         return (
-          <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase whitespace-nowrap">
-            <Tag className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+            <Tag className="w-3 h-3 text-emerald-600 shrink-0" />
             {student.scholarshipFixedDiscount
               ? `-S/ ${student.scholarshipFixedDiscount.toFixed(2)}`
               : `-${student.scholarshipDiscountPct || 20}%`}{' '}
@@ -276,60 +276,62 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
   };
 
   return (
-    <div className="space-y-4 font-mono text-xs">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header and Controls */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-sky-400" />
-            <h1 className="text-base font-bold text-white uppercase tracking-wide">
-              Directorio de Alumnos y Familias ({students.length})
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="p-1.5 rounded-xl bg-blue-50 text-blue-600">
+              <Users className="w-4 h-4" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Alumnos y Familias ({students.length})
             </h1>
           </div>
-          <p className="text-slate-400 text-[11px] mt-0.5">
-            Control de matrículas, historial de asistencia, datos de contacto de apoderados y estado de pensiones.
+          <p className="text-slate-500 text-sm max-w-2xl">
+            Gestión integral de matrículas, fichas de contacto, asistencia regular y estado de cuotas.
           </p>
         </div>
 
         <button
           onClick={handleOpenNewStudent}
-          className={`px-3.5 py-2 rounded font-bold uppercase tracking-wider text-xs flex items-center gap-1.5 transition shadow-sm ${
+          className={`px-5 py-3 rounded-2xl font-semibold text-sm flex items-center gap-2 transition cursor-pointer shadow-xs ${
             isStudentLimitReached
-              ? 'bg-amber-500 hover:bg-amber-400 text-black'
-              : 'bg-sky-500 hover:bg-sky-400 text-black'
+              ? 'bg-amber-500 hover:bg-amber-600 text-white'
+              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
           }`}
         >
-          {isStudentLimitReached ? <Zap className="w-4 h-4" /> : <Plus className="w-4 h-4 stroke-[3]" />}
-          <span>{isStudentLimitReached ? 'Límite de Alumnos (Actualizar a Pro)' : 'Inscribir Nuevo Alumno'}</span>
+          {isStudentLimitReached ? <Zap className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          <span>{isStudentLimitReached ? 'Límite (Ver Planes)' : 'Inscribir Nuevo Alumno'}</span>
         </button>
       </div>
 
       {/* Sub-Navigation: Alumnos vs Familias */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-1">
+      <div className="flex items-center gap-2 border-b border-slate-200">
         <button
           onClick={() => setActiveSubTab('STUDENTS')}
-          className={`px-3 py-2 rounded-t font-bold flex items-center gap-2 transition cursor-pointer text-xs ${
+          className={`px-5 py-3 font-semibold flex items-center gap-2 transition cursor-pointer text-sm border-b-2 -mb-px ${
             activeSubTab === 'STUDENTS'
-              ? 'bg-[#161B22] text-sky-400 border-b-2 border-sky-400'
-              : 'text-slate-400 hover:text-white'
+              ? 'border-emerald-600 text-emerald-700'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Users className="w-3.5 h-3.5" />
+          <Users className="w-4 h-4" />
           <span>Alumnos Matriculados ({students.length})</span>
         </button>
 
         <button
           onClick={() => setActiveSubTab('FAMILIES')}
-          className={`px-3 py-2 rounded-t font-bold flex items-center gap-2 transition cursor-pointer text-xs ${
+          className={`px-5 py-3 font-semibold flex items-center gap-2 transition cursor-pointer text-sm border-b-2 -mb-px ${
             activeSubTab === 'FAMILIES'
-              ? 'bg-[#161B22] text-purple-300 border-b-2 border-purple-400'
-              : 'text-slate-400 hover:text-white'
+              ? 'border-purple-600 text-purple-700'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          <Building className="w-3.5 h-3.5" />
-          <span>Familias & Apoderados ({families.length})</span>
-          <span className="text-[9px] bg-purple-950/70 text-purple-300 border border-purple-500/40 px-1.5 py-0.2 rounded font-bold">
-            Estado de Cuenta Consolidado
+          <Building className="w-4 h-4" />
+          <span>Familias y Apoderados ({families.length})</span>
+          <span className="text-xs bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full">
+            Consolidado
           </span>
         </button>
       </div>
@@ -354,283 +356,284 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
         />
       ) : (
         <>
+          {/* Plan Limit Warning Banner if at capacity */}
+          {isStudentLimitReached && (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs sm:text-sm text-amber-950 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                <span>
+                  Has alcanzado el límite de {subscription?.limits.students || 30} alumnos de tu plan gratuito ({students.length} activos).
+                  Tus alumnos existentes siguen 100% operativos.
+                </span>
+              </div>
+              <button
+                onClick={onOpenPlansModal}
+                className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs transition whitespace-nowrap cursor-pointer"
+              >
+                Actualizar a Pro
+              </button>
+            </div>
+          )}
 
-      {/* Plan Limit Warning Banner if at capacity */}
-      {isStudentLimitReached && (
-        <div className="bg-amber-950/60 border border-amber-500/40 rounded p-3 text-xs font-mono text-amber-200 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>
-              Has alcanzado el límite de {subscription?.limits.students || 30} alumnos de tu plan gratuito ({students.length} activos).
-              Tus alumnos existentes siguen 100% operativos.
-            </span>
+          {/* Filter and Search Toolbar */}
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2 flex-1 min-w-[260px]">
+              <div className="relative w-full">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  placeholder="Buscar por alumno, DNI o familia..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-2 text-slate-800 placeholder-slate-400 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
+                />
+              </div>
+            </div>
+
+            {/* Quick Category Filters */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-slate-400 text-xs font-semibold uppercase">Filtrar:</span>
+              {[
+                { id: 'ALL', label: `Todos (${students.length})` },
+                {
+                  id: 'ACTIVE',
+                  label: `Regulares (${
+                    students.filter(
+                      (s) => s.status === 'ACTIVE' && (!s.scholarshipType || s.scholarshipType === 'NONE')
+                    ).length
+                  })`,
+                },
+                {
+                  id: 'SCHOLARSHIP',
+                  label: `Becas (${
+                    students.filter((s) => s.scholarshipType && s.scholarshipType !== 'NONE').length
+                  })`,
+                  badge: true,
+                },
+                {
+                  id: 'DEBT',
+                  label: `Con Deuda (${students.filter((s) => s.balance > 0).length})`,
+                },
+                {
+                  id: 'TRIAL',
+                  label: `Prueba (${students.filter((s) => s.status === 'TRIAL').length})`,
+                },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setStatusFilter(item.id as any)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer ${
+                    statusFilter === item.id
+                      ? item.id === 'SCHOLARSHIP'
+                        ? 'bg-purple-600 text-white shadow-xs'
+                        : 'bg-emerald-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {item.badge && <Award className="w-3 h-3 text-purple-200" />}
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <button
-            onClick={onOpenPlansModal}
-            className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded text-[11px] transition whitespace-nowrap"
-          >
-            Actualizar a PRO
-          </button>
-        </div>
-      )}
 
-      {/* Filter and Search Toolbar */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded p-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 flex-1 min-w-[260px]">
-          <div className="relative w-full">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
-            <input
-              type="text"
-              placeholder="Buscar por alumno, DNI o familia..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#161B22] border border-slate-800 rounded pl-8 pr-3 py-1.5 text-slate-200 placeholder-slate-500 text-xs focus:border-sky-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Quick Category Filters */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="text-slate-500 text-[10px] uppercase">Filtro:</span>
-          {[
-            { id: 'ALL', label: `Todos (${students.length})` },
-            {
-              id: 'ACTIVE',
-              label: `Regulares (${
-                students.filter(
-                  (s) => s.status === 'ACTIVE' && (!s.scholarshipType || s.scholarshipType === 'NONE')
-                ).length
-              })`,
-            },
-            {
-              id: 'SCHOLARSHIP',
-              label: `Becas / Subsidios (${
-                students.filter((s) => s.scholarshipType && s.scholarshipType !== 'NONE').length
-              })`,
-              badge: true,
-            },
-            {
-              id: 'DEBT',
-              label: `Con Deuda (${students.filter((s) => s.balance > 0).length})`,
-            },
-            {
-              id: 'TRIAL',
-              label: `Clase Prueba (${students.filter((s) => s.status === 'TRIAL').length})`,
-            },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setStatusFilter(item.id as any)}
-              className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase transition flex items-center gap-1.5 ${
-                statusFilter === item.id
-                  ? item.id === 'SCHOLARSHIP'
-                    ? 'bg-purple-500 text-white shadow-sm'
-                    : 'bg-sky-500 text-black shadow-sm'
-                  : 'bg-[#161B22] text-slate-400 hover:text-white border border-slate-800'
-              }`}
-            >
-              {item.badge && <Award className="w-3 h-3 text-purple-300" />}
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Student List Table */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-800 bg-[#161B22] text-slate-400 text-[10px] uppercase tracking-wider">
-                <th className="p-3">Alumno & Documento</th>
-                <th className="p-3">Categoría / Deporte</th>
-                <th className="p-3">Familia / Apoderado</th>
-                <th className="p-3">Asistencia</th>
-                <th className="p-3">Condición / Pensión</th>
-                <th className="p-3 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/60">
-              {filteredStudents.map((student) => {
-                const hasScholarship =
-                  student.scholarshipType && student.scholarshipType !== 'NONE';
-                const effectiveFee =
-                  student.finalMonthlyFee !== undefined
-                    ? student.finalMonthlyFee
-                    : student.scholarshipType === 'FULL_SCHOLARSHIP'
-                    ? 0
-                    : student.scholarshipType === 'HALF_SCHOLARSHIP'
-                    ? student.monthlyFee * 0.5
-                    : student.monthlyFee;
-
-                return (
-                  <tr
-                    key={student.id}
-                    className="hover:bg-slate-800/30 transition text-slate-300"
-                  >
-                    <td className="p-3">
-                      <div className="font-bold text-white text-xs flex items-center gap-2 flex-wrap">
-                        <span>{student.name}</span>
-                        {student.status === 'TRIAL' && (
-                          <span className="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[9px] px-1.5 py-0.2 rounded font-bold">
-                            TRIAL
-                          </span>
-                        )}
-                        {hasScholarship && getScholarshipBadge(student)}
-                      </div>
-                      <div className="text-slate-500 text-[10px] mt-0.5">
-                        {student.documentType}: {student.documentNumber} • {student.age} años
-                      </div>
-                      {hasScholarship && student.scholarshipReason && (
-                        <div className="text-[9px] text-purple-400/90 mt-0.5 italic flex items-center gap-1">
-                          <span>Motivo: {student.scholarshipReason}</span>
-                        </div>
-                      )}
-                    </td>
-
-                    <td className="p-3">
-                      <div className="text-sky-400 font-semibold">{student.groupName}</div>
-                      <div className="text-slate-500 text-[10px]">{student.sport}</div>
-                    </td>
-
-                    <td className="p-3">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-slate-200">{student.contactName}</span>
-                        {student.familyName && (
-                          <button
-                            onClick={() => setActiveSubTab('FAMILIES')}
-                            className="text-[9px] bg-purple-950/60 hover:bg-purple-900/80 text-purple-300 border border-purple-500/30 px-1.5 py-0.2 rounded font-mono cursor-pointer transition"
-                            title="Ver en Directorio de Familias"
-                          >
-                            {student.familyName}
-                          </button>
-                        )}
-                      </div>
-                      <div className="text-slate-400 text-[10px] flex items-center gap-1 mt-0.5">
-                        <Phone className="w-2.5 h-2.5 text-slate-500" />
-                        <span>{student.phone}</span>
-                      </div>
-                    </td>
-
-                    <td className="p-3">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className="bg-emerald-400 h-full rounded-full"
-                            style={{ width: `${student.attendanceRate}%` }}
-                          ></div>
-                        </div>
-                        <span className="font-bold text-emerald-400 text-[10px]">
-                          {student.attendanceRate}%
-                        </span>
-                      </div>
-                      <div className="text-[9px] text-slate-500">Puntualidad regular</div>
-                    </td>
-
-                    <td className="p-3">
-                      <div className="flex items-baseline gap-1.5 flex-wrap">
-                        {hasScholarship && (
-                          <span className="line-through text-slate-500 text-[10px]">
-                            S/ {student.monthlyFee.toFixed(2)}
-                          </span>
-                        )}
-                        <span
-                          className={`font-bold ${
-                            student.scholarshipType === 'FULL_SCHOLARSHIP'
-                              ? 'text-purple-300'
-                              : hasScholarship
-                              ? 'text-emerald-400'
-                              : 'text-white'
-                          }`}
-                        >
-                          S/ {effectiveFee.toFixed(2)}
-                        </span>
-                        <span className="text-slate-500 text-[10px] font-normal"> /mes</span>
-                      </div>
-
-                      <div className="mt-0.5">
-                        {student.scholarshipType === 'FULL_SCHOLARSHIP' ? (
-                          <span className="text-purple-300 text-[10px] font-bold flex items-center gap-1">
-                            <CheckCircle2 className="w-2.5 h-2.5" />
-                            <span>100% Exonerado</span>
-                          </span>
-                        ) : student.balance > 0 ? (
-                          <span className="text-amber-400 font-bold text-[10px]">
-                            Deuda: S/ {student.balance.toFixed(2)}
-                          </span>
-                        ) : (
-                          <span className="text-emerald-400 text-[10px] flex items-center gap-1 font-semibold">
-                            <CheckCircle2 className="w-2.5 h-2.5" />
-                            <span>Al día</span>
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="p-3 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => setSelectedStudent(student)}
-                          className="px-2 py-1 rounded bg-[#161B22] hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-[10px] font-bold"
-                        >
-                          Ficha
-                        </button>
-
-                        {student.balance > 0 && (
-                          <button
-                            onClick={() => onQuickPay(student)}
-                            className="px-2 py-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1"
-                          >
-                            <DollarSign className="w-3 h-3" />
-                            <span>Cobrar</span>
-                          </button>
-                        )}
-                      </div>
-                    </td>
+          {/* Main Student List Table */}
+          <div className="bg-white border border-slate-200/80 rounded-3xl overflow-hidden shadow-xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/60 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+                    <th className="p-4 pl-6">Alumno y Documento</th>
+                    <th className="p-4">Categoría / Deporte</th>
+                    <th className="p-4">Familia / Contacto</th>
+                    <th className="p-4">Asistencia</th>
+                    <th className="p-4">Pensión / Saldo</th>
+                    <th className="p-4 pr-6 text-right">Acciones</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm">
+                  {filteredStudents.map((student) => {
+                    const hasScholarship =
+                      student.scholarshipType && student.scholarshipType !== 'NONE';
+                    const effectiveFee =
+                      student.finalMonthlyFee !== undefined
+                        ? student.finalMonthlyFee
+                        : student.scholarshipType === 'FULL_SCHOLARSHIP'
+                        ? 0
+                        : student.scholarshipType === 'HALF_SCHOLARSHIP'
+                        ? student.monthlyFee * 0.5
+                        : student.monthlyFee;
+
+                    return (
+                      <tr
+                        key={student.id}
+                        className="hover:bg-slate-50/80 transition text-slate-700"
+                      >
+                        <td className="p-4 pl-6">
+                          <div className="font-bold text-slate-900 flex items-center gap-2 flex-wrap">
+                            <span>{student.name}</span>
+                            {student.status === 'TRIAL' && (
+                              <span className="bg-amber-50 text-amber-800 border border-amber-200 text-xs px-2 py-0.5 rounded-full font-semibold">
+                                Prueba
+                              </span>
+                            )}
+                            {hasScholarship && getScholarshipBadge(student)}
+                          </div>
+                          <div className="text-slate-400 text-xs mt-0.5">
+                            {student.documentType}: {student.documentNumber} • {student.age} años
+                          </div>
+                          {hasScholarship && student.scholarshipReason && (
+                            <div className="text-xs text-purple-700 mt-0.5 italic">
+                              Motivo: {student.scholarshipReason}
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="p-4">
+                          <div className="font-semibold text-slate-900">{student.groupName}</div>
+                          <div className="text-slate-400 text-xs">{student.sport}</div>
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-slate-800 font-medium">{student.contactName}</span>
+                            {student.familyName && (
+                              <button
+                                onClick={() => setActiveSubTab('FAMILIES')}
+                                className="text-xs bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-2 py-0.5 rounded-lg cursor-pointer transition font-medium"
+                                title="Ver en Familias"
+                              >
+                                {student.familyName}
+                              </button>
+                            )}
+                          </div>
+                          <div className="text-slate-500 text-xs flex items-center gap-1 mt-0.5">
+                            <Phone className="w-3 h-3 text-slate-400" />
+                            <span>{student.phone}</span>
+                          </div>
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 bg-slate-100 rounded-full h-2 overflow-hidden">
+                              <div
+                                className="bg-emerald-500 h-full rounded-full"
+                                style={{ width: `${student.attendanceRate}%` }}
+                              ></div>
+                            </div>
+                            <span className="font-bold text-emerald-700 text-xs">
+                              {student.attendanceRate}%
+                            </span>
+                          </div>
+                          <div className="text-xs text-slate-400 mt-0.5">Asistencia regular</div>
+                        </td>
+
+                        <td className="p-4">
+                          <div className="flex items-baseline gap-1.5 flex-wrap">
+                            {hasScholarship && (
+                              <span className="line-through text-slate-400 text-xs">
+                                S/ {student.monthlyFee.toFixed(2)}
+                              </span>
+                            )}
+                            <span
+                              className={`font-bold ${
+                                student.scholarshipType === 'FULL_SCHOLARSHIP'
+                                  ? 'text-purple-700'
+                                  : hasScholarship
+                                  ? 'text-emerald-700'
+                                  : 'text-slate-900'
+                              }`}
+                            >
+                              S/ {effectiveFee.toFixed(2)}
+                            </span>
+                            <span className="text-slate-400 text-xs font-normal"> /mes</span>
+                          </div>
+
+                          <div className="mt-0.5">
+                            {student.scholarshipType === 'FULL_SCHOLARSHIP' ? (
+                              <span className="text-purple-700 text-xs font-semibold flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>100% Exonerado</span>
+                              </span>
+                            ) : student.balance > 0 ? (
+                              <span className="text-amber-700 font-semibold text-xs">
+                                Deuda: S/ {student.balance.toFixed(2)}
+                              </span>
+                            ) : (
+                              <span className="text-emerald-700 text-xs flex items-center gap-1 font-semibold">
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>Al día</span>
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="p-4 pr-6 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => setSelectedStudent(student)}
+                              className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer"
+                            >
+                              Ficha
+                            </button>
+
+                            {student.balance > 0 && (
+                              <button
+                                onClick={() => onQuickPay(student)}
+                                className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+                              >
+                                <DollarSign className="w-3.5 h-3.5" />
+                                <span>Cobrar</span>
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </>
       )}
 
       {/* Modal: Inscribir Alumno */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded max-w-xl w-full p-4 shadow-2xl space-y-3 font-mono">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-sky-400" />
-                <h3 className="font-bold text-white text-xs uppercase tracking-wider">
-                  Formulario de Matrícula / Registro de Alumno
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                  <Users className="w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-slate-900 text-lg">
+                  Matrícula y Registro de Alumno
                 </h3>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-slate-500 hover:text-white"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateStudent} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
+            <form onSubmit={handleCreateStudent} className="space-y-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">Nombre Completo del Alumno *</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Nombre Completo del Alumno *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ej. Rodrigo Quispe"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">DNI del Alumno *</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">DNI del Alumno *</label>
                   <input
                     type="text"
                     required
@@ -638,7 +641,7 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                     placeholder="8 dígitos"
                     value={formData.documentNumber}
                     onChange={(e) => setFormData({ ...formData, documentNumber: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   />
                 </div>
               </div>
@@ -646,8 +649,8 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
               {/* Opción de vincular a Familia existente */}
               {families.length > 0 && (
                 <div>
-                  <label className="text-[10px] text-purple-300 font-bold block mb-1">
-                    Vincular a Núcleo Familiar Existente (Aplica Descuento Hermanos)
+                  <label className="text-xs font-semibold text-purple-800 block mb-1">
+                    Vincular a Familia Existente (Aplica Descuento Hermanos)
                   </label>
                   <select
                     value={formData.familyName}
@@ -673,7 +676,7 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                         });
                       }
                     }}
-                    className="w-full bg-[#161B22] border border-purple-500/40 rounded px-2.5 py-1.5 text-white text-xs"
+                    className="w-full bg-purple-50/50 border border-purple-200 rounded-xl px-3 py-2 text-slate-800 text-sm focus:bg-white focus:border-purple-500 focus:outline-none transition"
                   >
                     <option value="">-- Registrar Familia Nueva / Independiente --</option>
                     {families.map((f) => (
@@ -685,36 +688,36 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">Apoderado / Madre / Padre</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Apoderado / Madre / Padre</label>
                   <input
                     type="text"
                     placeholder="Nombre del apoderado"
                     value={formData.contactName}
                     onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">Teléfono Móvil (WhatsApp)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Teléfono Móvil (WhatsApp)</label>
                   <input
                     type="text"
                     placeholder="+51 9..."
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">Categoría / Grupo</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Categoría / Grupo</label>
                   <select
                     value={formData.groupName}
                     onChange={(e) => setFormData({ ...formData, groupName: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   >
                     {groups.map((g) => (
                       <option key={g.id} value={g.name}>
@@ -724,33 +727,33 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 block mb-1">Tarifa Base de Lista (PEN)</label>
+                  <label className="text-xs font-semibold text-slate-700 block mb-1">Tarifa Base (PEN)</label>
                   <input
                     type="number"
                     value={formData.monthlyFee}
                     onChange={(e) => setFormData({ ...formData, monthlyFee: Number(e.target.value) })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white font-bold"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 font-bold text-sm focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                   />
                 </div>
               </div>
 
               {/* SECCIÓN DE BECAS, SEMIBECAS Y DESCUENTOS */}
-              <div className="p-3 bg-[#131720] border border-purple-500/30 rounded space-y-2.5">
+              <div className="p-4 bg-purple-50/50 border border-purple-200/80 rounded-2xl space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Award className="w-3.5 h-3.5 text-purple-400" />
-                    <span className="text-[11px] font-bold text-purple-300 uppercase tracking-wider">
-                      Condición Arancelaria, Becas y Beneficios
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-purple-600" />
+                    <span className="text-xs font-bold text-purple-900 uppercase tracking-wider">
+                      Condición Arancelaria y Becas
                     </span>
                   </div>
-                  <span className="text-[9px] bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold">
-                    POLÍTICA FORMATIVA
+                  <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-semibold">
+                    Formativa
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-slate-400 block mb-1">
+                    <label className="text-xs font-medium text-slate-700 block mb-1">
                       Tipo de Beca / Descuento
                     </label>
                     <select
@@ -768,7 +771,7 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                           scholarshipFixedDiscount: type === 'CUSTOM_DISCOUNT' ? 40 : 0,
                         });
                       }}
-                      className="w-full bg-[#161B22] border border-purple-500/40 rounded px-2 py-1.5 text-white font-bold text-xs"
+                      className="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-slate-800 font-medium text-xs focus:outline-none focus:border-purple-500 transition"
                     >
                       <option value="NONE">Sin Beca (Tarifa Regular 100%)</option>
                       <option value="FULL_SCHOLARSHIP">Beca Integral 100% (Exonerado - S/ 0)</option>
@@ -781,10 +784,10 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                   {formData.scholarshipType === 'CUSTOM_DISCOUNT' && (
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-[10px] text-slate-400 block mb-1">Desc. Fijo (S/)</label>
+                        <label className="text-xs font-medium text-slate-700 block mb-1">Desc. Fijo (S/)</label>
                         <input
                           type="number"
-                          placeholder="Ej. 40.00"
+                          placeholder="40.00"
                           value={formData.scholarshipFixedDiscount || ''}
                           onChange={(e) =>
                             setFormData({
@@ -793,14 +796,14 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                               scholarshipDiscountPct: 0,
                             })
                           }
-                          className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-emerald-400 font-bold"
+                          className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-emerald-700 font-bold text-xs"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] text-slate-400 block mb-1">O en Porcentaje (%)</label>
+                        <label className="text-xs font-medium text-slate-700 block mb-1">Porcentaje (%)</label>
                         <input
                           type="number"
-                          placeholder="Ej. 25%"
+                          placeholder="25"
                           value={formData.scholarshipDiscountPct || ''}
                           onChange={(e) =>
                             setFormData({
@@ -809,7 +812,7 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                               scholarshipFixedDiscount: 0,
                             })
                           }
-                          className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-emerald-400 font-bold"
+                          className="w-full bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-emerald-700 font-bold text-xs"
                         />
                       </div>
                     </div>
@@ -817,7 +820,7 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
 
                   {formData.scholarshipType === 'SIBLING_DISCOUNT' && (
                     <div>
-                      <label className="text-[10px] text-slate-400 block mb-1">Porcentaje de Descuento</label>
+                      <label className="text-xs font-medium text-slate-700 block mb-1">% de Descuento</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="number"
@@ -825,53 +828,53 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                           onChange={(e) =>
                             setFormData({ ...formData, scholarshipDiscountPct: Number(e.target.value) })
                           }
-                          className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-sky-400 font-bold"
+                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-blue-700 font-bold text-xs"
                         />
-                        <span className="text-slate-400 font-bold">%</span>
+                        <span className="text-slate-500 font-bold">%</span>
                       </div>
                     </div>
                   )}
                 </div>
 
                 {formData.scholarshipType !== 'NONE' && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1 border-t border-purple-500/20">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-purple-200/60">
                     <div>
-                      <label className="text-[10px] text-slate-400 block mb-1">
-                        Motivo / Justificación de la Beca *
+                      <label className="text-xs font-medium text-slate-700 block mb-1">
+                        Motivo de la Beca *
                       </label>
                       <input
                         type="text"
-                        placeholder="Ej. Talento Selección Sub-10, Convenio Colegio, etc."
+                        placeholder="Ej. Talento Selección Sub-10"
                         value={formData.scholarshipReason}
                         onChange={(e) => setFormData({ ...formData, scholarshipReason: e.target.value })}
-                        className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white text-[11px]"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-slate-400 block mb-1">
-                        Aprobado por / Comité
+                      <label className="text-xs font-medium text-slate-700 block mb-1">
+                        Aprobado por
                       </label>
                       <input
                         type="text"
-                        placeholder="Ej. Dirección Deportiva, Comité de Becas"
+                        placeholder="Ej. Dirección Deportiva"
                         value={formData.scholarshipApprovedBy}
                         onChange={(e) =>
                           setFormData({ ...formData, scholarshipApprovedBy: e.target.value })
                         }
-                        className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white text-[11px]"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 text-xs"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* Calculadora en tiempo real del arancel */}
-                <div className="p-2 bg-[#161B22] rounded border border-slate-800 flex items-center justify-between flex-wrap gap-2 text-[11px]">
-                  <div className="space-y-0.5">
-                    <span className="text-slate-400 block text-[10px]">Cálculo arancelario mensual:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-400">Base: S/ {Number(formData.monthlyFee || 0).toFixed(2)}</span>
+                {/* Calculadora de arancel */}
+                <div className="p-3 bg-white rounded-xl border border-purple-200/70 flex items-center justify-between flex-wrap gap-2 text-xs">
+                  <div>
+                    <span className="text-slate-400 block text-[11px]">Cálculo arancelario mensual:</span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-slate-600">Base: S/ {Number(formData.monthlyFee || 0).toFixed(2)}</span>
                       {previewDiscountAmount > 0 && (
-                        <span className="text-purple-400 font-semibold">
+                        <span className="text-purple-700 font-semibold">
                           - Descuento: S/ {previewDiscountAmount.toFixed(2)}
                         </span>
                       )}
@@ -879,14 +882,14 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                   </div>
 
                   <div className="text-right">
-                    <span className="text-slate-400 block text-[10px]">Cuota Neta Final:</span>
+                    <span className="text-slate-400 block text-[11px]">Cuota Neta Final:</span>
                     <span
-                      className={`text-sm font-bold ${
+                      className={`text-base font-bold ${
                         formData.scholarshipType === 'FULL_SCHOLARSHIP'
-                          ? 'text-purple-300'
+                          ? 'text-purple-700'
                           : previewDiscountAmount > 0
-                          ? 'text-emerald-400'
-                          : 'text-white'
+                          ? 'text-emerald-700'
+                          : 'text-slate-900'
                       }`}
                     >
                       {formData.scholarshipType === 'FULL_SCHOLARSHIP'
@@ -898,27 +901,27 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
               </div>
 
               <div>
-                <label className="text-[10px] text-slate-400 block mb-1">Ficha Médica / Alergias / Observaciones</label>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">Ficha Médica / Alergias / Observaciones</label>
                 <textarea
                   rows={2}
                   placeholder="Alergias, asma, grupo sanguíneo o recomendaciones..."
                   value={formData.medicalNotes}
                   onChange={(e) => setFormData({ ...formData, medicalNotes: e.target.value })}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded px-2 py-1.5 text-white text-[11px]"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-800 text-xs focus:bg-white focus:border-emerald-500 focus:outline-none transition"
                 />
               </div>
 
-              <div className="pt-2 border-t border-slate-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-3 py-1.5 rounded bg-slate-800 text-slate-300 text-xs"
+                  className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition cursor-pointer shadow-xs"
                 >
                   Guardar Matrícula
                 </button>
@@ -930,71 +933,71 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
 
       {/* Modal: Ficha Detallada del Alumno */}
       {selectedStudent && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded max-w-lg w-full p-4 shadow-2xl space-y-3 font-mono">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] bg-sky-500/10 text-sky-400 border border-sky-500/30 px-1.5 py-0.5 rounded font-bold uppercase">
-                    FICHA INTEGRAL DEL ALUMNO
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-0.5 rounded-full font-semibold uppercase">
+                    Ficha del Alumno
                   </span>
                   {selectedStudent.scholarshipType &&
                     selectedStudent.scholarshipType !== 'NONE' &&
                     getScholarshipBadge(selectedStudent)}
                 </div>
-                <h3 className="font-bold text-white text-sm mt-1">
+                <h3 className="font-bold text-slate-900 text-xl">
                   {selectedStudent.name}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedStudent(null)}
-                className="text-slate-500 hover:text-white"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-2 text-xs">
-              <div className="grid grid-cols-2 gap-2 p-2 bg-[#161B22] rounded border border-slate-800">
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200/70">
                 <div>
-                  <span className="text-[9px] text-slate-500 block uppercase">Documento</span>
-                  <span className="text-white font-bold">{selectedStudent.documentType}: {selectedStudent.documentNumber}</span>
+                  <span className="text-xs text-slate-400 block uppercase font-medium">Documento</span>
+                  <span className="text-slate-900 font-bold">{selectedStudent.documentType}: {selectedStudent.documentNumber}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-500 block uppercase">Categoría</span>
-                  <span className="text-sky-400 font-bold">{selectedStudent.groupName}</span>
+                  <span className="text-xs text-slate-400 block uppercase font-medium">Categoría</span>
+                  <span className="text-emerald-700 font-bold">{selectedStudent.groupName}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-500 block uppercase">Apoderado</span>
-                  <span className="text-slate-300">{selectedStudent.contactName}</span>
+                  <span className="text-xs text-slate-400 block uppercase font-medium">Apoderado</span>
+                  <span className="text-slate-800">{selectedStudent.contactName}</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-500 block uppercase">Teléfono Contacto</span>
-                  <span className="text-slate-300">{selectedStudent.phone}</span>
+                  <span className="text-xs text-slate-400 block uppercase font-medium">Teléfono Contacto</span>
+                  <span className="text-slate-800">{selectedStudent.phone}</span>
                 </div>
               </div>
 
               {/* CARD DE BECA Y CONDICIÓN FORMATIVA */}
               {selectedStudent.scholarshipType && selectedStudent.scholarshipType !== 'NONE' && (
-                <div className="p-3 bg-purple-950/20 border border-purple-500/30 rounded space-y-2">
+                <div className="p-4 bg-purple-50/50 border border-purple-200/80 rounded-2xl space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-purple-300 font-bold text-[11px] uppercase">
-                      <Award className="w-3.5 h-3.5 text-purple-400" />
-                      <span>Condición de Beca / Subsidio Deportivo</span>
+                    <div className="flex items-center gap-1.5 text-purple-900 font-bold text-xs uppercase">
+                      <Award className="w-4 h-4 text-purple-600" />
+                      <span>Condición de Beca Deportiva</span>
                     </div>
                     {getScholarshipBadge(selectedStudent)}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="text-slate-400 text-[10px] block">Tarifa regular de lista:</span>
-                      <span className="line-through text-slate-500">
+                      <span className="text-slate-500 block">Tarifa regular de lista:</span>
+                      <span className="line-through text-slate-400">
                         S/ {selectedStudent.monthlyFee.toFixed(2)}/mes
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-400 text-[10px] block">Cuota mensual con beca:</span>
-                      <span className="text-emerald-400 font-bold">
+                      <span className="text-slate-500 block">Cuota con beneficio:</span>
+                      <span className="text-emerald-700 font-bold text-sm">
                         {selectedStudent.scholarshipType === 'FULL_SCHOLARSHIP'
                           ? 'S/ 0.00 (Exonerado 100%)'
                           : `S/ ${(
@@ -1005,17 +1008,17 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                   </div>
 
                   {selectedStudent.scholarshipReason && (
-                    <div className="p-2 bg-[#161B22] rounded border border-purple-500/20 text-[11px]">
-                      <span className="text-[10px] text-slate-400 block uppercase">Motivo / Dictamen:</span>
-                      <span className="text-purple-200">{selectedStudent.scholarshipReason}</span>
+                    <div className="p-2.5 bg-white rounded-xl border border-purple-200 text-xs">
+                      <span className="text-[11px] text-slate-400 block uppercase font-medium">Motivo:</span>
+                      <span className="text-purple-900">{selectedStudent.scholarshipReason}</span>
                     </div>
                   )}
 
                   {selectedStudent.scholarshipApprovedBy && (
-                    <div className="text-[10px] text-slate-400 flex items-center justify-between">
-                      <span>Aprobado por: <strong className="text-slate-200">{selectedStudent.scholarshipApprovedBy}</strong></span>
-                      <span className="text-purple-300">
-                        Ahorro anual familia: S/{' '}
+                    <div className="text-xs text-slate-500 flex items-center justify-between">
+                      <span>Aprobado por: <strong className="text-slate-800">{selectedStudent.scholarshipApprovedBy}</strong></span>
+                      <span className="text-purple-700 font-medium">
+                        Ahorro anual: S/{' '}
                         {(
                           (selectedStudent.monthlyFee -
                             (selectedStudent.finalMonthlyFee ?? selectedStudent.monthlyFee)) *
@@ -1027,38 +1030,38 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
                 </div>
               )}
 
-              <div className="p-2.5 bg-[#161B22] rounded border border-slate-800 space-y-1">
-                <div className="flex items-center gap-1 text-[10px] text-rose-400 uppercase font-bold">
-                  <HeartPulse className="w-3 h-3" />
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/70 space-y-1">
+                <div className="flex items-center gap-1.5 text-xs text-rose-600 uppercase font-bold">
+                  <HeartPulse className="w-3.5 h-3.5" />
                   <span>Ficha Médica y Salud</span>
                 </div>
-                <div className="text-slate-300 text-[11px]">
+                <div className="text-slate-700 text-xs">
                   {selectedStudent.medicalNotes || 'Sin observaciones médicas especiales.'}
                 </div>
-                <div className="text-slate-500 text-[10px]">
+                <div className="text-slate-500 text-xs">
                   Emergencias: {selectedStudent.emergencyPhone}
                 </div>
               </div>
 
-              <div className="p-2.5 bg-[#161B22] rounded border border-slate-800 flex justify-between items-center">
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/70 flex justify-between items-center">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase block">Estado de Cobranza</span>
-                  <span className="font-bold text-white">
+                  <span className="text-xs text-slate-400 uppercase block font-medium">Estado de Cobranza</span>
+                  <span className="font-bold text-slate-900">
                     Pensión efectiva: S/{' '}
                     {(selectedStudent.finalMonthlyFee ?? selectedStudent.monthlyFee).toFixed(2)}/mes
                   </span>
                 </div>
                 <div>
                   {selectedStudent.scholarshipType === 'FULL_SCHOLARSHIP' ? (
-                    <span className="text-xs bg-purple-500/10 text-purple-300 border border-purple-500/30 px-2 py-1 rounded font-bold">
+                    <span className="text-xs bg-purple-50 text-purple-800 border border-purple-200 px-3 py-1 rounded-full font-semibold">
                       100% Exonerado (Beca)
                     </span>
                   ) : selectedStudent.balance > 0 ? (
-                    <span className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-1 rounded font-bold">
+                    <span className="text-xs bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1 rounded-full font-semibold">
                       Deuda: S/ {selectedStudent.balance.toFixed(2)}
                     </span>
                   ) : (
-                    <span className="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded font-bold">
+                    <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-full font-semibold">
                       Al Día (0 Deuda)
                     </span>
                   )}
@@ -1066,10 +1069,10 @@ export const WebStudents: React.FC<WebStudentsProps> = ({
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex justify-end">
+            <div className="pt-3 border-t border-slate-100 flex justify-end">
               <button
                 onClick={() => setSelectedStudent(null)}
-                className="px-4 py-1.5 rounded bg-slate-800 text-white font-bold text-xs"
+                className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition cursor-pointer"
               >
                 Cerrar Ficha
               </button>

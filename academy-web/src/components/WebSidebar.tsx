@@ -124,23 +124,23 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
   return (
     <>
       {/* Mobile Top App Bar (visible only on small screens < lg) */}
-      <header className="lg:hidden bg-[#0D1117] border-b border-slate-800 sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-lg">
+      <header className="lg:hidden bg-white border-b border-slate-200 sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition"
+            className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer"
             aria-label="Abrir menú"
           >
             {isMobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-600 to-sky-500 flex items-center justify-center text-white font-black text-xs shadow-md shadow-emerald-500/20">
-              FK
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xs shadow-xs">
+              AD
             </div>
             <div>
-              <div className="font-bold text-white text-sm tracking-tight leading-tight">GESTICLUB</div>
-              <div className="text-[10px] text-emerald-400 font-mono truncate max-w-[170px]">
+              <div className="font-bold text-slate-900 text-sm tracking-tight leading-tight">Academia Deportiva</div>
+              <div className="text-xs text-emerald-700 font-medium truncate max-w-[170px]">
                 {activeAcademy.name}
               </div>
             </div>
@@ -149,19 +149,19 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
 
         <div className="flex items-center gap-2">
           {apiConnected ? (
-            <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Live DB
+            <span className="flex items-center gap-1.5 text-xs text-emerald-800 font-medium bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              En Línea
             </span>
           ) : (
-            <span className="flex items-center gap-1 text-[10px] text-rose-400 font-mono bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
-              Offline
+            <span className="flex items-center gap-1.5 text-xs text-rose-700 font-medium bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200">
+              Local
             </span>
           )}
 
           <button
             onClick={onLogout}
-            className="p-1.5 rounded-lg bg-rose-950/40 text-rose-300 border border-rose-800/40 hover:bg-rose-900/60 transition"
+            className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
             title="Cerrar sesión"
           >
             <LogOut className="w-4 h-4" />
@@ -173,39 +173,36 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-900/30 backdrop-blur-xs z-40 lg:hidden transition-opacity"
         />
       )}
 
       {/* Sidebar Vertical Container (Desktop Sticky + Mobile Slide-over Drawer) */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-[#0D1117] border-r border-slate-800 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:shrink-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-white border-r border-slate-200 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:shrink-0 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Upper Sidebar: Branding + Tenant Switcher */}
-        <div className="p-4 border-b border-slate-800/80">
+        <div className="p-5 border-b border-slate-100">
           {/* Brand Header */}
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-sky-500 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-emerald-500/20 ring-1 ring-white/20">
-                FK
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                AD
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-white text-base tracking-tight">GESTICLUB</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded font-semibold">
-                    v1.0
-                  </span>
+                  <span className="font-bold text-slate-900 text-base tracking-tight">Academia App</span>
                 </div>
-                <p className="text-[11px] text-slate-400 font-medium">Gestión Deportiva Multi-Sede</p>
+                <p className="text-xs text-slate-500 font-normal">Gestión Deportiva & SUNAT</p>
               </div>
             </div>
 
             {/* Mobile close button */}
             <button
               onClick={() => setIsMobileOpen(false)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              className="lg:hidden p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -214,12 +211,12 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
           {/* Sede / Academy Multi-Tenant Selector */}
           <div className="relative">
             <div className="flex items-center justify-between mb-1.5 px-0.5">
-              <label className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                {hasMultipleAcademies ? 'Sede Activa (Conmutador)' : 'Sede Asignada'}
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                {hasMultipleAcademies ? 'Sede Activa' : 'Sede Asignada'}
               </label>
               {!hasMultipleAcademies && (
-                <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded border border-emerald-500/20 font-mono">
-                  Sede Única
+                <span className="text-[11px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 font-semibold">
+                  Principal
                 </span>
               )}
             </div>
@@ -227,40 +224,40 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
             {hasMultipleAcademies ? (
               <button
                 onClick={() => setShowAcademyMenu(!showAcademyMenu)}
-                className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl bg-[#161B22] hover:bg-[#1C2128] border border-slate-700/80 hover:border-slate-500 text-left transition shadow-inner group cursor-pointer"
+                className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-left transition cursor-pointer"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800 shrink-0">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-bold text-slate-100 truncate">{activeAcademy.name}</div>
-                    <div className="text-[10px] text-slate-400 font-mono">RUC: {activeAcademy.ruc || '20123456789'}</div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 truncate">{activeAcademy.name}</div>
+                    <div className="text-xs text-slate-500 font-mono">RUC: {activeAcademy.ruc || '20123456789'}</div>
                   </div>
                 </div>
                 <ChevronDown
                   className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                    showAcademyMenu ? 'rotate-180 text-emerald-400' : ''
+                    showAcademyMenu ? 'rotate-180 text-emerald-600' : ''
                   }`}
                 />
               </button>
             ) : (
-              <div className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#161B22] border border-slate-800 text-left">
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <div className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-left">
+                <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-800 shrink-0">
                   <Building2 className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs font-bold text-slate-100 truncate">{activeAcademy.name}</div>
-                  <div className="text-[10px] text-slate-400 font-mono">RUC: {activeAcademy.ruc || '20123456789'}</div>
+                  <div className="text-xs sm:text-sm font-bold text-slate-900 truncate">{activeAcademy.name}</div>
+                  <div className="text-xs text-slate-500 font-mono">RUC: {activeAcademy.ruc || '20123456789'}</div>
                 </div>
               </div>
             )}
 
             {/* Dropdown Menu when multiple sedes exist */}
             {hasMultipleAcademies && showAcademyMenu && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#161B22] border border-slate-700 rounded-xl shadow-2xl py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-2 duration-150">
-                <div className="px-3 py-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider border-b border-slate-800">
-                  Tus Sedes Autorizadas
+              <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 z-50 text-xs">
+                <div className="px-3 py-1 text-[11px] text-slate-400 font-bold uppercase tracking-wider border-b border-slate-100">
+                  Sedes Autorizadas
                 </div>
                 <div className="max-h-48 overflow-y-auto py-1">
                   {academiesList.map((acad) => {
@@ -272,13 +269,13 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                           onSelectAcademy(acad.id);
                           setShowAcademyMenu(false);
                         }}
-                        className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-800/90 transition cursor-pointer ${
-                          isCurrent ? 'bg-emerald-500/10 text-emerald-300 font-semibold' : 'text-slate-300'
+                        className={`w-full text-left px-3.5 py-2 flex items-center justify-between hover:bg-slate-50 transition cursor-pointer ${
+                          isCurrent ? 'bg-emerald-50 text-emerald-950 font-semibold' : 'text-slate-700'
                         }`}
                       >
                         <span className="truncate pr-2">{acad.name}</span>
                         {isCurrent && (
-                          <span className="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono shrink-0">
+                          <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-semibold shrink-0">
                             Activo
                           </span>
                         )}
@@ -292,9 +289,9 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
         </div>
 
         {/* Middle Navigation Section */}
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1.5 scrollbar-thin scrollbar-thumb-slate-800">
-          <div className="px-2 pt-1 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-            Menú Principal
+        <nav className="flex-1 overflow-y-auto p-4 space-y-1.5">
+          <div className="px-2 pt-1 pb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Menú de Operaciones
           </div>
 
           {navItems.map((item) => {
@@ -306,10 +303,10 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                 to={item.to}
                 onClick={() => setIsMobileOpen(false)}
                 className={({ isActive }) =>
-                  `w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all duration-150 group cursor-pointer ${
+                  `w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-left transition duration-150 group cursor-pointer ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-bold shadow-lg shadow-emerald-700/25 ring-1 ring-emerald-400/30'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/70 font-medium'
+                      ? 'bg-emerald-50/90 text-emerald-950 font-bold border border-emerald-200/80 shadow-xs'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50 font-medium'
                   }`
                 }
               >
@@ -317,23 +314,23 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                   <>
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                           isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-800/80 text-slate-400 group-hover:text-emerald-400 group-hover:bg-slate-800'
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-100 text-slate-500 group-hover:text-emerald-700 group-hover:bg-emerald-50'
                         }`}
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-4.5 h-4.5" />
                       </div>
                       <div className="min-w-0">
-                        <div className="text-xs tracking-tight truncate flex items-center gap-1.5">
+                        <div className="text-sm tracking-tight truncate flex items-center gap-1.5">
                           <span>{item.label}</span>
                           {item.badge && (
                             <span
-                              className={`text-[9px] font-mono px-1.5 py-0.2 rounded ${
+                              className={`text-[10px] px-1.5 py-0.5 rounded-md font-semibold ${
                                 isActive
-                                  ? 'bg-emerald-950/80 text-emerald-200 border border-emerald-400/40'
-                                  : 'bg-slate-800 text-slate-300 border border-slate-700'
+                                  ? 'bg-emerald-200 text-emerald-900'
+                                  : 'bg-slate-200 text-slate-700'
                               }`}
                             >
                               {item.badge}
@@ -341,8 +338,8 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                           )}
                         </div>
                         <div
-                          className={`text-[10px] truncate ${
-                            isActive ? 'text-emerald-100/80 font-normal' : 'text-slate-400 group-hover:text-slate-300'
+                          className={`text-xs truncate ${
+                            isActive ? 'text-emerald-800' : 'text-slate-500'
                           }`}
                         >
                           {item.description}
@@ -351,8 +348,8 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                     </div>
 
                     <ChevronRight
-                      className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-                        isActive ? 'text-white translate-x-0.5' : 'text-slate-400 opacity-0 group-hover:opacity-100'
+                      className={`w-4 h-4 shrink-0 transition-transform ${
+                        isActive ? 'text-emerald-700 translate-x-0.5' : 'text-slate-300 opacity-0 group-hover:opacity-100'
                       }`}
                     />
                   </>
@@ -363,69 +360,50 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
         </nav>
 
         {/* Lower Sidebar: SaaS Plan Banner, API Health & User Profile */}
-        <div className="p-3 border-t border-slate-800/80 space-y-2.5 bg-[#0A0D12]">
+        <div className="p-4 border-t border-slate-100 space-y-3 bg-slate-50/50">
           {/* SaaS Plan Mini-Card */}
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#161B22] to-[#1C2128] border border-slate-700/80">
+          <div className="p-3 rounded-2xl bg-white border border-slate-200 shadow-xs">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
                 <Crown
-                  className={`w-3.5 h-3.5 ${
-                    subscription.plan.code === 'PRO' ? 'text-amber-400 animate-bounce' : 'text-slate-400'
+                  className={`w-4 h-4 ${
+                    subscription.plan.code === 'PRO' ? 'text-amber-500' : 'text-slate-400'
                   }`}
                 />
-                <span className="text-[11px] font-bold text-white tracking-tight">
-                  {subscription.plan.name || 'Plan PRO'}
+                <span className="text-xs font-bold text-slate-900">
+                  {subscription.plan.name || 'Plan Pro'}
                 </span>
               </div>
-              <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
                 {subscription.status === 'ACTIVE' ? 'ACTIVO' : 'TRIAL'}
               </span>
             </div>
 
-            <div className="text-[10px] text-slate-400 flex items-center justify-between mb-2">
-              <span>Alumnos:</span>
-              <span className="font-semibold text-slate-200 font-mono">
-                {subscription.limits.students ? `Límite ${subscription.limits.students}` : 'Ilimitado'}
+            <div className="text-xs text-slate-500 flex items-center justify-between mb-2">
+              <span>Capacidad:</span>
+              <span className="font-semibold text-slate-800">
+                {subscription.limits.students ? `${subscription.limits.students} alumnos` : 'Ilimitado'}
               </span>
             </div>
 
             <button
               onClick={onOpenPlansModal}
-              className="w-full py-1.5 px-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition shadow-md shadow-emerald-600/20 cursor-pointer"
+              className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
-              <Sparkles className="w-3 h-3 text-amber-300" />
-              <span>Gestionar Plan SaaS</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>Ver Plan y Límites</span>
             </button>
-          </div>
-
-          {/* API Connection Indicator */}
-          <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-[#161B22]/60 text-[10px] font-mono border border-slate-800/80">
-            <span className="text-slate-400 flex items-center gap-1.5">
-              <Layers className="w-3 h-3 text-slate-400" />
-              API NestJS:
-            </span>
-            {apiConnected === true ? (
-              <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Conectado (PostgreSQL)
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 text-rose-400 font-semibold">
-                <WifiOff className="w-3 h-3" />
-                Desconectado
-              </span>
-            )}
           </div>
 
           {/* User Profile & Logout */}
           <div className="flex items-center justify-between gap-2 pt-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs ring-1 ring-sky-400/40 shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-bold text-xs shrink-0">
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-white truncate leading-tight">{userName}</div>
-                <div className="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider truncate">
+                <div className="text-xs font-bold text-slate-900 truncate leading-tight">{userName}</div>
+                <div className="text-[11px] text-slate-500 truncate">
                   {userRole}
                 </div>
               </div>
@@ -433,10 +411,10 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
 
             <button
               onClick={onLogout}
-              className="p-2 rounded-lg bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 border border-rose-800/40 transition cursor-pointer shrink-0"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition cursor-pointer shrink-0"
               title="Cerrar sesión"
             >
-              <LogOut className="w-4 h-4 text-rose-400" />
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
 
@@ -447,10 +425,10 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                 if (onReturnToSuperAdmin) onReturnToSuperAdmin();
                 navigate('/superadmin');
               }}
-              className="w-full py-1.5 px-2 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-700/50 text-purple-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+              className="w-full py-2 px-3 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-900 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
-              <Crown className="w-3 h-3 text-amber-300" />
-              <span>Volver a Panel Maestro</span>
+              <Crown className="w-3.5 h-3.5 text-purple-600" />
+              <span>Panel Maestro</span>
             </button>
           )}
         </div>

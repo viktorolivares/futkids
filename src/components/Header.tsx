@@ -1,18 +1,15 @@
 import React from 'react';
 import {
-  ShieldCheck,
   Building2,
   User,
-  Activity,
   CheckCircle2,
-  Layers,
-  Database,
-  Terminal,
+  Sparkles,
   Smartphone,
+  Wrench,
+  ChevronDown,
 } from 'lucide-react';
 import { DemoUser, SubscriptionStatusInfo, AppMode } from '../types';
 import { DEMO_USERS, DEMO_ACADEMIES } from '../data/mockApiData';
-import { Sparkles } from 'lucide-react';
 
 interface HeaderProps {
   currentUser: DemoUser;
@@ -45,113 +42,119 @@ export const Header: React.FC<HeaderProps> = ({
   const activeAcademy = DEMO_ACADEMIES.find((a) => a.id === activeAcademyId);
 
   return (
-    <header className="bg-[#0F1219] border-b border-slate-800 text-slate-300 sticky top-0 z-50">
-      {/* Top Telemetry Strip - High Density Console */}
-      <div className="bg-[#090B10] px-3 py-1.5 border-b border-slate-800/80 flex flex-wrap items-center justify-between text-[10px] font-mono gap-2">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-1.5 text-sky-400 font-semibold uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>API: NESTJS V10 (MODULAR MONOLITH)</span>
+    <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50 shadow-xs">
+      {/* Top Reassurance Strip - Clean, reassuring and calm */}
+      <div className="bg-slate-50/80 border-b border-slate-200/60 px-4 sm:px-8 py-2 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-emerald-700 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Sistema Operativo y Seguro</span>
           </div>
-
-          <div className="flex items-center gap-1.5 text-slate-400">
-            <Database className="w-3 h-3 text-sky-400" />
-            <span className="text-slate-500 uppercase">PG16:</span>
-            <span className="text-emerald-400 font-semibold">ONLINE (PRISMA)</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-slate-400">
-            <Activity className="w-3 h-3 text-rose-400" />
-            <span className="text-slate-500 uppercase">REDIS:</span>
-            <span className="text-emerald-400 font-semibold">PONG (6379)</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-slate-400">
-            <Layers className="w-3 h-3 text-amber-400" />
-            <span className="text-slate-500 uppercase">BULLMQ:</span>
-            <span className="text-amber-300 font-semibold">6 QUEUES ACTIVE</span>
-          </div>
+          <span className="text-slate-300">•</span>
+          <span className="text-slate-500 hidden sm:inline">Moneda: Soles (S/) • Conexión SUNAT UBL 2.1 Lista</span>
         </div>
 
-        <div className="flex items-center gap-3 text-slate-400">
-          <div className="hidden lg:flex items-center gap-2 text-slate-500">
-            <span>LOC: PE-LIM (-12.0464° S, 77.0428° W)</span>
-            <span>•</span>
-            <span className="text-slate-300">CUR: PEN (S/)</span>
-          </div>
+        <div className="flex items-center gap-3">
           <button
             onClick={onOpenQuickHealth}
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#161B22] hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium transition cursor-pointer shadow-2xs"
           >
-            <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
-            <span className="uppercase tracking-wider">GET /api/v1/health</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Ver Estado de Servidores</span>
           </button>
         </div>
       </div>
 
-      {/* Main Header Console Bar */}
-      <div className="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-7 h-7 bg-sky-500 rounded flex items-center justify-center text-[#0B0E14] font-black text-xs italic tracking-tighter">
-            AP
+      {/* Main Peaceful Navigation Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        {/* Brand & Logo */}
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center font-bold text-lg shadow-sm">
+            AD
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xs font-bold tracking-tight text-white uppercase font-mono">
-                GESTICLUB PLATFORM
+              <h1 className="text-lg font-bold text-slate-900 tracking-tight">
+                Academia Deportiva
               </h1>
-              <span className="bg-sky-500/10 text-sky-400 text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded border border-sky-500/30 uppercase">
-                PERÚ
+              <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full border border-emerald-200/70">
+                Perú
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-mono">
-              MULTI-TENANT • SUNAT UBL 2.1 • SAAS FREE/PRO
+            <p className="text-xs text-slate-500">
+              Plataforma Integral de Gestión y Entrenamiento
             </p>
-          </div>
-
-          {/* Dedicated Sandbox Mode Switcher: clients-admin vs api-sandbox */}
-          <div className="hidden sm:flex items-center bg-[#090B10] p-1 rounded border border-slate-800 font-mono text-[10px] ml-2">
-            <button
-              onClick={() => onSelectMode('clients-admin')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'clients-admin'
-                  ? 'bg-sky-500 text-black shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              <Building2 className="w-3 h-3" />
-              <span>Mis Clientes (SaaS Admin)</span>
-            </button>
-            <button
-              onClick={() => onSelectMode('api-sandbox')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'api-sandbox'
-                  ? 'bg-amber-400 text-black shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              <Terminal className="w-3 h-3" />
-              <span>API Sandbox & SUNAT</span>
-            </button>
-            <button
-              onClick={() => onSelectMode('mobile-field')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'mobile-field'
-                  ? 'bg-emerald-400 text-black shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              <Smartphone className="w-3 h-3" />
-              <span>App Móvil (APK Campo)</span>
-            </button>
           </div>
         </div>
 
-        {/* Tenant & User Switcher Controls (Compact Density) */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {/* User Profile Switcher */}
-          <div className="flex items-center gap-2 bg-[#090B10] px-2.5 py-1 rounded border border-slate-800">
-            <User className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-            <div>
-              <div className="text-[9px] uppercase tracking-wider text-slate-500 font-mono font-semibold">
-                AUTH USER (JWT)
+        {/* Primary View Switcher Tabs - Spacious & Relaxed */}
+        <nav className="flex items-center bg-slate-100/90 p-1.5 rounded-xl border border-slate-200/70 text-sm font-medium">
+          <button
+            onClick={() => onSelectMode('clients-admin')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition text-sm cursor-pointer ${
+              currentMode === 'clients-admin'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <Building2 className="w-4 h-4 text-emerald-600" />
+            <span>Mis Academias</span>
+          </button>
+
+          <button
+            onClick={() => onSelectMode('mobile-field')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition text-sm cursor-pointer ${
+              currentMode === 'mobile-field'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <Smartphone className="w-4 h-4 text-blue-600" />
+            <span>App Móvil de Campo</span>
+          </button>
+
+          <button
+            onClick={() => onSelectMode('api-sandbox')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition text-sm cursor-pointer ${
+              currentMode === 'api-sandbox'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <Wrench className="w-4 h-4 text-amber-600" />
+            <span>Herramientas & SUNAT</span>
+          </button>
+        </nav>
+
+        {/* Tenant & User Context - Clean, legible and calm */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Active Academy Dropdown */}
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+            <Building2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="text-left">
+              <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                Sede Activa
+              </div>
+              <select
+                value={activeAcademyId}
+                onChange={(e) => onSelectAcademy(e.target.value)}
+                className="bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer max-w-[200px] truncate"
+              >
+                {DEMO_ACADEMIES.map((acad) => (
+                  <option key={acad.id} value={acad.id} className="text-slate-800 bg-white">
+                    {acad.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* User Profile Selector */}
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs">
+            <User className="w-4 h-4 text-slate-500 shrink-0" />
+            <div className="text-left">
+              <div className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                Usuario
               </div>
               <select
                 value={currentUser.id}
@@ -164,73 +167,37 @@ export const Header: React.FC<HeaderProps> = ({
                     }
                   }
                 }}
-                className="bg-transparent text-[11px] font-mono text-white focus:outline-none cursor-pointer"
+                className="bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer"
               >
                 {DEMO_USERS.map((usr) => (
-                  <option key={usr.id} value={usr.id} className="bg-[#0F1219] text-white font-mono">
-                    {usr.name} — {usr.roleLabel}
+                  <option key={usr.id} value={usr.id} className="text-slate-800 bg-white">
+                    {usr.name} ({usr.roleLabel})
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Active Tenant Context Switcher */}
-          <div className="flex items-center gap-2 bg-[#090B10] px-2.5 py-1 rounded border border-slate-800">
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <div>
-              <div className="text-[9px] uppercase tracking-wider text-slate-500 font-mono font-semibold">
-                TENANT CONTEXT (x-academy-id)
-              </div>
-              <select
-                value={activeAcademyId}
-                onChange={(e) => onSelectAcademy(e.target.value)}
-                className="bg-transparent text-[11px] font-mono text-amber-300 focus:outline-none cursor-pointer max-w-[240px] truncate"
-              >
-                {DEMO_ACADEMIES.map((acad) => {
-                  const isMember = currentUser.memberships.some((m) => m.academyId === acad.id);
-                  return (
-                    <option
-                      key={acad.id}
-                      value={acad.id}
-                      className="bg-[#0F1219] text-white font-mono"
-                    >
-                      {acad.name} {isMember ? '• [MEMBERSHIP ACTIVE]' : '• [NO ACCESS - 403]'}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-
-          {/* Role Badge in Current Tenant */}
-          <div className="px-2 py-1 rounded text-[11px] font-mono font-bold flex items-center gap-1.5 border border-slate-800 bg-[#090B10]">
-            <span className="text-slate-500 text-[9px] uppercase">ROL:</span>
-            {currentMembership ? (
-              <span className="text-emerald-400">{currentMembership.role}</span>
-            ) : (
-              <span className="text-rose-400">UNAUTHORIZED</span>
-            )}
-          </div>
-
-          {/* SaaS Plan / Trial Badge */}
+          {/* SaaS Plan Badge */}
           {subscription && (
             <button
               onClick={onOpenPlansModal}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer ${subscription.status === 'TRIALING'
-                  ? 'bg-purple-950/60 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
+              className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition cursor-pointer shadow-2xs ${
+                subscription.status === 'TRIALING'
+                  ? 'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100'
                   : subscription.plan.code === 'PRO'
-                    ? 'bg-amber-950/60 border-amber-500/40 text-amber-300 hover:bg-amber-900/60'
-                    : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
-                }`}
-              title="Gestionar Plan y Suscripción SaaS"
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+              }`}
+              title="Gestionar Plan y Suscripción"
             >
-              <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>PLAN:</span>
-              <span className="uppercase text-white">
-                {subscription.plan.code}
-                {subscription.status === 'TRIALING' && ` (${subscription.trial.remainingDays}d)`}
-              </span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Plan {subscription.plan.code}</span>
+              {subscription.status === 'TRIALING' && (
+                <span className="text-purple-600 font-normal">
+                  ({subscription.trial.remainingDays}d de prueba)
+                </span>
+              )}
             </button>
           )}
         </div>
@@ -238,3 +205,4 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
+

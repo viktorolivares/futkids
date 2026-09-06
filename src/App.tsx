@@ -120,7 +120,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] text-slate-300 flex flex-col font-sans selection:bg-sky-500 selection:text-black">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-emerald-200 selection:text-emerald-950">
       {/* Top Header with live telemetry and tenant context switcher */}
       <Header
         currentUser={currentUser}
@@ -136,12 +136,12 @@ export default function App() {
 
       {/* Floating Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-[#161B22] border border-sky-500/60 shadow-2xl rounded-lg px-4 py-3 text-xs font-mono text-white flex items-center gap-3 animate-fade-in">
-          <div className="w-2 h-2 rounded-full bg-sky-400 animate-ping"></div>
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white shadow-xl rounded-2xl px-5 py-3.5 text-sm font-medium flex items-center gap-3 animate-fade-in border border-slate-800">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
           <span>{toastMessage}</span>
           <button
             onClick={() => setToastMessage(null)}
-            className="text-slate-400 hover:text-white ml-2 text-sm font-bold"
+            className="text-slate-400 hover:text-white ml-2 text-lg font-bold p-1 cursor-pointer"
           >
             ×
           </button>
@@ -149,66 +149,66 @@ export default function App() {
       )}
 
       {/* Subheader Navigation Bar */}
-      <div className="bg-[#161B22] border-b border-slate-800 sticky top-[77px] z-40">
-        <div className="max-w-7xl mx-auto px-3 flex items-center justify-between overflow-x-auto">
+      <div className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 md:top-[85px] z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between overflow-x-auto py-2.5">
           {appMode === 'mobile-field' ? (
-            <div className="flex items-center justify-between w-full py-2">
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-400 text-black font-bold rounded uppercase">
-                  <Smartphone className="w-3.5 h-3.5" />
-                  App Móvil de Campo (academy-mobile APK)
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-800 font-semibold rounded-xl text-xs sm:text-sm">
+                  <Smartphone className="w-4 h-4 text-emerald-700" />
+                  App Móvil de Campo
                 </span>
-                <span className="text-slate-400 hidden md:inline">
-                  • Herramienta de campo para Dueño, Encargado y Cajero (Pase de lista 30s, Suspensión/Reprogramación, Semáforo de deuda, Yape)
+                <span className="text-slate-500 text-xs sm:text-sm hidden md:inline">
+                  Control en cancha para asistencia, pagos y reprogramaciones rápidas
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setAppMode('clients-admin')}
-                  className="px-2.5 py-1 rounded bg-[#0D1117] hover:bg-slate-800 text-sky-400 border border-sky-500/30 text-[11px] font-mono font-semibold flex items-center gap-1.5 transition"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
                 >
-                  <Building2 className="w-3 h-3" />
-                  <span>Volver a Mis Clientes</span>
+                  <Building2 className="w-4 h-4 text-slate-600" />
+                  <span>Volver a Mis Academias</span>
                 </button>
               </div>
             </div>
           ) : appMode === 'clients-admin' ? (
-            <div className="flex items-center justify-between w-full py-2">
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="flex items-center gap-1.5 px-2.5 py-1 bg-sky-500 text-black font-bold rounded uppercase">
-                  <Building2 className="w-3.5 h-3.5" />
-                  Panel de Administración de Mis Clientes
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-800 font-semibold rounded-xl text-xs sm:text-sm">
+                  <Building2 className="w-4 h-4 text-slate-700" />
+                  Panel Principal de Academias
                 </span>
-                <span className="text-slate-400 hidden md:inline">
-                  • Gestión de {clients.length} academias deportivas, planes y cuotas multi-tenant
+                <span className="text-slate-500 text-xs sm:text-sm hidden md:inline">
+                  {clients.length} sedes y academias operando en tiempo real
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => setAppMode('mobile-field')}
-                  className="px-2.5 py-1 rounded bg-[#0D1117] hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 text-[11px] font-mono font-semibold flex items-center gap-1.5 transition"
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
                 >
-                  <Smartphone className="w-3 h-3" />
+                  <Smartphone className="w-4 h-4 text-emerald-700" />
                   <span>Ver App Móvil</span>
                 </button>
                 <button
                   onClick={() => setAppMode('api-sandbox')}
-                  className="px-2.5 py-1 rounded bg-[#0D1117] hover:bg-slate-800 text-amber-400 border border-amber-500/30 text-[11px] font-mono font-semibold flex items-center gap-1.5 transition"
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
                 >
-                  <Terminal className="w-3 h-3" />
-                  <span>Ir al API Sandbox</span>
+                  <Terminal className="w-4 h-4 text-slate-600" />
+                  <span>Consola Técnica</span>
                 </button>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-between w-full py-1.5">
-              <nav className="flex space-x-1">
+            <div className="flex items-center justify-between w-full">
+              <nav className="flex space-x-2">
                 {[
-                  { id: 'api-console', label: 'Consola API & Swagger', icon: Terminal },
-                  { id: 'sunat-sandbox', label: 'Transmisor SOAP SUNAT Beta', icon: Send },
-                  { id: 'health', label: 'Telemetría & Healthcheck', icon: Activity },
+                  { id: 'api-console', label: 'Consola API & Endpoints', icon: Terminal },
+                  { id: 'sunat-sandbox', label: 'Emisión SUNAT Beta', icon: Send },
+                  { id: 'health', label: 'Telemetría & Diagnóstico', icon: Activity },
                 ].map((tab) => {
                   const Icon = tab.icon;
                   const isActive = sandboxSubTab === tab.id;
@@ -216,13 +216,13 @@ export default function App() {
                     <button
                       key={tab.id}
                       onClick={() => setSandboxSubTab(tab.id as any)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-[11px] font-mono uppercase tracking-wider font-semibold whitespace-nowrap transition ${
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer ${
                         isActive
-                          ? 'bg-amber-400 text-black shadow-sm font-bold'
-                          : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                          ? 'bg-slate-900 text-white shadow-xs'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                       }`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
+                      <Icon className="w-4 h-4" />
                       <span>{tab.label}</span>
                     </button>
                   );
@@ -231,10 +231,10 @@ export default function App() {
 
               <button
                 onClick={() => setAppMode('clients-admin')}
-                className="px-2.5 py-1 rounded bg-[#0D1117] hover:bg-slate-800 text-sky-400 border border-sky-500/30 text-[11px] font-mono font-semibold flex items-center gap-1.5 transition"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
               >
-                <Building2 className="w-3 h-3" />
-                <span>Volver a Mis Clientes</span>
+                <Building2 className="w-4 h-4 text-slate-600" />
+                <span>Volver a Mis Academias</span>
               </button>
             </div>
           )}
@@ -242,7 +242,7 @@ export default function App() {
       </div>
 
       {/* Main Workspace View */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
         {/* MODO 1: PANEL DE ADMINISTRACIÓN DE MIS CLIENTES */}
         {appMode === 'clients-admin' && (
           <SaaSClientAdmin
@@ -260,9 +260,9 @@ export default function App() {
           </div>
         )}
 
-        {/* MODO 2: API SANDBOX & SUNAT TOOLS */}
+        {/* MODO 3: API SANDBOX & SUNAT TOOLS */}
         {appMode === 'api-sandbox' && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {sandboxSubTab === 'api-console' && (
               <ApiConsoleView
                 currentUser={currentUser}
@@ -271,17 +271,19 @@ export default function App() {
             )}
 
             {sandboxSubTab === 'sunat-sandbox' && (
-              <div className="space-y-4">
-                <div className="bg-[#0F1219] border border-amber-500/40 rounded-xl p-4 font-mono text-xs text-amber-200 flex items-start gap-3">
-                  <Send className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-6">
+                <div className="bg-white border border-amber-200/80 rounded-2xl p-5 sm:p-6 text-sm text-slate-700 flex items-start gap-4 shadow-xs">
+                  <div className="p-2.5 rounded-xl bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                    <Send className="w-5 h-5" />
+                  </div>
                   <div>
-                    <strong className="text-white uppercase block">
-                      Probador Independiente de Transmisión SOAP UBL 2.1 (SUNAT Beta)
-                    </strong>
-                    <p className="mt-1 text-slate-300">
-                      Este módulo permite probar el ciclo completo de facturación electrónica para cualquier academia:
-                      Generación de XML con firma digital RSA-SHA256, empaquetado ZIP en Base64, envío a
-                      WebServices SOAP de SUNAT y decodificación inmediata del CDR oficial con Hash SHA-256.
+                    <h3 className="text-base font-bold text-slate-900">
+                      Transmisión Electrónica SUNAT UBL 2.1 (Entorno Beta)
+                    </h3>
+                    <p className="mt-1 text-slate-600 leading-relaxed text-sm">
+                      Módulo de prueba para el ciclo completo de facturación: generación del XML estándar SUNAT,
+                      firma digital RSA-SHA256, compresión ZIP en Base64, envío a los WebServices SOAP oficiales y
+                      recepción inmediata de la Constancia de Recepción (CDR).
                     </p>
                   </div>
                 </div>
@@ -290,55 +292,58 @@ export default function App() {
             )}
 
             {sandboxSubTab === 'health' && (
-              <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-5 font-mono space-y-4 text-xs">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-emerald-400" />
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200 gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-800">
+                      <Activity className="w-6 h-6" />
+                    </div>
                     <div>
-                      <h2 className="text-sm font-bold text-white uppercase">
-                        Diagnóstico y Telemetría del Sistema (Backend & Base de Datos)
+                      <h2 className="text-lg font-bold text-slate-900">
+                        Diagnóstico y Salud de los Servicios
                       </h2>
-                      <p className="text-[11px] text-slate-400">
-                        Estado de microservicios, aislamiento multi-tenant RLS y colas BullMQ.
+                      <p className="text-sm text-slate-500">
+                        Monitoreo continuo de base de datos PostgreSQL, colas Redis y conexión SUNAT.
                       </p>
                     </div>
                   </div>
-                  <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded text-[11px] font-bold">
-                    TODO OPERATIVO
+                  <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-semibold self-start sm:self-auto">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Todos los servicios operativos
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div className="p-3 bg-[#161B22] border border-slate-800 rounded-lg space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase">MOTOR DE BASE DE DATOS</span>
-                    <div className="text-white font-bold flex items-center gap-1.5">
-                      <Database className="w-4 h-4 text-sky-400" /> PostgreSQL 16 (RLS Habilitado)
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-1.5">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Base de Datos</span>
+                    <div className="text-slate-900 font-bold flex items-center gap-2 text-base">
+                      <Database className="w-5 h-5 text-emerald-600" /> PostgreSQL 16
                     </div>
-                    <span className="text-[10px] text-emerald-400">Conexiones activas: 4/20</span>
+                    <span className="text-xs text-slate-600 block">Aislamiento por academia activo y seguro</span>
                   </div>
 
-                  <div className="p-3 bg-[#161B22] border border-slate-800 rounded-lg space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase">COLAS EN MEMORIA</span>
-                    <div className="text-white font-bold flex items-center gap-1.5">
-                      <Server className="w-4 h-4 text-amber-400" /> Redis 7 + BullMQ
+                  <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-1.5">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Memoria y Colas</span>
+                    <div className="text-slate-900 font-bold flex items-center gap-2 text-base">
+                      <Server className="w-5 h-5 text-emerald-600" /> Redis 7 + BullMQ
                     </div>
-                    <span className="text-[10px] text-sky-400">Worker de suscripciones y SUNAT activo</span>
+                    <span className="text-xs text-slate-600 block">Sincronización y notificaciones en segundo plano</span>
                   </div>
 
-                  <div className="p-3 bg-[#161B22] border border-slate-800 rounded-lg space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase">MONEDA BASE PERÚ</span>
-                    <div className="text-white font-bold flex items-center gap-1.5">
-                      <DollarSign className="w-4 h-4 text-emerald-400" /> Soles PEN (S/) DECIMAL(10, 2)
+                  <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-1.5">
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Moneda y Precisión</span>
+                    <div className="text-slate-900 font-bold flex items-center gap-2 text-base">
+                      <DollarSign className="w-5 h-5 text-emerald-600" /> Soles (S/)
                     </div>
-                    <span className="text-[10px] text-slate-400">Sin pérdidas por coma flotante</span>
+                    <span className="text-xs text-slate-600 block">Cálculos con exactitud contable DECIMAL(10,2)</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-[#090B10] border border-slate-800 rounded-lg">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold block mb-2">
-                    JSON RESPONSE: /api/v1/health (Tenant: {activeAcademyId})
+                <div className="p-5 bg-slate-900 text-slate-100 rounded-2xl">
+                  <span className="text-xs text-slate-400 font-medium block mb-2">
+                    Respuesta del servidor (/api/v1/health):
                   </span>
-                  <pre className="text-[11px] text-emerald-400 bg-black/40 p-3 rounded overflow-x-auto">
+                  <pre className="text-xs font-mono text-emerald-400 overflow-x-auto p-3 bg-slate-950/80 rounded-xl leading-relaxed">
 {JSON.stringify(
   {
     status: 'ok',
@@ -367,46 +372,47 @@ export default function App() {
       </main>
 
       {/* High Density Footer */}
-      <footer className="bg-[#090B10] border-t border-slate-800 text-slate-500 py-2.5 px-3 text-[10px] font-mono">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-400 uppercase">ACADEMY API PLATFORM</span>
+      <footer className="bg-white border-t border-slate-200 text-slate-500 py-4 px-6 text-xs mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-slate-600 font-medium">
+            <span>Sistema Multi-Academia</span>
             <span>•</span>
-            <span>MULTI-TENANT SAAS</span>
+            <span>Facturación SUNAT en Soles (S/)</span>
             <span>•</span>
-            <span className="text-emerald-400">DECIMAL(10, 2) PEN</span>
+            <span className="text-emerald-700 font-semibold">Base de datos PostgreSQL + Redis</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400 uppercase">
-            <span>POSTGRESQL 16</span>
-            <span>REDIS 7</span>
-            <span>BULLMQ</span>
-            <span>NESTJS 10</span>
-            <span className="text-sky-400">SUNAT UBL 2.1 BETA</span>
+          <div className="text-slate-400 text-xs">
+            Diseñado para brindar tranquilidad y agilidad en la gestión deportiva.
           </div>
         </div>
       </footer>
 
       {/* Quick Health Modal */}
       {showHealthModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded-xl max-w-lg w-full p-4 shadow-2xl space-y-3 font-mono">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-emerald-400" />
-                <h3 className="font-bold text-white text-xs uppercase tracking-wider">
-                  GET /api/v1/health — Live Telemetry
-                </h3>
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800">
+                  <Activity className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-sm">
+                    Telemetría del Sistema
+                  </h3>
+                  <p className="text-xs text-slate-500">GET /api/v1/health</p>
+                </div>
               </div>
               <button
                 onClick={() => setShowHealthModal(false)}
-                className="text-slate-400 hover:text-white p-0.5 rounded hover:bg-slate-800 transition"
+                className="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-100 transition cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-[#090B10] p-3 rounded border border-slate-800 text-[11px] text-slate-200">
-              <pre className="text-emerald-400 overflow-x-auto max-h-72">
+            <div className="bg-slate-900 p-4 rounded-2xl text-xs text-slate-200">
+              <pre className="text-emerald-400 overflow-x-auto max-h-72 leading-relaxed font-mono">
 {JSON.stringify(
   {
     status: 'ok',
@@ -448,27 +454,27 @@ export default function App() {
               </pre>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center justify-between pt-2">
               <button
                 onClick={handleCopyCurl}
-                className="flex items-center gap-1 text-[10px] text-slate-300 hover:text-white px-2.5 py-1 rounded bg-[#161B22] border border-slate-700 transition"
+                className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-slate-900 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition font-medium cursor-pointer"
               >
                 {copiedCurl ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400 uppercase">Copiado</span>
+                    <Check className="w-4 h-4 text-emerald-600" />
+                    <span className="text-emerald-700 font-semibold">Comando Copiado</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3" />
-                    <span className="uppercase">Copiar cURL</span>
+                    <Copy className="w-4 h-4 text-slate-500" />
+                    <span>Copiar cURL</span>
                   </>
                 )}
               </button>
 
               <button
                 onClick={() => setShowHealthModal(false)}
-                className="bg-sky-500 hover:bg-sky-400 text-black text-[10px] font-bold px-3 py-1 rounded transition uppercase"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold px-5 py-2 rounded-xl transition cursor-pointer"
               >
                 Cerrar
               </button>

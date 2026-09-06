@@ -24,33 +24,10 @@ import {
   WebFamily,
 } from '../types';
 
-import {
-  INITIAL_STUDENTS,
-  INITIAL_FAMILIES,
-  INITIAL_GROUPS,
-  INITIAL_SESSIONS,
-  INITIAL_CHARGES,
-  INITIAL_PAYMENTS,
-  INITIAL_INVOICES,
-  INITIAL_CUSTOMER_CREDITS,
-  INITIAL_REFUNDS,
-  INITIAL_PACKAGES,
-  INITIAL_PACKAGE_CREDITS,
-  INITIAL_TRIALS,
-  INITIAL_PROMOTIONS,
-  INITIAL_ACADEMY_POLICIES,
-} from '../data/academyData';
-
-import {
-  INITIAL_ACADEMY_PROFILES,
-  INITIAL_SPORTS,
-  INITIAL_STAFF,
-  INITIAL_TARIFFS,
-} from '../data/mockAdminData';
-
-import { INITIAL_SAAS_CLIENTS } from '../data/mockClientsData';
-
 interface AcademyContextType {
+  // Loading status
+  isLoading: boolean;
+
   // Auth
   currentUser: DemoUser | null;
   handleLogin: (user: DemoUser) => void;
@@ -135,7 +112,22 @@ interface AcademyContextType {
 
 const AcademyContext = createContext<AcademyContextType | undefined>(undefined);
 
+const DEFAULT_ACADEMY_POLICY: WebAcademyPolicy = {
+  id: 'policy-default',
+  academyId: 'acad-demo-01',
+  allowTrainingWithDebt: true,
+  debtWarningThreshold: 50.0,
+  cancellationPolicy: 'CREDIT',
+  siblingDiscountPct: 10.0,
+  maxMakeupClassesPerMonth: 2,
+  lateGracePeriodMinutes: 15,
+  updatedAt: new Date().toISOString().split('T')[0],
+};
+
 export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Global loading state
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   // Authentication state
   const [currentUser, setCurrentUser] = useState<DemoUser | null>(() => {
     try {
@@ -154,17 +146,39 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     () => localStorage.getItem('academy_active_id') || 'acad-demo-01'
   );
 
-  const [clients, setClients] = useState<SaaSClientAcademy[]>(INITIAL_SAAS_CLIENTS);
-  const [academyProfiles, setAcademyProfiles] = useState<Record<string, WebAcademyProfile>>(INITIAL_ACADEMY_PROFILES);
+  const [clients, setClients] = useState<SaaSClientAcademy[]>([]);
+  const [academyProfiles, setAcademyProfiles] = useState<Record<string, WebAcademyProfile>>({});
 
-  const activeAcademy =
-    academyProfiles[activeAcademyId] ||
-    INITIAL_ACADEMY_PROFILES['acad-demo-01'] ||
-    INITIAL_ACADEMY_PROFILES[Object.keys(academyProfiles)[0]];
+  const activeAcademy: WebAcademyProfile = academyProfiles[activeAcademyId] || {
+    id: activeAcademyId,
+    name: clients.find((c) => c.id === activeAcademyId)?.name || 'Academia Deportiva Demo Central',
+    legalName: clients.find((c) => c.id === activeAcademyId)?.legalName || 'Academia Deportiva Demo S.A.C.',
+    ruc: clients.find((c) => c.id === activeAcademyId)?.ruc || '20601234567',
+    address: clients.find((c) => c.id === activeAcademyId)?.address || 'Av. Javier Prado Este 2500',
+    district: 'San Borja',
+    city: clients.find((c) => c.id === activeAcademyId)?.city || 'Lima',
+    department: clients.find((c) => c.id === activeAcademyId)?.department || 'Lima',
+    phone: clients.find((c) => c.id === activeAcademyId)?.phone || '+51 987 654 321',
+    whatsapp: clients.find((c) => c.id === activeAcademyId)?.phone || '+51 987 654 321',
+    email: clients.find((c) => c.id === activeAcademyId)?.email || 'contacto@demo.pe',
+    openingHours: 'Lunes a Sábado: 08:00 - 20:00',
+    sunatConfig: {
+      solUser: 'MODDATOS',
+      solPassConfigured: false,
+      environment: 'BETA',
+      establishmentCode: '0000',
+      certificateStatus: 'MISSING',
+      certificateExpiresAt: '2028-12-31',
+      defaultSeriesBoleta: 'B001',
+      defaultSeriesFactura: 'F001',
+    },
+  };
 
   // Deduplicated list of authorized academies
   const rawAuthorizedList = currentUser?.isSuperAdmin
-    ? Object.values(academyProfiles).map((a) => ({ id: a.id, name: a.name }))
+    ? Object.values(academyProfiles).length > 0
+      ? Object.values(academyProfiles).map((a) => ({ id: a.id, name: a.name }))
+      : clients.map((c) => ({ id: c.id, name: c.name }))
     : currentUser?.memberships?.map((m) => ({ id: m.academyId, name: m.academyName })) || [
         { id: activeAcademy.id, name: activeAcademy.name },
       ];
@@ -178,31 +192,32 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setActiveAcademyId(academyId);
     localStorage.setItem('academy_active_id', academyId);
     apiClient.setAcademyId(academyId);
+    loadAcademyData(academyId);
   }, []);
 
-  // Domain State
-  const [students, setStudents] = useState<WebStudent[]>(INITIAL_STUDENTS);
-  const [families, setFamilies] = useState<WebFamily[]>(INITIAL_FAMILIES);
-  const [groups, setGroups] = useState<WebGroup[]>(INITIAL_GROUPS);
-  const [sessions, setSessions] = useState<WebClassSession[]>(INITIAL_SESSIONS);
-  const [charges, setCharges] = useState<WebCharge[]>(INITIAL_CHARGES);
-  const [payments, setPayments] = useState<WebPayment[]>(INITIAL_PAYMENTS);
-  const [invoices, setInvoices] = useState<WebBillingInvoice[]>(INITIAL_INVOICES);
-  const [sports, setSports] = useState<WebSportItem[]>(INITIAL_SPORTS);
-  const [staff, setStaff] = useState<WebStaffMember[]>(INITIAL_STAFF);
-  const [tariffs, setTariffs] = useState<WebFeeTariff[]>(INITIAL_TARIFFS);
+  // Domain State (Clean real data - no mock data fallbacks)
+  const [students, setStudents] = useState<WebStudent[]>([]);
+  const [families, setFamilies] = useState<WebFamily[]>([]);
+  const [groups, setGroups] = useState<WebGroup[]>([]);
+  const [sessions, setSessions] = useState<WebClassSession[]>([]);
+  const [charges, setCharges] = useState<WebCharge[]>([]);
+  const [payments, setPayments] = useState<WebPayment[]>([]);
+  const [invoices, setInvoices] = useState<WebBillingInvoice[]>([]);
+  const [sports, setSports] = useState<WebSportItem[]>([]);
+  const [staff, setStaff] = useState<WebStaffMember[]>([]);
+  const [tariffs, setTariffs] = useState<WebFeeTariff[]>([]);
 
-  const [customerCredits, setCustomerCredits] = useState<WebCustomerCredit[]>(INITIAL_CUSTOMER_CREDITS);
-  const [refunds, setRefunds] = useState<WebRefund[]>(INITIAL_REFUNDS);
-  const [packages, setPackages] = useState<WebPackage[]>(INITIAL_PACKAGES);
-  const [packageCredits, setPackageCredits] = useState<WebPackageCredit[]>(INITIAL_PACKAGE_CREDITS);
-  const [trials, setTrials] = useState<WebTrial[]>(INITIAL_TRIALS);
-  const [promotions, setPromotions] = useState<WebPromotion[]>(INITIAL_PROMOTIONS);
-  const [academyPolicy, setAcademyPolicy] = useState<WebAcademyPolicy>(INITIAL_ACADEMY_POLICIES[0]);
+  const [customerCredits, setCustomerCredits] = useState<WebCustomerCredit[]>([]);
+  const [refunds, setRefunds] = useState<WebRefund[]>([]);
+  const [packages, setPackages] = useState<WebPackage[]>([]);
+  const [packageCredits, setPackageCredits] = useState<WebPackageCredit[]>([]);
+  const [trials, setTrials] = useState<WebTrial[]>([]);
+  const [promotions, setPromotions] = useState<WebPromotion[]>([]);
+  const [academyPolicy, setAcademyPolicy] = useState<WebAcademyPolicy>(DEFAULT_ACADEMY_POLICY);
 
   const [preselectedStudent, setPreselectedStudent] = useState<WebStudent | null>(null);
   const [preselectedFamily, setPreselectedFamily] = useState<WebFamily | null>(null);
-  const [selectedSession, setSelectedSession] = useState<WebClassSession | null>(INITIAL_SESSIONS[0] || null);
+  const [selectedSession, setSelectedSession] = useState<WebClassSession | null>(null);
 
   // SaaS Subscription State
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
@@ -227,10 +242,10 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       users: null,
     },
     usage: {
-      students: INITIAL_STUDENTS.length,
-      groups: INITIAL_GROUPS.length,
-      sports: INITIAL_SPORTS.length,
-      users: INITIAL_STAFF.length,
+      students: 0,
+      groups: 0,
+      sports: 0,
+      users: 0,
     },
     overLimit: false,
     features: {
@@ -244,6 +259,7 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // MASTER DATA LOADER (From PostgreSQL API)
   // ==========================================
   const loadAcademyData = useCallback(async (academyId: string) => {
+    setIsLoading(true);
     apiClient.setAcademyId(academyId);
 
     try {
@@ -288,55 +304,61 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       ] = results;
 
       // 1. Estudiantes
-      if (studentsRes.status === 'fulfilled' && Array.isArray(studentsRes.value) && studentsRes.value.length > 0) {
+      if (studentsRes.status === 'fulfilled' && Array.isArray(studentsRes.value)) {
         setStudents(studentsRes.value);
       }
 
       // 2. Familias
-      if (familiesRes.status === 'fulfilled' && Array.isArray(familiesRes.value) && familiesRes.value.length > 0) {
+      if (familiesRes.status === 'fulfilled' && Array.isArray(familiesRes.value)) {
         setFamilies(familiesRes.value);
       }
 
       // 3. Grupos
-      if (groupsRes.status === 'fulfilled' && Array.isArray(groupsRes.value) && groupsRes.value.length > 0) {
+      if (groupsRes.status === 'fulfilled' && Array.isArray(groupsRes.value)) {
         setGroups(groupsRes.value);
       }
 
       // 4. Deportes
-      if (sportsRes.status === 'fulfilled' && Array.isArray(sportsRes.value) && sportsRes.value.length > 0) {
-        setSports((prev) =>
-          sportsRes.value.map((s: any, idx: number) => ({
+      if (sportsRes.status === 'fulfilled' && Array.isArray(sportsRes.value)) {
+        setSports(
+          sportsRes.value.map((s: any) => ({
             id: s.id,
             name: s.name,
-            iconName: prev[idx]?.iconName || 'Activity',
+            iconName: 'Activity',
             description: s.description || '',
-            categories: prev[idx]?.categories || ['Sub-6', 'Sub-8', 'Sub-10', 'Sub-12'],
-            assignedCourts: prev[idx]?.assignedCourts || ['Cancha Principal', 'Cancha Sintética 1'],
-            monthlyFee: prev[idx]?.monthlyFee || 180,
-            activeStudents: s.groupsCount * 12 || 15,
+            categories: ['Sub-6', 'Sub-8', 'Sub-10', 'Sub-12'],
+            assignedCourts: ['Cancha Principal', 'Cancha Sintética 1'],
+            monthlyFee: 180,
+            activeStudents: (s.groupsCount || 0) * 12,
             isActive: s.isActive ?? true,
           }))
         );
       }
 
       // 5. Sesiones
-      if (sessionsRes.status === 'fulfilled' && Array.isArray(sessionsRes.value) && sessionsRes.value.length > 0) {
+      if (sessionsRes.status === 'fulfilled' && Array.isArray(sessionsRes.value)) {
         setSessions(sessionsRes.value);
-        setSelectedSession(sessionsRes.value[0] || null);
+        setSelectedSession((prev) => {
+          if (prev) {
+            const found = sessionsRes.value.find((s: any) => s.id === prev.id);
+            return found || sessionsRes.value[0] || null;
+          }
+          return sessionsRes.value[0] || null;
+        });
       }
 
       // 6. Cargos
-      if (chargesRes.status === 'fulfilled' && Array.isArray(chargesRes.value) && chargesRes.value.length > 0) {
+      if (chargesRes.status === 'fulfilled' && Array.isArray(chargesRes.value)) {
         setCharges(chargesRes.value);
       }
 
       // 7. Pagos
-      if (paymentsRes.status === 'fulfilled' && Array.isArray(paymentsRes.value) && paymentsRes.value.length > 0) {
+      if (paymentsRes.status === 'fulfilled' && Array.isArray(paymentsRes.value)) {
         setPayments(paymentsRes.value);
       }
 
       // 8. Facturas SUNAT
-      if (invoicesRes.status === 'fulfilled' && Array.isArray(invoicesRes.value) && invoicesRes.value.length > 0) {
+      if (invoicesRes.status === 'fulfilled' && Array.isArray(invoicesRes.value)) {
         setInvoices(
           invoicesRes.value.map((inv: any) => ({
             id: inv.id,
@@ -362,17 +384,17 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       // 10. Paquetes
-      if (packagesRes.status === 'fulfilled' && Array.isArray(packagesRes.value) && packagesRes.value.length > 0) {
+      if (packagesRes.status === 'fulfilled' && Array.isArray(packagesRes.value)) {
         setPackages(packagesRes.value);
       }
 
       // 11. Promociones
-      if (promotionsRes.status === 'fulfilled' && Array.isArray(promotionsRes.value) && promotionsRes.value.length > 0) {
+      if (promotionsRes.status === 'fulfilled' && Array.isArray(promotionsRes.value)) {
         setPromotions(promotionsRes.value);
       }
 
       // 12. Clases de Prueba
-      if (trialsRes.status === 'fulfilled' && Array.isArray(trialsRes.value) && trialsRes.value.length > 0) {
+      if (trialsRes.status === 'fulfilled' && Array.isArray(trialsRes.value)) {
         setTrials(trialsRes.value);
       }
 
@@ -389,7 +411,7 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
           plan: {
             code: res.plan.code || 'PRO',
             name: res.plan.name || 'Plan PRO',
-            priceMonthly: res.plan.priceMonthly || 99,
+            priceMonthly: res.plan.priceMonthly ?? 99,
             currency: res.plan.currency || 'PEN',
           },
           status: res.status || 'ACTIVE',
@@ -406,7 +428,7 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       // 15. Academias del sistema
-      if (academiesRes.status === 'fulfilled' && Array.isArray(academiesRes.value) && academiesRes.value.length > 0) {
+      if (academiesRes.status === 'fulfilled' && Array.isArray(academiesRes.value)) {
         const mappedClients: SaaSClientAcademy[] = academiesRes.value.map((raw: any) => {
           const a = raw.academy || raw;
           const sub = a.subscription;
@@ -479,18 +501,18 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       // 16. Staff en tiempo real
-      if (staffRes.status === 'fulfilled' && Array.isArray(staffRes.value) && staffRes.value.length > 0) {
+      if (staffRes.status === 'fulfilled' && Array.isArray(staffRes.value)) {
         setStaff(
           staffRes.value.map((m: any) => ({
             id: m.id,
-            name: `${m.user.firstName} ${m.user.lastName}`.trim(),
-            dni: m.user.email.split('@')[0],
-            email: m.user.email,
-            phone: m.user.phone || '+51 900 000 000',
+            name: `${m.user?.firstName || ''} ${m.user?.lastName || ''}`.trim() || m.user?.email || 'Staff',
+            dni: m.user?.email?.split('@')[0] || 'DNI',
+            email: m.user?.email || '',
+            phone: m.user?.phone || '+51 900 000 000',
             role: m.role,
             roleTitle: m.role === 'OWNER' ? 'Director General' : m.role === 'CASHIER' ? 'Cajero / Recepción' : m.role === 'COACH' ? 'Entrenador' : 'Administrador',
             sports: ['Fútbol Formativo'],
-            joinedDate: new Date(m.createdAt).toISOString().split('T')[0],
+            joinedDate: m.createdAt ? new Date(m.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
             status: m.isActive ? 'ACTIVE' : 'INACTIVE',
           }))
         );
@@ -520,6 +542,8 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
     } catch (err: any) {
       console.warn('[AcademyContext] Error sincronizando datos con API:', err.message);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -1099,6 +1123,7 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
   return (
     <AcademyContext.Provider
       value={{
+        isLoading,
         currentUser,
         handleLogin,
         handleLogout,
