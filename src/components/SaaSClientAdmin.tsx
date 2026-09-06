@@ -1,0 +1,1042 @@
+import React, { useState } from 'react';
+import {
+  Building2,
+  Users,
+  CreditCard,
+  Sparkles,
+  Search,
+  Filter,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  Shield,
+  Zap,
+  Key,
+  Copy,
+  Check,
+  ChevronRight,
+  Plus,
+  ExternalLink,
+  Sliders,
+  DollarSign,
+  TrendingUp,
+  FileText,
+  Activity,
+  X,
+  Lock,
+  PauseCircle,
+  PlayCircle,
+  Calendar,
+  Layers,
+  BarChart3,
+  RefreshCw,
+} from 'lucide-react';
+import { SaaSClientAcademy } from '../types';
+
+interface SaaSClientAdminProps {
+  clients: SaaSClientAcademy[];
+  onUpdateClient: (updated: SaaSClientAcademy) => void;
+  onAddClient: (newClient: SaaSClientAcademy) => void;
+  onSelectClientForApiTesting: (academyId: string) => void;
+}
+
+export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
+  clients,
+  onUpdateClient,
+  onAddClient,
+  onSelectClientForApiTesting,
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<'ALL' | 'TRIAL' | 'PRO' | 'FREE' | 'ENTERPRISE' | 'OVER_LIMIT'>('ALL');
+  const [selectedClient, setSelectedClient] = useState<SaaSClientAcademy | null>(null);
+  const [isNewClientModalOpen, setIsNewClientModalOpen] = useState(false);
+  const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
+
+  // New Client Form state
+  const [newForm, setNewForm] = useState({
+    name: '',
+    legalName: '',
+    ruc: '',
+    address: '',
+    city: 'Lima',
+    department: 'Lima',
+    phone: '+51 ',
+    email: '',
+    contactPerson: '',
+    sportName: 'Fútbol',
+  });
+
+  // Calculate SaaS Global Metrics
+  const totalClients = clients.length;
+  const trialClients = clients.filter((c) => c.planStatus === 'TRIALING').length;
+  const proClients = clients.filter((c) => c.plan === 'PRO' && c.planStatus === 'ACTIVE').length;
+  const enterpriseClients = clients.filter((c) => c.plan === 'ENTERPRISE' && c.planStatus === 'ACTIVE').length;
+  const freeClients = clients.filter((c) => c.plan === 'FREE').length;
+
+  const totalMrr = clients.reduce((acc, c) => {
+    if (c.planStatus === 'ACTIVE' || c.planStatus === 'TRIALING') {
+      return acc + (c.mrr || 0);
+    }
+    return acc;
+  }, 0);
+
+  const totalStudents = clients.reduce((acc, c) => acc + c.studentsCount, 0);
+  const totalInvoices = clients.reduce((acc, c) => acc + c.invoicesThisMonth, 0);
+
+  // Filter clients
+  const filteredClients = clients.filter((c) => {
+    const matchesSearch =
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.legalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.ruc.includes(searchTerm) ||
+      c.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.contactPerson.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (filterStatus === 'TRIAL') return c.planStatus === 'TRIALING';
+    if (filterStatus === 'PRO') return c.plan === 'PRO';
+    if (filterStatus === 'FREE') return c.plan === 'FREE';
+    if (filterStatus === 'ENTERPRISE') return c.plan === 'ENTERPRISE';
+    if (filterStatus === 'OVER_LIMIT') {
+      return c.studentsLimit !== null && c.studentsCount >= c.studentsLimit * 0.9;
+    }
+
+    return true;
+  });
+
+  const handleCopyApiKey = (id: string, key: string) => {
+    navigator.clipboard.writeText(key);
+    setCopiedKeyId(id);
+    setTimeout(() => setCopiedKeyId(null), 2000);
+  };
+
+  const handleExtendTrial = (client: SaaSClientAcademy, extraDays: number) => {
+    const currentDays = client.trialDaysLeft || 0;
+    const newDays = currentDays + extraDays;
+    const endsAt = new Date(Date.now() + newDays * 86400000).toISOString();
+
+    const updated: SaaSClientAcademy = {
+      ...client,
+      plan: 'PRO',
+      planStatus: 'TRIALING',
+      trialDaysLeft: newDays,
+      trialEndsAt: endsAt,
+    };
+    onUpdateClient(updated);
+    if (selectedClient?.id === client.id) {
+      setSelectedClient(updated);
+    }
+  };
+
+  const handleChangePlan = (client: SaaSClientAcademy, newPlan: 'FREE' | 'PRO' | 'ENTERPRISE') => {
+    let mrr = 0;
+    let studentsLimit: number | null = null;
+    let sportsLimit = null;
+
+    if (newPlan === 'FREE') {
+      mrr = 0;
+      studentsLimit = 30;
+    } else if (newPlan === 'PRO') {
+      mrr = 99;
+      studentsLimit = null;
+    } else if (newPlan === 'ENTERPRISE') {
+      mrr = 249;
+      studentsLimit = null;
+    }
+
+    const updated: SaaSClientAcademy = {
+      ...client,
+      plan: newPlan,
+      planStatus: 'ACTIVE',
+      trialDaysLeft: 0,
+      trialEndsAt: null,
+      mrr,
+      studentsLimit,
+    };
+    onUpdateClient(updated);
+    if (selectedClient?.id === client.id) {
+      setSelectedClient(updated);
+    }
+  };
+
+  const handleToggleSuspension = (client: SaaSClientAcademy) => {
+    const updated: SaaSClientAcademy = {
+      ...client,
+      isSuspended: !client.isSuspended,
+      planStatus: !client.isSuspended ? 'SUSPENDED' : client.plan === 'FREE' ? 'ACTIVE' : 'ACTIVE',
+    };
+    onUpdateClient(updated);
+    if (selectedClient?.id === client.id) {
+      setSelectedClient(updated);
+    }
+  };
+
+  const handleRegenerateApiKey = (client: SaaSClientAcademy) => {
+    const prefix = client.planStatus === 'TRIALING' ? 'sk_test_' : 'sk_live_';
+    const randomHex = Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 10);
+    const newKey = `${prefix}${client.slug.substring(0, 8)}_${randomHex}`;
+
+    const updated: SaaSClientAcademy = {
+      ...client,
+      apiKey: newKey,
+    };
+    onUpdateClient(updated);
+    if (selectedClient?.id === client.id) {
+      setSelectedClient(updated);
+    }
+  };
+
+  const handleCreateNewClient = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newForm.name || !newForm.ruc || newForm.ruc.length !== 11) {
+      alert('Por favor ingresa un nombre válido y un RUC de 11 dígitos.');
+      return;
+    }
+
+    const slug = newForm.name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    const newId = `acad-${slug.substring(0, 10)}-${Math.floor(10 + Math.random() * 90)}`;
+    const randomKey = `sk_test_${slug.substring(0, 8)}_${Math.random().toString(36).substring(2, 15)}`;
+
+    const newClient: SaaSClientAcademy = {
+      id: newId,
+      slug,
+      name: newForm.name,
+      legalName: newForm.legalName || newForm.name.toUpperCase() + ' S.A.C.',
+      ruc: newForm.ruc,
+      address: newForm.address || 'Av. Principal 123',
+      city: newForm.city,
+      department: newForm.department,
+      phone: newForm.phone,
+      email: newForm.email || `contacto@${slug}.pe`,
+      contactPerson: newForm.contactPerson || 'Administrador Sede',
+      plan: 'PRO',
+      planStatus: 'TRIALING',
+      trialDaysLeft: 14,
+      trialEndsAt: new Date(Date.now() + 14 * 86400000).toISOString(),
+      mrr: 99.0,
+      studentsCount: 0,
+      studentsLimit: null,
+      sportsCount: 1,
+      groupsCount: 0,
+      staffCount: 1,
+      invoicesThisMonth: 0,
+      sunatStatus: 'CONFIGURED_BETA',
+      apiKey: randomKey,
+      createdAt: new Date().toISOString(),
+      lastActiveAt: 'Recién registrado',
+      isSuspended: false,
+    };
+
+    onAddClient(newClient);
+    setIsNewClientModalOpen(false);
+    setSelectedClient(newClient);
+    setNewForm({
+      name: '',
+      legalName: '',
+      ruc: '',
+      address: '',
+      city: 'Lima',
+      department: 'Lima',
+      phone: '+51 ',
+      email: '',
+      contactPerson: '',
+      sportName: 'Fútbol',
+    });
+  };
+
+  return (
+    <div className="space-y-6 font-mono text-xs">
+      {/* 1. Header & Architecture Link Alert */}
+      <div className="bg-[#161B22] border border-slate-800 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+              <Building2 className="w-5 h-5" />
+            </span>
+            <h2 className="text-base font-bold text-white uppercase tracking-tight">
+              Panel de Administración de Mis Clientes (SaaS SuperAdmin)
+            </h2>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
+              Multi-Tenant Engine
+            </span>
+          </div>
+          <p className="text-slate-400 text-xs max-w-3xl">
+            Gestión centralizada de academias deportivas clientes: estado de suscripción, cuotas de alumnos,
+            facturación recurrente MRR, credenciales SUNAT UBL 2.1 y llaves de acceso API.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setIsNewClientModalOpen(true)}
+            className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-black font-bold flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition"
+          >
+            <Plus className="w-4 h-4" /> Registrar Nueva Academia
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Decoupled Web App Architecture Info Banner */}
+      <div className="bg-sky-500/[0.04] border border-sky-500/20 rounded-xl p-4 flex items-start justify-between gap-4 text-xs">
+        <div className="flex items-start gap-3">
+          <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <div className="font-bold text-white flex items-center gap-2">
+              <span>Frontend SPA Desacoplado: <strong>academy-web</strong></span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
+                Puerto 8080 en Docker
+              </span>
+            </div>
+            <p className="text-slate-400">
+              Cada academia cliente accede a su propio portal operativo en el proyecto independiente{' '}
+              <code className="text-sky-300 bg-sky-950/60 px-1 py-0.5 rounded">/academy-web</code>. Aquí en el{' '}
+              <strong>Sandbox</strong> administras los tenants globales, sus planes y pruebas de API.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Executive SaaS Metrics (MRR, Tenants, Trials, Alumnos) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
+            <Building2 className="w-3.5 h-3.5 text-sky-400" /> Clientes Totales
+          </span>
+          <div className="text-xl font-bold text-white">{totalClients}</div>
+          <span className="text-[10px] text-slate-400">Academias en Perú</span>
+        </div>
+
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-purple-400 uppercase font-semibold flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-purple-400" /> En Prueba (14d)
+          </span>
+          <div className="text-xl font-bold text-purple-300">{trialClients}</div>
+          <span className="text-[10px] text-slate-400">Prueba Pro gratuita</span>
+        </div>
+
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-amber-400 uppercase font-semibold flex items-center gap-1">
+            <Zap className="w-3.5 h-3.5 text-amber-400" /> Clientes Pro
+          </span>
+          <div className="text-xl font-bold text-amber-300">{proClients + enterpriseClients}</div>
+          <span className="text-[10px] text-slate-400">S/ 99 - S/ 249/mes</span>
+        </div>
+
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" /> Plan Free
+          </span>
+          <div className="text-xl font-bold text-slate-200">{freeClients}</div>
+          <span className="text-[10px] text-slate-400">Hasta 30 alumnos</span>
+        </div>
+
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-emerald-400 uppercase font-semibold flex items-center gap-1">
+            <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> MRR Proyectado
+          </span>
+          <div className="text-xl font-bold text-emerald-300">S/ {totalMrr.toFixed(2)}</div>
+          <span className="text-[10px] text-slate-400">Ingreso recurrente</span>
+        </div>
+
+        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
+          <span className="text-[10px] text-sky-400 uppercase font-semibold flex items-center gap-1">
+            <Users className="w-3.5 h-3.5 text-sky-400" /> Alumnos Red
+          </span>
+          <div className="text-xl font-bold text-white">{totalStudents.toLocaleString()}</div>
+          <span className="text-[10px] text-slate-400">En todas las sedes</span>
+        </div>
+      </div>
+
+      {/* 4. Filter and Search Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#161B22] border border-slate-800 rounded-xl p-3">
+        <div className="flex items-center gap-2 flex-1 min-w-[240px]">
+          <div className="relative w-full max-w-md">
+            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
+            <input
+              type="text"
+              placeholder="Buscar por academia, RUC, ciudad o contacto..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-[#0D1117] border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <button
+            onClick={() => setFilterStatus('ALL')}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+              filterStatus === 'ALL'
+                ? 'bg-sky-500 text-black font-bold'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Todos ({clients.length})
+          </button>
+          <button
+            onClick={() => setFilterStatus('TRIAL')}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+              filterStatus === 'TRIAL'
+                ? 'bg-purple-500 text-white font-bold'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            En Prueba 14d ({trialClients})
+          </button>
+          <button
+            onClick={() => setFilterStatus('PRO')}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+              filterStatus === 'PRO'
+                ? 'bg-amber-400 text-black font-bold'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Plan PRO ({proClients})
+          </button>
+          <button
+            onClick={() => setFilterStatus('FREE')}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+              filterStatus === 'FREE'
+                ? 'bg-slate-700 text-white font-bold'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Plan FREE ({freeClients})
+          </button>
+          <button
+            onClick={() => setFilterStatus('OVER_LIMIT')}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
+              filterStatus === 'OVER_LIMIT'
+                ? 'bg-rose-500 text-white font-bold'
+                : 'bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Límite Alumnos
+          </button>
+        </div>
+      </div>
+
+      {/* 5. Clients Directory Grid / Table */}
+      <div className="space-y-3">
+        {filteredClients.map((client) => {
+          const isTrial = client.planStatus === 'TRIALING';
+          const isPro = client.plan === 'PRO';
+          const isEnterprise = client.plan === 'ENTERPRISE';
+          const isFree = client.plan === 'FREE';
+          const isSuspended = client.isSuspended;
+
+          // Resource usage percent
+          const usagePercent = client.studentsLimit
+            ? Math.min(100, (client.studentsCount / client.studentsLimit) * 100)
+            : 0;
+
+          return (
+            <div
+              key={client.id}
+              className={`bg-[#161B22] border rounded-xl p-4 transition ${
+                isSuspended
+                  ? 'border-rose-900/60 opacity-60 bg-rose-950/10'
+                  : isTrial
+                  ? 'border-purple-500/30 hover:border-purple-500/50'
+                  : isEnterprise
+                  ? 'border-amber-500/40 hover:border-amber-500/60'
+                  : isPro
+                  ? 'border-sky-500/30 hover:border-sky-500/50'
+                  : 'border-slate-800 hover:border-slate-700'
+              }`}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                {/* Academy Basic Details */}
+                <div className="space-y-1.5 flex-1 min-w-[280px]">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="text-sm font-bold text-white">{client.name}</h3>
+                    <span className="text-[10px] text-slate-400 px-1.5 py-0.5 rounded bg-[#0D1117] border border-slate-700">
+                      RUC: {client.ruc}
+                    </span>
+
+                    {/* Plan Badge */}
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase border ${
+                        isSuspended
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                          : isTrial
+                          ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                          : isEnterprise
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          : isPro
+                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                          : 'bg-slate-700/40 text-slate-300 border-slate-600'
+                      }`}
+                    >
+                      {isSuspended
+                        ? 'SUSPENDIDO'
+                        : isTrial
+                        ? `PRO (Prueba ${client.trialDaysLeft}d)`
+                        : isEnterprise
+                        ? 'ENTERPRISE (S/ 249/m)'
+                        : isPro
+                        ? 'PRO (S/ 99/m)'
+                        : 'FREE (S/ 0/m)'}
+                    </span>
+
+                    {/* SUNAT Badge */}
+                    <span
+                      className={`text-[9px] px-1.5 py-0.5 rounded font-semibold border ${
+                        client.sunatStatus === 'CONFIGURED_PROD'
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                          : client.sunatStatus === 'CONFIGURED_BETA'
+                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                          : 'bg-slate-800 text-slate-400 border-slate-700'
+                      }`}
+                    >
+                      {client.sunatStatus === 'CONFIGURED_PROD'
+                        ? 'SUNAT Prod (UBL 2.1)'
+                        : client.sunatStatus === 'CONFIGURED_BETA'
+                        ? 'SUNAT Beta'
+                        : 'SOL Pendiente'}
+                    </span>
+                  </div>
+
+                  <div className="text-slate-400 text-xs flex items-center gap-4 flex-wrap">
+                    <span>
+                      <strong className="text-slate-300">Razón Social:</strong> {client.legalName}
+                    </span>
+                    <span>•</span>
+                    <span>
+                      <strong className="text-slate-300">Sede:</strong> {client.city}, {client.department}
+                    </span>
+                    <span>•</span>
+                    <span>
+                      <strong className="text-slate-300">Contacto:</strong> {client.contactPerson} ({client.phone})
+                    </span>
+                  </div>
+
+                  {/* Tenant ID & API Key snippet */}
+                  <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
+                    <span className="text-slate-500 uppercase text-[10px]">Tenant ID:</span>
+                    <code className="bg-[#0D1117] text-amber-300 px-1.5 py-0.5 rounded border border-slate-800">
+                      {client.id}
+                    </code>
+
+                    <span className="text-slate-500 uppercase text-[10px] ml-2">API Key:</span>
+                    <div className="flex items-center gap-1 bg-[#0D1117] px-1.5 py-0.5 rounded border border-slate-800">
+                      <Key className="w-3 h-3 text-sky-400" />
+                      <code className="text-slate-300 text-[10px]">
+                        {client.apiKey.substring(0, 14)}••••••••
+                      </code>
+                      <button
+                        onClick={() => handleCopyApiKey(client.id, client.apiKey)}
+                        className="p-1 hover:text-white text-slate-400 transition"
+                        title="Copiar API Key"
+                      >
+                        {copiedKeyId === client.id ? (
+                          <Check className="w-3 h-3 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </button>
+                    </div>
+
+                    <span className="text-slate-500 text-[10px] ml-auto">
+                      Actividad: {client.lastActiveAt}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Resource Stats & Capacity Indicators */}
+                <div className="flex items-center gap-6 border-l border-slate-800 pl-4">
+                  {/* Students Counter & Limit */}
+                  <div className="w-32">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <span className="text-[10px] text-slate-400 uppercase">Alumnos</span>
+                      <span className="text-xs font-bold text-white">
+                        {client.studentsCount}
+                        <span className="text-slate-400 font-normal">
+                          {client.studentsLimit ? ` / ${client.studentsLimit}` : ' (Ilim.)'}
+                        </span>
+                      </span>
+                    </div>
+
+                    {client.studentsLimit ? (
+                      <div className="w-full bg-[#0D1117] h-1.5 rounded-full overflow-hidden border border-slate-800">
+                        <div
+                          className={`h-full rounded-full ${
+                            usagePercent >= 90 ? 'bg-rose-500' : 'bg-sky-400'
+                          }`}
+                          style={{ width: `${usagePercent}%` }}
+                        ></div>
+                      </div>
+                    ) : (
+                      <div className="text-[9px] text-emerald-400 font-semibold">Sin límite de alumnos</div>
+                    )}
+                  </div>
+
+                  {/* Facturación y Staff */}
+                  <div className="text-right space-y-0.5">
+                    <div className="text-slate-400 text-[10px]">
+                      Comprobantes mes: <strong className="text-white">{client.invoicesThisMonth}</strong>
+                    </div>
+                    <div className="text-slate-400 text-[10px]">
+                      Staff / Coaches: <strong className="text-white">{client.staffCount}</strong>
+                    </div>
+                  </div>
+
+                  {/* Operational Action Buttons */}
+                  <div className="flex flex-col gap-1.5">
+                    <button
+                      onClick={() => setSelectedClient(client)}
+                      className="px-3 py-1.5 bg-[#0D1117] hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 rounded text-xs flex items-center gap-1.5 transition font-semibold"
+                    >
+                      <Sliders className="w-3.5 h-3.5 text-sky-400" />
+                      <span>Gestionar</span>
+                    </button>
+
+                    <button
+                      onClick={() => onSelectClientForApiTesting(client.id)}
+                      className="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-xs flex items-center gap-1.5 transition font-semibold"
+                      title="Abrir este tenant en la consola de API"
+                    >
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Probar API</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {filteredClients.length === 0 && (
+          <div className="p-8 text-center bg-[#161B22] border border-slate-800 rounded-xl text-slate-400">
+            No se encontraron academias clientes con el filtro o búsqueda actual.
+          </div>
+        )}
+      </div>
+
+      {/* 6. Detailed Client Management Drawer/Modal */}
+      {selectedClient && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
+            {/* Modal Header */}
+            <div className="border-b border-slate-800 p-5 flex items-start justify-between bg-[#161B22]">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="p-1 rounded bg-sky-500/20 text-sky-400">
+                    <Building2 className="w-4 h-4" />
+                  </span>
+                  <h3 className="text-base font-bold text-white font-mono">
+                    {selectedClient.name}
+                  </h3>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                      selectedClient.isSuspended
+                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                        : selectedClient.planStatus === 'TRIALING'
+                        ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                    }`}
+                  >
+                    {selectedClient.isSuspended
+                      ? 'SUSPENDIDO'
+                      : selectedClient.planStatus === 'TRIALING'
+                      ? `Prueba (${selectedClient.trialDaysLeft}d)`
+                      : selectedClient.plan}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 font-mono mt-0.5">
+                  RUC: {selectedClient.ruc} • {selectedClient.legalName} • ID: {selectedClient.id}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setSelectedClient(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* Plan & Subscription Controls */}
+              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-amber-400" /> Plan SaaS y Suscripción del Cliente
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Plan Free Button */}
+                  <div
+                    className={`p-3 rounded-lg border cursor-pointer transition ${
+                      selectedClient.plan === 'FREE'
+                        ? 'border-sky-500 bg-sky-500/10'
+                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                    }`}
+                    onClick={() => handleChangePlan(selectedClient, 'FREE')}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-white text-xs">Plan FREE</span>
+                      {selectedClient.plan === 'FREE' && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" />
+                      )}
+                    </div>
+                    <div className="text-sm font-black text-white">S/ 0.00</div>
+                    <span className="text-[10px] text-slate-400 block mt-1">
+                      Hasta 30 alumnos • Sin SUNAT
+                    </span>
+                  </div>
+
+                  {/* Plan Pro Button */}
+                  <div
+                    className={`p-3 rounded-lg border cursor-pointer transition ${
+                      selectedClient.plan === 'PRO'
+                        ? 'border-amber-500 bg-amber-500/10'
+                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                    }`}
+                    onClick={() => handleChangePlan(selectedClient, 'PRO')}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-amber-300 text-xs">Plan PRO</span>
+                      {selectedClient.plan === 'PRO' && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+                      )}
+                    </div>
+                    <div className="text-sm font-black text-white">S/ 99.00/mes</div>
+                    <span className="text-[10px] text-slate-400 block mt-1">
+                      Alumnos ilimitados • Facturación SUNAT
+                    </span>
+                  </div>
+
+                  {/* Plan Enterprise Button */}
+                  <div
+                    className={`p-3 rounded-lg border cursor-pointer transition ${
+                      selectedClient.plan === 'ENTERPRISE'
+                        ? 'border-emerald-500 bg-emerald-500/10'
+                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                    }`}
+                    onClick={() => handleChangePlan(selectedClient, 'ENTERPRISE')}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-emerald-300 text-xs">Plan ENTERPRISE</span>
+                      {selectedClient.plan === 'ENTERPRISE' && (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      )}
+                    </div>
+                    <div className="text-sm font-black text-white">S/ 249.00/mes</div>
+                    <span className="text-[10px] text-slate-400 block mt-1">
+                      Multisede total • SLA Prioritario
+                    </span>
+                  </div>
+                </div>
+
+                {/* Trial Extension and Suspension Actions */}
+                <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-400">Extender período de prueba PRO:</span>
+                    <button
+                      onClick={() => handleExtendTrial(selectedClient, 7)}
+                      className="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded transition"
+                    >
+                      +7 Días
+                    </button>
+                    <button
+                      onClick={() => handleExtendTrial(selectedClient, 14)}
+                      className="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded transition font-bold"
+                    >
+                      +14 Días
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => handleToggleSuspension(selectedClient)}
+                    className={`px-3 py-1 rounded border transition font-bold flex items-center gap-1.5 ${
+                      selectedClient.isSuspended
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                        : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
+                    }`}
+                  >
+                    {selectedClient.isSuspended ? (
+                      <>
+                        <PlayCircle className="w-3.5 h-3.5" /> Reactivar Cuenta
+                      </>
+                    ) : (
+                      <>
+                        <PauseCircle className="w-3.5 h-3.5" /> Suspender Cuenta
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* API Access & Tenant Keys */}
+              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-3">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+                  <Key className="w-4 h-4 text-sky-400" /> Credenciales API & Integración
+                </h4>
+
+                <div className="space-y-2 text-xs">
+                  <div>
+                    <span className="text-slate-400 text-[10px] uppercase block mb-1">
+                      Encabezado Multi-Tenant (x-academy-id)
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={selectedClient.id}
+                        className="bg-[#0D1117] border border-slate-700 rounded px-3 py-1.5 text-amber-300 font-mono text-xs w-full"
+                      />
+                      <button
+                        onClick={() => handleCopyApiKey('tenant-id', selectedClient.id)}
+                        className="p-1.5 bg-[#0D1117] border border-slate-700 rounded hover:bg-slate-800 transition"
+                      >
+                        {copiedKeyId === 'tenant-id' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-slate-400 text-[10px] uppercase">API Secret Key</span>
+                      <button
+                        onClick={() => handleRegenerateApiKey(selectedClient)}
+                        className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1"
+                      >
+                        <RefreshCw className="w-3 h-3" /> Regenerar Llave
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={selectedClient.apiKey}
+                        className="bg-[#0D1117] border border-slate-700 rounded px-3 py-1.5 text-white font-mono text-xs w-full"
+                      />
+                      <button
+                        onClick={() => handleCopyApiKey('api-key', selectedClient.apiKey)}
+                        className="p-1.5 bg-[#0D1117] border border-slate-700 rounded hover:bg-slate-800 transition"
+                      >
+                        {copiedKeyId === 'api-key' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fiscal & Contact Data */}
+              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-2 text-xs">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-emerald-400" /> Datos Fiscales y Certificado Digital
+                </h4>
+
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <span className="text-slate-500 text-[10px] uppercase block">Dirección Legal:</span>
+                    <span className="text-white">{selectedClient.address}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-[10px] uppercase block">Email de Facturación:</span>
+                    <span className="text-white">{selectedClient.email}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-[10px] uppercase block">Teléfono / WhatsApp:</span>
+                    <span className="text-white">{selectedClient.phone}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 text-[10px] uppercase block">Certificado Digital SUNAT:</span>
+                    <span className="text-emerald-400">
+                      {selectedClient.certificateExpiresAt
+                        ? `Válido hasta ${selectedClient.certificateExpiresAt}`
+                        : 'No registrado'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-800 bg-[#090D13] flex items-center justify-between">
+              <button
+                onClick={() => {
+                  onSelectClientForApiTesting(selectedClient.id);
+                  setSelectedClient(null);
+                }}
+                className="px-3.5 py-1.5 rounded bg-amber-500 text-black font-bold flex items-center gap-1.5 hover:bg-amber-400 transition"
+              >
+                <Zap className="w-4 h-4" /> Probar este Tenant en el API Sandbox
+              </button>
+
+              <button
+                onClick={() => setSelectedClient(null)}
+                className="px-4 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. New Client Onboarding Modal */}
+      {isNewClientModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
+            <div className="border-b border-slate-800 p-5 flex items-start justify-between bg-[#161B22]">
+              <div>
+                <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-sky-400" /> Alta de Nueva Academia Cliente (Onboarding)
+                </h3>
+                <p className="text-xs text-slate-400 font-mono mt-0.5">
+                  Registra una nueva academia deportiva con 14 días de prueba PRO ilimitada sin tarjeta.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsNewClientModalOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateNewClient} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Nombre Comercial de la Academia *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej. Academia Los Leones FC"
+                    value={newForm.name}
+                    onChange={(e) => setNewForm({ ...newForm, name: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    RUC (11 Dígitos) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    maxLength={11}
+                    placeholder="20XXXXXXXXX"
+                    value={newForm.ruc}
+                    onChange={(e) => setNewForm({ ...newForm, ruc: e.target.value.replace(/\D/g, '') })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500 font-mono"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Razón Social Tributaria *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej. ASOCIACIÓN CLUB DEPORTIVO LOS LEONES"
+                    value={newForm.legalName}
+                    onChange={(e) => setNewForm({ ...newForm, legalName: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500 uppercase"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Nombre del Director / Dueño *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej. Juan Pérez"
+                    value={newForm.contactPerson}
+                    onChange={(e) => setNewForm({ ...newForm, contactPerson: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Email de Contacto *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="director@losleones.pe"
+                    value={newForm.email}
+                    onChange={(e) => setNewForm({ ...newForm, email: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Teléfono / Celular *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="+51 987 654 321"
+                    value={newForm.phone}
+                    onChange={(e) => setNewForm({ ...newForm, phone: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                    Ciudad / Sede
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Lima / Arequipa / Trujillo..."
+                    value={newForm.city}
+                    onChange={(e) => setNewForm({ ...newForm, city: e.target.value })}
+                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+              </div>
+
+              {/* Automatic Trial notice */}
+              <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg flex items-start gap-2.5 text-xs text-purple-200">
+                <Clock className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                <div>
+                  <strong>Activación Instantánea:</strong> La academia iniciará con el{' '}
+                  <span className="text-white font-bold">Plan PRO con 14 días de prueba gratuita</span> (sin tarjeta de
+                  crédito). Al culminar los 14 días, el sistema degradará de manera segura al plan Free (máx 30 alumnos)
+                  sin eliminar ninguna data.
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsNewClientModalOpen(false)}
+                  className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold shadow-lg shadow-sky-500/20 transition"
+                >
+                  Crear Academia Cliente
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

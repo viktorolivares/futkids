@@ -1,0 +1,794 @@
+// Prisma Schema for Plataforma de Gestión de Academias Deportivas (Perú)
+// Multi-Tenant Modular Monolith with PostgreSQL & Decimal for monetary precision
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -----------------------------------------------------------------------------
+// ENUMS
+// -----------------------------------------------------------------------------
+
+enum Role {
+  SUPER_ADMIN
+  OWNER
+  ADMIN
+  COACH
+  CASHIER
+  STAFF
+  PARENT
+}
+
+enum ParticipationType {
+  REGULAR
+  TRIAL
+  MAKEUP
+  COMPLIMENTARY
+  GUEST
+  PROMOTIONAL
+  PACKAGE
+  OTHER
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  JUSTIFIED
+}
+
+enum ChargeType {
+  ENROLLMENT
+  MONTHLY
+  CLASS
+  TRIAL
+  PACKAGE
+  UNIFORM
+  EVENT
+  OTHER
+}
+
+enum ChargeStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  YAPE
+  PLIN
+  BANK_TRANSFER
+  CREDIT_NOTE
+  CUSTOMER_CREDIT
+  OTHER
+}
+
+enum InvoiceStatus {
+  PENDING
+  PROCESSING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+enum InvoiceType {
+  BOLETA
+  FACTURA
+  NOTA_CREDITO
+  NOTA_DEBITO
+}
+
+enum DataSource {
+  DIRECT
+  MIGRATION
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  CANCELED
+  EXPIRED
+}
+
+// -----------------------------------------------------------------------------
+// CORE & MULTI-TENANCY
+// -----------------------------------------------------------------------------
+
+model Academy {
+  id              String         @id @default(uuid())
+  slug            String         @unique
+  name            String
+  legalName       String?
+  ruc             String?        @unique
+  phone           String?
+  email           String?
+  address         String?
+  city            String?        @default("Lima")
+  country         String         @default("PE")
+  isActive        Boolean        @default(true)
+  settings        Json?          @default("{}")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Tenant-scoped relations
+  memberships     Membership[]
+  families        Family[]
+  students        Student[]
+  sports          Sport[]
+  groups          Group[]
+  schedules       Schedule[]
+  classSessions   ClassSession[]
+  enrollments     Enrollment[]
+  participations  ClassParticipation[]
+  charges         Charge[]
+  payments        Payment[]
+  customerCredits CustomerCredit[]
+  packages        Package[]
+  promotions      Promotion[]
+  billingSettings BillingSetting?
+  invoices        Invoice[]
+  policies        AcademyPolicy[]
+  auditLogs       AuditLog[]
+  migrationBatches MigrationBatch[]
+  subscription    Subscription?
+
+  @@map("academies")
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  documentType    String?        @default("DNI") // DNI, CE, PASAPORTE
+  documentNumber  String?
+  phone           String?
+  isActive        Boolean        @default(true)
+  isSuperAdmin    Boolean        @default(false)
+  lastLoginAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  memberships     Membership[]
+  auditLogs       AuditLog[]
+  familyContacts  FamilyContact[]
+
+  @@map("users")
+}
+
+model Membership {
+  id          String    @id @default(uuid())
+  academyId   String
+  userId      String
+  role        Role      @default(STAFF)
+  isDefault   Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  academy     Academy   @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([academyId, userId, role])
+  @@index([academyId])
+  @@index([userId])
+  @@map("memberships")
+}
+
+// -----------------------------------------------------------------------------
+// FAMILIES & STUDENTS
+// -----------------------------------------------------------------------------
+
+model Family {
+  id          String          @id @default(uuid())
+  academyId   String
+  code        String?
+  name        String          // e.g. "Familia Pérez Quispe"
+  notes       String?
+  source      DataSource      @default(DIRECT)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  academy     Academy         @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  contacts    FamilyContact[]
+  students    Student[]
+  charges     Charge[]
+  payments    Payment[]
+  credits     CustomerCredit[]
+
+  @@index([academyId])
+  @@map("families")
+}
+
+model FamilyContact {
+  id             String    @id @default(uuid())
+  familyId       String
+  userId         String?
+  relationship   String    // PADRE, MADRE, APODERADO, TUTOR
+  fullName       String
+  phone          String
+  email          String?
+  documentNumber String?
+  isPrimary      Boolean   @default(false)
+
+  family         Family    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("family_contacts")
+}
+
+model Student {
+  id              String               @id @default(uuid())
+  academyId       String
+  familyId        String?
+  firstName       String
+  lastName        String
+  birthDate       DateTime
+  documentType    String               @default("DNI")
+  documentNumber  String?
+  medicalNotes    String?
+  emergencyPhone  String?
+  isActive        Boolean              @default(true)
+  source          DataSource           @default(DIRECT)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  academy         Academy              @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  family          Family?              @relation(fields: [familyId], references: [id], onDelete: SetNull)
+  enrollments     Enrollment[]
+  participations  ClassParticipation[]
+  guestVisits     ClassParticipation[] @relation("GuestReferral")
+  charges         Charge[]
+  packageCredits  PackageCredit[]
+  trials          Trial[]
+
+  @@index([academyId])
+  @@index([familyId])
+  @@map("students")
+}
+
+// -----------------------------------------------------------------------------
+// ACADEMIC: SPORTS, GROUPS, SCHEDULES & SESSIONS
+// -----------------------------------------------------------------------------
+
+model Sport {
+  id          String     @id @default(uuid())
+  academyId   String
+  name        String     // Fútbol, Baloncesto, Natación, Voleibol, etc.
+  description String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  academy     Academy    @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  groups      Group[]
+
+  @@index([academyId])
+  @@map("sports")
+}
+
+model Group {
+  id          String         @id @default(uuid())
+  academyId   String
+  sportId     String
+  name        String         // Sub-10, Sub-12 Avanzado, Iniciación
+  minAge      Int?
+  maxAge      Int?
+  capacity    Int            @default(20)
+  coachId     String?        // Ref to User (Coach)
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  academy     Academy        @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  sport       Sport          @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  schedules   Schedule[]
+  sessions    ClassSession[]
+  enrollments Enrollment[]
+
+  @@index([academyId])
+  @@index([sportId])
+  @@map("groups")
+}
+
+model Schedule {
+  id          String         @id @default(uuid())
+  academyId   String
+  groupId     String
+  dayOfWeek   Int            // 1 (Monday) to 7 (Sunday)
+  startTime   String         // "16:00"
+  endTime     String         // "17:30"
+  court       String?        // "Cancha Sintética 1"
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  academy     Academy        @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  group       Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sessions    ClassSession[]
+
+  @@index([academyId])
+  @@index([groupId])
+  @@map("schedules")
+}
+
+model ClassSession {
+  id          String               @id @default(uuid())
+  academyId   String
+  groupId     String
+  scheduleId  String?
+  sessionDate DateTime
+  startTime   String
+  endTime     String
+  coachId     String?              // User ID
+  court       String?
+  isCancelled Boolean              @default(false)
+  cancelReason String?
+  notes       String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  academy     Academy              @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  group       Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  schedule    Schedule?            @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+  participations ClassParticipation[]
+
+  @@index([academyId])
+  @@index([groupId])
+  @@index([sessionDate])
+  @@map("class_sessions")
+}
+
+// -----------------------------------------------------------------------------
+// ENROLLMENTS & PARTICIPATIONS
+// -----------------------------------------------------------------------------
+
+model Enrollment {
+  id          String         @id @default(uuid())
+  academyId   String
+  studentId   String
+  groupId     String
+  startDate   DateTime
+  endDate     DateTime?
+  isActive    Boolean        @default(true)
+  monthlyFee  Decimal        @db.Decimal(10, 2)
+  notes       String?
+  source      DataSource     @default(DIRECT)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  academy     Academy        @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  student     Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  group       Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  charges     Charge[]
+
+  @@index([academyId])
+  @@index([studentId])
+  @@index([groupId])
+  @@map("enrollments")
+}
+
+model ClassParticipation {
+  id                String            @id @default(uuid())
+  academyId         String
+  sessionId         String
+  studentId         String
+  participationType ParticipationType @default(REGULAR)
+  guestOfStudentId  String?           // For GUEST participation relation
+  packageCreditId   String?           // Consumed package credit
+  notes             String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  academy           Academy           @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  session           ClassSession      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student           Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  guestReferrer     Student?          @relation("GuestReferral", fields: [guestOfStudentId], references: [id], onDelete: SetNull)
+  attendance        Attendance?
+
+  @@index([academyId])
+  @@index([sessionId])
+  @@index([studentId])
+  @@map("class_participations")
+}
+
+model Attendance {
+  id              String             @id @default(uuid())
+  participationId String             @unique
+  status          AttendanceStatus   @default(PRESENT)
+  checkInTime     DateTime?
+  recordedById    String?            // Coach or Staff user ID
+  remarks         String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  participation   ClassParticipation @relation(fields: [participationId], references: [id], onDelete: Cascade)
+
+  @@map("attendances")
+}
+
+// -----------------------------------------------------------------------------
+// COMMERCIAL: PACKAGES, TRIALS & PROMOTIONS
+// -----------------------------------------------------------------------------
+
+model Package {
+  id           String          @id @default(uuid())
+  academyId    String
+  name         String          // e.g. "Pack 10 Clases + 2 Bonus"
+  classCount   Int             // 10
+  bonusClasses Int             @default(0) // 2
+  price        Decimal         @db.Decimal(10, 2)
+  validityDays Int             @default(60)
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  academy      Academy         @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  credits      PackageCredit[]
+
+  @@index([academyId])
+  @@map("packages")
+}
+
+model PackageCredit {
+  id           String    @id @default(uuid())
+  packageId    String
+  studentId    String
+  totalClasses Int
+  usedClasses  Int       @default(0)
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  package      Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  student      Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@map("package_credits")
+}
+
+model Trial {
+  id              String    @id @default(uuid())
+  studentId       String
+  isPaid          Boolean   @default(false)
+  price           Decimal   @default(0) @db.Decimal(10, 2)
+  converted       Boolean   @default(false)
+  convertedAt     DateTime?
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("trials")
+}
+
+model Promotion {
+  id            String    @id @default(uuid())
+  academyId     String
+  code          String
+  name          String
+  description   String?
+  discountPct   Decimal?  @db.Decimal(5, 2)
+  discountFixed Decimal?  @db.Decimal(10, 2)
+  bonusClasses  Int?      @default(0)
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  academy       Academy   @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId])
+  @@map("promotions")
+}
+
+// -----------------------------------------------------------------------------
+// FINANCIAL: CHARGES, PAYMENTS, ALLOCATIONS, CREDITS, REFUNDS
+// -----------------------------------------------------------------------------
+
+model Charge {
+  id              String              @id @default(uuid())
+  academyId       String
+  familyId        String?
+  studentId       String?
+  enrollmentId    String?
+  chargeType      ChargeType          @default(MONTHLY)
+  description     String
+  dueDate         DateTime
+  
+  // Monetary amounts (Always Decimal, never Float)
+  originalAmount  Decimal             @db.Decimal(10, 2)
+  discountAmount  Decimal             @default(0) @db.Decimal(10, 2)
+  scholarshipPct  Decimal             @default(0) @db.Decimal(5, 2)
+  totalAmount     Decimal             @db.Decimal(10, 2) // original - discount
+  paidAmount      Decimal             @default(0) @db.Decimal(10, 2)
+  balance         Decimal             @db.Decimal(10, 2) // totalAmount - paidAmount
+  status          ChargeStatus        @default(PENDING)
+  
+  source          DataSource          @default(DIRECT)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  academy         Academy             @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  family          Family?             @relation(fields: [familyId], references: [id], onDelete: SetNull)
+  student         Student?            @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  enrollment      Enrollment?         @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+  allocations     PaymentAllocation[]
+
+  @@index([academyId])
+  @@index([familyId])
+  @@index([studentId])
+  @@index([status])
+  @@map("charges")
+}
+
+model Payment {
+  id              String              @id @default(uuid())
+  academyId       String
+  familyId        String?
+  amount          Decimal             @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod       @default(YAPE)
+  referenceNumber String?             // Operación Yape/Plin/Banco
+  paidAt          DateTime            @default(now())
+  receivedById    String?             // Cashier user ID
+  notes           String?
+  source          DataSource          @default(DIRECT)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  academy         Academy             @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  family          Family?             @relation(fields: [familyId], references: [id], onDelete: SetNull)
+  allocations     PaymentAllocation[]
+  refunds         Refund[]
+  invoices        Invoice[]
+
+  @@index([academyId])
+  @@index([familyId])
+  @@map("payments")
+}
+
+model PaymentAllocation {
+  id          String   @id @default(uuid())
+  paymentId   String
+  chargeId    String
+  amount      Decimal  @db.Decimal(10, 2)
+  allocatedAt DateTime @default(now())
+
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  charge      Charge   @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@index([chargeId])
+  @@map("payment_allocations")
+}
+
+model CustomerCredit {
+  id          String   @id @default(uuid())
+  academyId   String
+  familyId    String
+  amount      Decimal  @db.Decimal(10, 2)
+  remaining   Decimal  @db.Decimal(10, 2)
+  reason      String   // "Sobrepago", "Cancelación de sesión", "Retiro"
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy     Academy  @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  family      Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId])
+  @@index([familyId])
+  @@map("customer_credits")
+}
+
+model Refund {
+  id          String   @id @default(uuid())
+  paymentId   String
+  amount      Decimal  @db.Decimal(10, 2)
+  reason      String
+  processedBy String   // User ID
+  createdAt   DateTime @default(now())
+
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@map("refunds")
+}
+
+// -----------------------------------------------------------------------------
+// BILLING & SUNAT (UBL 2.1)
+// -----------------------------------------------------------------------------
+
+model BillingSetting {
+  id                 String   @id @default(uuid())
+  academyId          String   @unique
+  ruc                String?  // RUC Emisor
+  solUser            String   // RUC + Usuario Secundario SUNAT
+  solPassword        String   // Clave SOL
+  certificatePem     String?  // Certificado Digital
+  certificatePass    String?  // Password certificado
+  environment        String   @default("BETA") // BETA / PRODUCTION
+  boletaSeries       String   @default("B001")
+  facturaSeries      String   @default("F001")
+  notaCreditoSeries  String   @default("NC01")
+  notaDebitoSeries   String   @default("ND01")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  academy            Academy  @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@map("billing_settings")
+}
+
+model Invoice {
+  id                   String        @id @default(uuid())
+  academyId            String
+  paymentId            String?
+  invoiceType          InvoiceType   @default(BOLETA)
+  series               String        // B001, F001, FC01, etc.
+  correlative          Int           // 00000042
+  clientDocType        String        // 1 (DNI), 6 (RUC), 4 (CE), 7 (Pasaporte), 0 (Sin Doc)
+  clientDocNum         String
+  clientName           String
+  clientAddress        String?
+  subtotal             Decimal       @db.Decimal(10, 2)
+  igv                  Decimal       @db.Decimal(10, 2)
+  total                Decimal       @db.Decimal(10, 2)
+  status               InvoiceStatus @default(PENDING)
+  ublXml               String?       @db.Text
+  signedXml            String?       @db.Text
+  sunatCdr             String?       @db.Text
+  sunatCode            String?
+  sunatMessage         String?
+  attempts             Int           @default(0)
+  items                Json?         @default("[]")
+  referenceSeries      String?       // Para Nota de Crédito / Débito (Documento modificado)
+  referenceCorrelative Int?          // Correlativo modificado
+  referenceCode        String?       // Catálogo 09 / 10 SUNAT (Tipo de nota)
+  referenceReason      String?       // Motivo o sustento
+  sentAt               DateTime?     // Fecha y hora del envío a SUNAT
+  issuedAt             DateTime      @default(now())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  academy              Academy       @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  payment              Payment?      @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@unique([academyId, invoiceType, series, correlative])
+  @@index([academyId])
+  @@index([status])
+  @@map("invoices")
+}
+
+// -----------------------------------------------------------------------------
+// POLICIES, AUDIT & MIGRATION
+// -----------------------------------------------------------------------------
+
+model AcademyPolicy {
+  id                    String   @id @default(uuid())
+  academyId             String
+  allowTrainingWithDebt Boolean  @default(true)
+  debtWarningThreshold  Decimal  @default(50.00) @db.Decimal(10, 2)
+  cancellationPolicy    String   @default("CREDIT") // CREDIT, MAKEUP, NONE
+  siblingDiscountPct    Decimal  @default(10.00) @db.Decimal(5, 2)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  academy               Academy  @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId])
+  @@map("academy_policies")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  academyId  String?
+  userId     String?
+  action     String   // PAYMENT_CREATED, REFUND_ISSUED, ENROLLMENT_CHANGED, etc.
+  entity     String   // Payment, Enrollment, Student
+  entityId   String
+  oldValue   Json?
+  newValue   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  academy    Academy? @relation(fields: [academyId], references: [id], onDelete: SetNull)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([academyId])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+model MigrationBatch {
+  id          String     @id @default(uuid())
+  academyId   String
+  filename    String
+  entityType  String     // FAMILIES, STUDENTS, CHARGES, PAYMENTS
+  totalRows   Int
+  successRows Int        @default(0)
+  errorRows   Int        @default(0)
+  status      String     @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  errors      Json?
+  createdAt   DateTime   @default(now())
+
+  academy     Academy    @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId])
+  @@map("migration_batches")
+}
+
+// -----------------------------------------------------------------------------
+// SAAS PLANS & SUBSCRIPTIONS
+// -----------------------------------------------------------------------------
+
+model Plan {
+  id            String         @id @default(uuid())
+  code          String         @unique // FREE, PRO, etc.
+  name          String
+  description   String?
+  priceMonthly  Decimal        @default(0.00) @db.Decimal(10, 2)
+  currency      String         @default("PEN") // PEN, USD
+  maxStudents   Int?           // Limite de alumnos activos (null = ilimitado)
+  maxGroups     Int?           // Limite de grupos activos (null = ilimitado)
+  maxSports     Int?           // Limite de disciplinas deportivas (null = ilimitado)
+  maxUsers      Int?           // Limite de usuarios del staff (null = ilimitado)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  features      PlanFeature[]
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model PlanFeature {
+  id          String    @id @default(uuid())
+  planId      String
+  key         String    // SUNAT_BILLING, WHATSAPP_AUTOMATION, ADVANCED_REPORTS, EXCEL_IMPORT, ADVANCED_FINANCE, PACKAGES, AUDIT_LOG, etc.
+  enabled     Boolean   @default(true)
+  limitValue  Int?      // Limite numerico opcional si aplica
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  plan        Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, key])
+  @@index([planId])
+  @@map("plan_features")
+}
+
+model Subscription {
+  id                 String             @id @default(uuid())
+  academyId          String             @unique
+  planId             String
+  status             SubscriptionStatus @default(TRIALING)
+  trialStartsAt      DateTime?
+  trialEndsAt        DateTime?
+  currentPeriodStart DateTime           @default(now())
+  currentPeriodEnd   DateTime?
+  canceledAt         DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  academy            Academy            @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  plan               Plan               @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  @@index([academyId])
+  @@index([planId])
+  @@index([status])
+  @@map("subscriptions")
+}
+

@@ -1,0 +1,6 @@
+{
+  "name": "Academy API - Plataforma de Gestión Deportiva",
+  "description": "API Modular Monolith multi-tenant para la gestión integral de academias deportivas en Perú (NestJS, Prisma, PostgreSQL, Redis, BullMQ).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
