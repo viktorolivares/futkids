@@ -264,7 +264,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
   };
 
   return (
-    <div className="space-y-6 font-mono text-xs">
+    <div className="space-y-6 text-slate-100 font-sans">
       {/* 1. Header & Architecture Link Alert */}
       <div className="bg-[#161B22] border border-slate-800 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
         <div>

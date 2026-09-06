@@ -27,6 +27,7 @@ import {
   Shield,
   Activity,
   Save,
+  Info,
 } from 'lucide-react';
 import {
   WebAcademyProfile,
@@ -178,44 +179,44 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
   const isSunatPro = subscription?.features?.SUNAT_BILLING ?? true;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6 text-slate-100">
       {/* Header Context Banner */}
-      <div className="bg-[#0F1219] border border-slate-800 rounded p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-mono">
-        <div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30 font-bold uppercase">
-              MÓDULO DE ADMINISTRACIÓN
+      <div className="bg-slate-900/95 border border-slate-800/80 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="bg-amber-400/10 text-amber-300 text-xs px-3 py-1 rounded-full border border-amber-400/20 font-semibold uppercase tracking-wide">
+              Administración de Sede
             </span>
-            <span className="text-slate-400 font-bold uppercase">{profileForm.name}</span>
+            <span className="text-slate-200 font-semibold text-sm">{profileForm.name}</span>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-500">RUC {profileForm.ruc}</span>
+            <span className="text-slate-400 text-xs font-mono">RUC {profileForm.ruc}</span>
           </div>
-          <h1 className="text-base font-bold text-white mt-1 uppercase tracking-wide">
-            Panel de Gestión Administrativa de la Academia
+          <h1 className="text-xl md:text-2xl font-bold text-white mt-2.5 tracking-tight">
+            Configuración y Gestión de Sede
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Configuración general de sede, disciplinas deportivas, plantilla de entrenadores, catálogo de tarifas y enlaces SUNAT.
+          <p className="text-sm md:text-base text-slate-400 mt-2 max-w-2xl leading-relaxed">
+            Administra los datos fiscales de tu sede deportiva, las disciplinas activas, el equipo de profesores, tarifas oficiales y la vinculación con SUNAT.
           </p>
         </div>
 
         {/* Quick SaaS Plan Status Chip */}
         {subscription && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 shrink-0 relative z-10">
             <button
               onClick={onOpenPlansModal}
-              className={`px-3 py-1.5 rounded text-[11px] font-bold border flex items-center gap-1.5 transition ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-semibold border flex items-center gap-2 transition cursor-pointer shadow-sm ${
                 subscription.status === 'TRIALING'
-                  ? 'bg-purple-950/60 border-purple-500/50 text-purple-300 hover:bg-purple-900/60'
+                  ? 'bg-purple-950/70 border-purple-500/40 text-purple-200 hover:bg-purple-900/80'
                   : subscription.plan.code === 'PRO'
-                  ? 'bg-amber-950/60 border-amber-500/50 text-amber-300 hover:bg-amber-900/60'
-                  : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
+                  ? 'bg-amber-950/70 border-amber-500/40 text-amber-200 hover:bg-amber-900/80'
+                  : 'bg-slate-800/90 border-slate-700 text-slate-200 hover:bg-slate-800'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>PLAN {subscription.plan.name.toUpperCase()}</span>
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Plan {subscription.plan.name}</span>
               {subscription.status === 'TRIALING' && (
-                <span className="bg-purple-500/20 text-purple-200 px-1.5 py-0.2 rounded text-[10px]">
-                  {subscription.trial.remainingDays}d prueba
+                <span className="bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded-full text-[11px] font-bold">
+                  {subscription.trial.remainingDays}d de prueba
                 </span>
               )}
             </button>
@@ -224,14 +225,14 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
       </div>
 
       {/* Sub-tabs Navigation */}
-      <div className="bg-[#161B22] border border-slate-800 rounded p-1 flex items-center gap-1 overflow-x-auto text-xs font-mono">
+      <div className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-1.5 flex items-center gap-1.5 overflow-x-auto text-xs md:text-sm shadow-sm scrollbar-none">
         {[
           { id: 'profile', label: '1. Sede & Datos Fiscales', icon: Building2 },
-          { id: 'sports', label: `2. Deportes & Disciplinas (${sports.length})`, icon: Trophy },
-          { id: 'staff', label: `3. Staff & Entrenadores (${staff.length})`, icon: Users },
-          { id: 'tariffs', label: `4. Catálogo de Tarifas (${tariffs.length})`, icon: CreditCard },
-          { id: 'sunat', label: '5. Configuración SUNAT SOL', icon: ShieldCheck },
-          { id: 'saas', label: '6. Límites SaaS & Plan', icon: Zap },
+          { id: 'sports', label: `2. Deportes (${sports.length})`, icon: Trophy },
+          { id: 'staff', label: `3. Personal & Staff (${staff.length})`, icon: Users },
+          { id: 'tariffs', label: `4. Tarifas & Precios (${tariffs.length})`, icon: CreditCard },
+          { id: 'sunat', label: '5. Configuración SUNAT', icon: ShieldCheck },
+          { id: 'saas', label: '6. Límites y Plan', icon: Zap },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -239,13 +240,13 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as AdminSubTab)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded font-bold uppercase transition whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition whitespace-nowrap cursor-pointer ${
                 isActive
-                  ? 'bg-sky-500 text-black shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-4 h-4 shrink-0" />
               <span>{tab.label}</span>
             </button>
           );
@@ -254,140 +255,158 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* TAB 1: PERFIL & DATOS FISCALES */}
       {activeTab === 'profile' && (
-        <form onSubmit={handleSaveProfile} className="bg-[#0F1219] border border-slate-800 rounded p-4 space-y-4 font-mono">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <form onSubmit={handleSaveProfile} className="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-sky-400" />
-                Información Institucional y Legal de la Sede
+              <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2.5">
+                <Building2 className="w-5 h-5 text-blue-400" />
+                Información Institucional y Fiscal de la Sede
               </h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">
-                Datos de la entidad emisora, dirección física y canales oficiales de comunicación con padres de familia.
+              <p className="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+                Datos de la entidad emisora, dirección física y canales oficiales de atención a padres y alumnos.
               </p>
             </div>
             {isSaved && (
-              <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2.5 py-1 rounded border border-emerald-500/40 flex items-center gap-1 animate-fade-in">
-                <Check className="w-3.5 h-3.5" /> Cambios Guardados
+              <span className="bg-emerald-500/20 text-emerald-300 text-xs md:text-sm px-3.5 py-1.5 rounded-full border border-emerald-500/30 flex items-center gap-1.5 font-medium self-start sm:self-auto">
+                <Check className="w-4 h-4" /> Cambios Guardados con Éxito
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">NOMBRE COMERCIAL DE LA SEDE</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Nombre Comercial de la Sede
+              </label>
               <input
                 type="text"
                 value={profileForm.name}
                 onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
                 required
               />
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">RAZÓN SOCIAL (EMISOR TRIBUTARIO)</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Razón Social (Emisor Tributario)
+              </label>
               <input
                 type="text"
                 value={profileForm.legalName}
                 onChange={(e) => setProfileForm({ ...profileForm, legalName: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
                 required
               />
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">RUC OFICIAL (11 DÍGITOS)</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                RUC Oficial (11 dígitos)
+              </label>
               <input
                 type="text"
                 value={profileForm.ruc}
                 onChange={(e) => setProfileForm({ ...profileForm, ruc: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white font-bold text-amber-300 focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-amber-300 font-bold font-mono text-sm focus:border-blue-500 focus:outline-none transition"
                 maxLength={11}
                 required
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-slate-400 block mb-1 text-[11px]">DIRECCIÓN FÍSICA DE LA CANCHA / SEDE</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Dirección Física del Complejo o Canchas
+              </label>
               <input
                 type="text"
                 value={profileForm.address}
                 onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
                 required
               />
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">DISTRITO / DEPARTAMENTO</label>
-              <div className="grid grid-cols-2 gap-2">
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Distrito y Departamento
+              </label>
+              <div className="grid grid-cols-2 gap-2.5">
                 <input
                   type="text"
                   value={profileForm.district}
                   onChange={(e) => setProfileForm({ ...profileForm, district: e.target.value })}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
                   placeholder="Distrito"
                 />
                 <input
                   type="text"
                   value={profileForm.department}
                   onChange={(e) => setProfileForm({ ...profileForm, department: e.target.value })}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
                   placeholder="Departamento"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">TELÉFONO DE RECEPCIÓN / FIJO</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Teléfono de Recepción / Fijo
+              </label>
               <input
                 type="text"
                 value={profileForm.phone}
                 onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
               />
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">WHATSAPP OFICIAL PARA COBRANZAS</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                WhatsApp Oficial para Cobranzas
+              </label>
               <div className="relative">
                 <input
                   type="text"
                   value={profileForm.whatsapp}
                   onChange={(e) => setProfileForm({ ...profileForm, whatsapp: e.target.value })}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-emerald-400 font-bold focus:border-sky-500 focus:outline-none pl-7"
+                  className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-emerald-400 font-semibold text-sm focus:border-blue-500 focus:outline-none transition pl-10"
                 />
-                <MessageCircle className="w-3.5 h-3.5 text-emerald-400 absolute left-2.5 top-3" />
+                <MessageCircle className="w-4 h-4 text-emerald-400 absolute left-3.5 top-3.5" />
               </div>
             </div>
 
             <div>
-              <label className="text-slate-400 block mb-1 text-[11px]">CORREO ELECTRÓNICO OFICIAL</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Correo Electrónico de Contacto
+              </label>
               <input
                 type="email"
                 value={profileForm.email}
                 onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
               />
             </div>
 
             <div className="md:col-span-3">
-              <label className="text-slate-400 block mb-1 text-[11px]">HORARIOS DE ATENCIÓN Y APERTURA DE CANCHAS</label>
+              <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-2">
+                Horarios de Atención y Entrenamiento
+              </label>
               <input
                 type="text"
                 value={profileForm.openingHours}
                 onChange={(e) => setProfileForm({ ...profileForm, openingHours: e.target.value })}
-                className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white focus:border-sky-500 focus:outline-none"
+                className="w-full bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-3 text-slate-100 text-sm focus:border-blue-500 focus:outline-none transition"
               />
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end">
+          <div className="pt-5 border-t border-slate-800 flex justify-end">
             <button
               type="submit"
-              className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded text-xs flex items-center gap-1.5 transition shadow"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
             >
-              <Save className="w-3.5 h-3.5" /> Guardar Cambios Institucionales
+              <Save className="w-4 h-4" /> Guardar Cambios Institucionales
             </button>
           </div>
         </form>
@@ -395,47 +414,47 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* TAB 2: DEPORTES & DISCIPLINAS */}
       {activeTab === 'sports' && (
-        <div className="space-y-3 font-mono">
-          <div className="flex items-center justify-between">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-amber-400" />
+              <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2.5">
+                <Trophy className="w-5 h-5 text-amber-400" />
                 Catálogo de Deportes y Disciplinas Formativas
               </h2>
-              <p className="text-[11px] text-slate-400">
-                Disciplinas habilitadas en la sede con sus categorías por edad y áreas de entrenamiento.
+              <p className="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+                Disciplinas impartidas en la sede con sus categorías por edad y áreas de entrenamiento.
               </p>
             </div>
             <button
               onClick={() => setShowSportModal(true)}
-              className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl text-xs md:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm self-start sm:self-auto"
             >
-              <Plus className="w-3.5 h-3.5" /> Nuevo Deporte
+              <Plus className="w-4 h-4" /> Nueva Disciplina
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sports.map((sp) => (
               <div
                 key={sp.id}
-                className={`p-3.5 bg-[#0F1219] border rounded space-y-2.5 transition ${
-                  sp.isActive ? 'border-slate-800 hover:border-slate-700' : 'border-slate-800/50 opacity-60'
+                className={`p-6 bg-slate-900/90 border rounded-3xl space-y-4 transition shadow-xl ${
+                  sp.isActive ? 'border-slate-800/80 hover:border-slate-700' : 'border-slate-800/40 opacity-60'
                 }`}
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 font-bold">
-                      <Trophy className="w-4 h-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-400 flex items-center justify-center border border-amber-400/20 font-bold">
+                      <Trophy className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-white uppercase">{sp.name}</h3>
-                      <span className="text-[10px] text-slate-400">{sp.activeStudents} alumnos matriculados</span>
+                      <h3 className="text-sm md:text-base font-bold text-white">{sp.name}</h3>
+                      <span className="text-xs text-slate-400">{sp.activeStudents} alumnos matriculados</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                      className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
                         sp.isActive ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-400'
                       }`}
                     >
@@ -443,37 +462,37 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
                     </span>
                     <button
                       onClick={() => onToggleSportStatus(sp.id)}
-                      className="text-[10px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-slate-700 hover:bg-slate-800"
+                      className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-xl border border-slate-700 hover:bg-slate-800 transition cursor-pointer"
                     >
                       {sp.isActive ? 'Pausar' : 'Activar'}
                     </button>
                   </div>
                 </div>
 
-                <p className="text-[11px] text-slate-300 leading-relaxed">{sp.description}</p>
+                <p className="text-xs md:text-sm text-slate-300/80 leading-relaxed">{sp.description}</p>
 
-                <div className="space-y-1.5 text-[10px] pt-2 border-t border-slate-800/80">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-slate-500 uppercase">CATEGORÍAS:</span>
+                <div className="space-y-2 pt-3 border-t border-slate-800/80 text-xs md:text-sm">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-slate-400 font-medium">Categorías:</span>
                     {sp.categories.map((c, i) => (
-                      <span key={i} className="bg-[#161B22] text-slate-300 px-1.5 py-0.2 rounded border border-slate-800">
+                      <span key={i} className="bg-slate-800/70 text-slate-200 px-2.5 py-1 rounded-lg border border-slate-700/60 text-xs">
                         {c}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-slate-500 uppercase">CANCHAS ASIGNADAS:</span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-slate-400 font-medium">Canchas:</span>
                     {sp.assignedCourts.map((court, i) => (
-                      <span key={i} className="text-sky-400 bg-sky-950/40 px-1.5 py-0.2 rounded border border-sky-800/50">
+                      <span key={i} className="text-blue-300 bg-blue-950/40 px-2.5 py-1 rounded-lg border border-blue-800/50 text-xs font-medium">
                         {court}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between text-slate-400 pt-1">
-                    <span>Pensión Sugerida:</span>
-                    <span className="text-emerald-400 font-bold">S/ {sp.monthlyFee.toFixed(2)}/mes</span>
+                  <div className="flex items-center justify-between text-slate-400 pt-1.5">
+                    <span>Pensión sugerida:</span>
+                    <span className="text-emerald-400 font-bold text-sm md:text-base">S/ {sp.monthlyFee.toFixed(2)}/mes</span>
                   </div>
                 </div>
               </div>
@@ -484,166 +503,168 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* TAB 3: STAFF & ENTRENADORES */}
       {activeTab === 'staff' && (
-        <div className="space-y-3 font-mono">
-          <div className="flex items-center justify-between">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-2">
-                <Users className="w-4 h-4 text-sky-400" />
+              <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2.5">
+                <Users className="w-5 h-5 text-blue-400" />
                 Equipo Técnico, Entrenadores y Personal Administrativo
               </h2>
-              <p className="text-[11px] text-slate-400">
-                Control de roles de acceso al sistema, asignación de disciplinas y teléfonos de contacto.
+              <p className="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+                Control de roles de acceso al sistema, asignación de disciplinas y canales de contacto directo.
               </p>
             </div>
             <button
               onClick={() => setShowStaffModal(true)}
-              className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl text-xs md:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm self-start sm:self-auto"
             >
-              <Plus className="w-3.5 h-3.5" /> Registrar Personal
+              <Plus className="w-4 h-4" /> Registrar Personal
             </button>
           </div>
 
-          <div className="bg-[#0F1219] border border-slate-800 rounded overflow-hidden">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-slate-800 bg-[#161B22] text-slate-400 text-[10px] uppercase">
-                  <th className="p-3">Nombre & Cargo</th>
-                  <th className="p-3">DNI</th>
-                  <th className="p-3">Rol Sistema</th>
-                  <th className="p-3">Deportes Asignados</th>
-                  <th className="p-3">Contacto</th>
-                  <th className="p-3">Estado</th>
-                  <th className="p-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800">
-                {staff.map((st) => (
-                  <tr key={st.id} className="hover:bg-slate-800/40 transition">
-                    <td className="p-3">
-                      <div className="font-bold text-white uppercase">{st.name}</div>
-                      <div className="text-[10px] text-slate-400">{st.roleTitle}</div>
-                    </td>
-                    <td className="p-3 text-slate-300 font-mono">{st.dni}</td>
-                    <td className="p-3">
-                      <span
-                        className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase border ${
-                          st.role === 'OWNER'
-                            ? 'bg-amber-500/10 border-amber-500/40 text-amber-300'
-                            : st.role === 'COACH'
-                            ? 'bg-sky-500/10 border-sky-500/40 text-sky-300'
-                            : st.role === 'CASHIER'
-                            ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
-                            : 'bg-slate-800 border-slate-700 text-slate-300'
-                        }`}
-                      >
-                        {st.role}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      {st.sports.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {st.sports.map((sp, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[9px] bg-[#161B22] border border-slate-700 px-1.5 py-0.2 rounded text-slate-300"
-                            >
-                              {sp}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-[10px] text-slate-500 italic">Administrativo / General</span>
-                      )}
-                    </td>
-                    <td className="p-3 text-[11px]">
-                      <div className="text-slate-300">{st.phone}</div>
-                      <div className="text-[10px] text-slate-500">{st.email}</div>
-                    </td>
-                    <td className="p-3">
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase">
-                        {st.status === 'ACTIVE' ? 'ACTIVO' : st.status}
-                      </span>
-                    </td>
-                    <td className="p-3 text-right">
-                      {st.role !== 'OWNER' && onRemoveStaff && (
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`¿Revocar acceso de ${st.name} a esta sede?`)) {
-                              onRemoveStaff(st.id);
-                            }
-                          }}
-                          className="px-2 py-1 rounded bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 text-[10px] text-rose-300 font-bold transition cursor-pointer"
-                        >
-                          Revocar
-                        </button>
-                      )}
-                    </td>
+          <div className="bg-slate-900/90 border border-slate-800/80 rounded-3xl overflow-hidden shadow-xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs md:text-sm">
+                <thead>
+                  <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                    <th className="p-4">Nombre & Cargo</th>
+                    <th className="p-4">DNI</th>
+                    <th className="p-4">Rol en Sistema</th>
+                    <th className="p-4">Disciplinas</th>
+                    <th className="p-4">Contacto</th>
+                    <th className="p-4">Estado</th>
+                    <th className="p-4 text-right">Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-800/80 text-slate-200">
+                  {staff.map((st) => (
+                    <tr key={st.id} className="hover:bg-slate-800/40 transition">
+                      <td className="p-4">
+                        <div className="font-bold text-white">{st.name}</div>
+                        <div className="text-xs text-slate-400 mt-0.5">{st.roleTitle}</div>
+                      </td>
+                      <td className="p-4 text-slate-300 font-mono text-xs">{st.dni}</td>
+                      <td className="p-4">
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full font-semibold border ${
+                            st.role === 'OWNER'
+                              ? 'bg-amber-500/10 border-amber-500/40 text-amber-300'
+                              : st.role === 'COACH'
+                              ? 'bg-blue-500/10 border-blue-500/40 text-blue-300'
+                              : st.role === 'CASHIER'
+                              ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+                              : 'bg-slate-800 border-slate-700 text-slate-300'
+                          }`}
+                        >
+                          {st.role}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        {st.sports.length > 0 ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {st.sports.map((sp, idx) => (
+                              <span
+                                key={idx}
+                                className="text-xs bg-slate-800/70 border border-slate-700 px-2 py-0.5 rounded-lg text-slate-200"
+                              >
+                                {sp}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-500 italic">Administrativo General</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-xs">
+                        <div className="text-slate-200 font-medium">{st.phone}</div>
+                        <div className="text-slate-400 mt-0.5">{st.email}</div>
+                      </td>
+                      <td className="p-4">
+                        <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full font-semibold">
+                          {st.status === 'ACTIVE' ? 'ACTIVO' : st.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        {st.role !== 'OWNER' && onRemoveStaff && (
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`¿Revocar acceso de ${st.name} a esta sede?`)) {
+                                onRemoveStaff(st.id);
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs text-rose-300 font-medium transition cursor-pointer"
+                          >
+                            Revocar
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       {/* TAB 4: TARIFAS & MENSUALIDADES */}
       {activeTab === 'tariffs' && (
-        <div className="space-y-3 font-mono">
-          <div className="flex items-center justify-between">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2.5">
+                <CreditCard className="w-5 h-5 text-emerald-400" />
                 Catálogo de Tarifas, Matrículas y Pensiones
               </h2>
-              <p className="text-[11px] text-slate-400">
-                Precios base en Soles (PEN) utilizados por el módulo de Caja para emitir cargos y cobranzas.
+              <p className="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
+                Precios oficiales en Soles (PEN) utilizados por el módulo de Caja para emitir cargos y cobranzas.
               </p>
             </div>
             <button
               onClick={() => setShowTariffModal(true)}
-              className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl text-xs md:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm self-start sm:self-auto"
             >
-              <Plus className="w-3.5 h-3.5" /> Nueva Tarifa
+              <Plus className="w-4 h-4" /> Nueva Tarifa
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tariffs.map((trf) => (
-              <div key={trf.id} className="bg-[#0F1219] border border-slate-800 rounded p-3.5 space-y-2">
+              <div key={trf.id} className="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 space-y-3.5 shadow-xl hover:border-slate-700 transition">
                 <div className="flex items-start justify-between">
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase border ${
+                    className={`text-xs px-3 py-1 rounded-full font-semibold border ${
                       trf.type === 'MONTHLY'
-                        ? 'bg-sky-500/10 border-sky-500/30 text-sky-400'
+                        ? 'bg-blue-500/10 border-blue-500/30 text-blue-300'
                         : trf.type === 'ENROLLMENT'
                         ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
                         : 'bg-slate-800 border-slate-700 text-slate-300'
                     }`}
                   >
-                    {trf.type}
+                    {trf.type === 'MONTHLY' ? 'Pensión Mensual' : trf.type === 'ENROLLMENT' ? 'Matrícula' : trf.type}
                   </span>
                   <div className="text-right">
-                    <span className="text-lg font-bold text-emerald-400">
+                    <span className="text-xl md:text-2xl font-bold text-emerald-400">
                       S/ {trf.amount.toFixed(2)}
                     </span>
-                    <span className="text-[9px] text-slate-500 block uppercase">{trf.frequency}</span>
+                    <span className="text-xs text-slate-400 block uppercase mt-0.5">{trf.frequency}</span>
                   </div>
                 </div>
 
-                <h3 className="text-xs font-bold text-white uppercase">{trf.name}</h3>
-                <p className="text-[11px] text-slate-400 leading-relaxed">{trf.description}</p>
+                <h3 className="text-sm md:text-base font-bold text-white">{trf.name}</h3>
+                <p className="text-xs md:text-sm text-slate-300/80 leading-relaxed">{trf.description}</p>
 
-                <div className="pt-2 border-t border-slate-800/80 text-[10px] space-y-1 text-slate-400">
+                <div className="pt-3 border-t border-slate-800/80 text-xs md:text-sm space-y-1.5 text-slate-400">
                   <div className="flex justify-between">
                     <span>Disciplina:</span>
-                    <span className="text-slate-200 font-bold">{trf.sport}</span>
+                    <span className="text-slate-200 font-semibold">{trf.sport}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Vencimiento sugerido:</span>
-                    <span className="text-slate-200 font-bold">Día {trf.dueDay} del mes</span>
+                    <span className="text-slate-200 font-semibold">Día {trf.dueDay} de cada mes</span>
                   </div>
                   {trf.earlyBirdDiscount > 0 && (
-                    <div className="flex justify-between text-amber-300">
+                    <div className="flex justify-between text-amber-300 font-medium">
                       <span>Descuento pronto pago:</span>
                       <span>- S/ {trf.earlyBirdDiscount.toFixed(2)}</span>
                     </div>
@@ -657,28 +678,28 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* TAB 5: CONFIGURACIÓN SUNAT SOL & CERTIFICADO DIGITAL */}
       {activeTab === 'sunat' && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* SaaS Pro Alert regarding SUNAT Billing */}
           <div
-            className={`p-3 rounded border text-xs leading-relaxed font-mono ${
+            className={`p-5 rounded-3xl border text-xs md:text-sm leading-relaxed ${
               isSunatPro
                 ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
                 : 'bg-amber-950/40 border-amber-500/40 text-amber-200'
             }`}
           >
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-3">
               {isSunatPro ? (
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
               ) : (
-                <Lock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <Lock className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
               )}
               <div>
-                <strong className="uppercase">
+                <strong className="text-sm md:text-base font-bold block mb-1">
                   {isSunatPro
                     ? 'Facturación Electrónica SUNAT Habilitada (Plan PRO Activo)'
                     : 'Aviso del Sistema: Emisión SUNAT Exclusiva del Plan PRO'}
                 </strong>
-                <p className="mt-1 text-[11px]">
+                <p className="text-xs md:text-sm text-slate-300/90 leading-relaxed">
                   {isSunatPro
                     ? 'Tu academia cuenta con permisos para emitir Boletas y Facturas electrónicas con firma digital XML-DSig y transmisión directa a los WebServices SOAP de SUNAT.'
                     : 'La emisión y transmisión de nuevas Boletas y Facturas a SUNAT requiere el Plan PRO. En Plan Free tu academia conserva acceso ilimitado a consultar, descargar XML y reimprimir todos los comprobantes emitidos con anterioridad (cero pérdida de datos).'}
@@ -701,19 +722,19 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
           />
 
           {/* SOAP WebServices Endpoints Reference Box */}
-          <div className="bg-[#0F1219] border border-slate-800 rounded-xl p-3.5 font-mono text-xs">
-            <div className="text-slate-400 font-bold uppercase text-[10px] mb-2 flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5 text-sky-400" />
-              <span>Endpoints Oficiales WebServices SOAP de SUNAT (Perú)</span>
+          <div className="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 text-xs md:text-sm shadow-xl space-y-3">
+            <div className="text-slate-300 font-semibold flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-blue-400" />
+              <span>Endpoints Oficiales de WebServices SOAP de SUNAT (Perú)</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10px]">
-              <div className="p-2 bg-[#161B22] border border-slate-800 rounded">
-                <span className="text-sky-400 font-bold block mb-0.5">Ambiente Beta (Pruebas & Homologación):</span>
-                <code className="text-slate-300 break-all">https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService</code>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
+                <span className="text-blue-400 font-semibold block mb-1">Ambiente Beta (Pruebas & Homologación):</span>
+                <code className="text-slate-300 font-mono text-xs break-all">https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService</code>
               </div>
-              <div className="p-2 bg-[#161B22] border border-slate-800 rounded">
-                <span className="text-emerald-400 font-bold block mb-0.5">Ambiente Producción Oficial (Comprobantes Reales):</span>
-                <code className="text-slate-300 break-all">https://e-factura.sunat.gob.pe/ol-ti-itcpe/billService</code>
+              <div className="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl">
+                <span className="text-emerald-400 font-semibold block mb-1">Ambiente Producción Oficial (Comprobantes Reales):</span>
+                <code className="text-slate-300 font-mono text-xs break-all">https://e-factura.sunat.gob.pe/ol-ti-itcpe/billService</code>
               </div>
             </div>
           </div>
@@ -722,47 +743,47 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* TAB 6: LÍMITES SAAS & PLAN */}
       {activeTab === 'saas' && subscription && (
-        <div className="bg-[#0F1219] border border-slate-800 rounded p-4 space-y-4 font-mono">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 md:p-8 space-y-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-800 gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-400" />
+              <h2 className="text-base md:text-lg font-bold text-white flex items-center gap-2.5">
+                <Zap className="w-5 h-5 text-amber-400" />
                 Estado de la Suscripción SaaS y Cuotas de Uso
               </h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-xs md:text-sm text-slate-400 mt-1 leading-relaxed">
                 Consumo actual de recursos comparado contra los límites contratados en tu plan.
               </p>
             </div>
             <button
               onClick={onOpenPlansModal}
-              className="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded text-xs flex items-center gap-1.5 transition"
+              className="px-4 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-2xl text-xs md:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm self-start sm:self-auto"
             >
-              <Sparkles className="w-3.5 h-3.5" /> Cambiar de Plan / Ver Tabla
+              <Sparkles className="w-4 h-4" /> Cambiar de Plan / Ver Tabla
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-            <div className="p-3.5 bg-[#161B22] border border-slate-800 rounded space-y-1">
-              <span className="text-[10px] text-slate-500 uppercase">PLAN CONTRATADO</span>
-              <div className="text-lg font-bold text-white flex items-center gap-1.5">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="p-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl space-y-2">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Plan Contratado</span>
+              <div className="text-xl font-bold text-white flex items-center gap-2">
                 <span>{subscription.plan.name}</span>
-                <span className="text-[10px] bg-sky-500/20 text-sky-300 px-1.5 py-0.2 rounded">
+                <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-medium">
                   S/ {subscription.plan.priceMonthly.toFixed(2)}/mes
                 </span>
               </div>
-              <span className="text-[10px] text-slate-400 block">
+              <span className="text-xs text-slate-400 block">
                 Estado: <strong className="text-emerald-400">{subscription.status}</strong>
               </span>
             </div>
 
-            <div className="p-3.5 bg-[#161B22] border border-slate-800 rounded space-y-1">
-              <span className="text-[10px] text-slate-500 uppercase">ALUMNOS ACTIVOS</span>
-              <div className="text-lg font-bold text-sky-400">
+            <div className="p-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl space-y-2">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Alumnos Activos</span>
+              <div className="text-xl font-bold text-blue-400">
                 {subscription.usage.students} / {subscription.limits.students ?? '∞ Ilimitados'}
               </div>
-              <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                 <div
-                  className="bg-sky-500 h-full rounded-full"
+                  className="bg-blue-500 h-full rounded-full transition-all"
                   style={{
                     width: subscription.limits.students
                       ? `${Math.min(100, (subscription.usage.students / subscription.limits.students) * 100)}%`
@@ -772,26 +793,26 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
               </div>
             </div>
 
-            <div className="p-3.5 bg-[#161B22] border border-slate-800 rounded space-y-1">
-              <span className="text-[10px] text-slate-500 uppercase">DEPORTES HABILITADOS</span>
-              <div className="text-lg font-bold text-amber-400">
+            <div className="p-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl space-y-2">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Deportes Habilitados</span>
+              <div className="text-xl font-bold text-amber-400">
                 {sports.length} / {subscription.limits.sports ?? '∞ Ilimitados'}
               </div>
-              <span className="text-[10px] text-slate-400 block">
-                {subscription.limits.sports ? 'Límite Free alcanzado' : 'Sin restricción'}
+              <span className="text-xs text-slate-400 block">
+                {subscription.limits.sports ? 'Límite Free alcanzado' : 'Sin restricciones'}
               </span>
             </div>
 
-            <div className="p-3.5 bg-[#161B22] border border-slate-800 rounded space-y-1">
-              <span className="text-[10px] text-slate-500 uppercase">FACTURACIÓN SUNAT</span>
+            <div className="p-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl space-y-2">
+              <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Facturación SUNAT</span>
               <div
-                className={`text-lg font-bold ${
+                className={`text-xl font-bold ${
                   subscription.features.SUNAT_BILLING ? 'text-emerald-400' : 'text-slate-500'
                 }`}
               >
                 {subscription.features.SUNAT_BILLING ? 'HABILITADA' : 'RESTRINGIDA'}
               </div>
-              <span className="text-[10px] text-slate-400 block">
+              <span className="text-xs text-slate-400 block">
                 {subscription.features.SUNAT_BILLING ? 'Boletas y Facturas PRO' : 'Suscripción PRO requerida'}
               </span>
             </div>
@@ -801,85 +822,88 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* MODAL: NUEVO DEPORTE */}
       {showSportModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded max-w-md w-full p-4 space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="text-white font-bold uppercase flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-amber-400" /> Registrar Nueva Disciplina
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-white font-bold text-base md:text-lg flex items-center gap-2.5">
+                <Trophy className="w-5 h-5 text-amber-400" /> Registrar Nueva Disciplina
               </h3>
-              <button onClick={() => setShowSportModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
+              <button
+                onClick={() => setShowSportModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateSport} className="space-y-3">
+            <form onSubmit={handleCreateSport} className="space-y-4">
               <div>
-                <label className="text-slate-400 block mb-1">Nombre del Deporte</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Nombre del Deporte</label>
                 <input
                   type="text"
                   placeholder="ej. Básquetbol Formativo"
                   value={newSportName}
                   onChange={(e) => setNewSportName(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Categorías de edad (separadas por comas)</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Categorías de edad (separadas por comas)</label>
                 <input
                   type="text"
                   placeholder="Sub-8, Sub-10, Sub-12, Sub-15"
                   value={newSportCategories}
                   onChange={(e) => setNewSportCategories(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Canchas asignadas</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Canchas asignadas</label>
                 <input
                   type="text"
-                  placeholder="Coliseo 1, Cancha Los Álamos"
+                  placeholder="Coliseo 1, Cancha Principal"
                   value={newSportCourts}
                   onChange={(e) => setNewSportCourts(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Pensión Mensual Sugerida (S/)</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Pensión Mensual Sugerida (S/)</label>
                 <input
                   type="number"
                   step="0.01"
                   value={newSportFee}
                   onChange={(e) => setNewSportFee(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-emerald-400 font-bold"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-emerald-400 font-bold text-sm focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Descripción Breve</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Descripción Breve</label>
                 <textarea
-                  placeholder="Metodología y objetivos..."
+                  placeholder="Metodología y objetivos de la disciplina..."
                   value={newSportDesc}
                   onChange={(e) => setNewSportDesc(e.target.value)}
                   rows={2}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                 ></textarea>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowSportModal(false)}
-                  className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded"
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-xs md:text-sm transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs md:text-sm transition cursor-pointer shadow-sm"
                 >
                   Registrar Deporte
                 </button>
@@ -891,37 +915,40 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* MODAL: NUEVO PERSONAL */}
       {showStaffModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded max-w-md w-full p-4 space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="text-white font-bold uppercase flex items-center gap-2">
-                <Users className="w-4 h-4 text-sky-400" /> Registrar Entrenador / Personal
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-white font-bold text-base md:text-lg flex items-center gap-2.5">
+                <Users className="w-5 h-5 text-blue-400" /> Registrar Entrenador o Personal
               </h3>
-              <button onClick={() => setShowStaffModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
+              <button
+                onClick={() => setShowStaffModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateStaff} className="space-y-3">
-              <div className="grid grid-cols-2 gap-2">
+            <form onSubmit={handleCreateStaff} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 block mb-1">DNI (8 dígitos)</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">DNI (8 dígitos)</label>
                   <input
                     type="text"
                     maxLength={8}
                     placeholder="72819203"
                     value={newStaffDni}
                     onChange={(e) => setNewStaffDni(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white font-bold"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white font-mono text-sm focus:border-blue-500 focus:outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 block mb-1">Rol en Sistema</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Rol en Sistema</label>
                   <select
                     value={newStaffRole}
                     onChange={(e) => setNewStaffRole(e.target.value as any)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   >
                     <option value="COACH">COACH (Profesor)</option>
                     <option value="ADMIN">ADMIN (Administrador)</option>
@@ -932,46 +959,46 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Nombre Completo y Apellidos</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Nombre Completo y Apellidos</label>
                 <input
                   type="text"
                   placeholder="ej. Juan Carlos Guerrero"
                   value={newStaffName}
                   onChange={(e) => setNewStaffName(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Cargo / Título Profesional</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Cargo / Título Profesional</label>
                 <input
                   type="text"
                   placeholder="ej. Entrenador Categorías Sub-10 a Sub-14"
                   value={newStaffRoleTitle}
                   onChange={(e) => setNewStaffRoleTitle(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 block mb-1">Teléfono Móvil</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Teléfono Celular</label>
                   <input
                     type="text"
                     placeholder="+51 987 654 321"
                     value={newStaffPhone}
                     onChange={(e) => setNewStaffPhone(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 block mb-1">Deporte Asignado</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Disciplina Asignada</label>
                   <select
                     value={newStaffSport}
                     onChange={(e) => setNewStaffSport(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   >
                     {sports.map((s) => (
                       <option key={s.id} value={s.name}>
@@ -982,17 +1009,17 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowStaffModal(false)}
-                  className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded"
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-xs md:text-sm transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs md:text-sm transition cursor-pointer shadow-sm"
                 >
                   Registrar Personal
                 </button>
@@ -1004,37 +1031,40 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
 
       {/* MODAL: NUEVA TARIFA */}
       {showTariffModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0F1219] border border-slate-800 rounded max-w-md w-full p-4 space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h3 className="text-white font-bold uppercase flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-emerald-400" /> Crear Nueva Tarifa
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-white font-bold text-base md:text-lg flex items-center gap-2.5">
+                <CreditCard className="w-5 h-5 text-emerald-400" /> Crear Nueva Tarifa
               </h3>
-              <button onClick={() => setShowTariffModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
+              <button
+                onClick={() => setShowTariffModal(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateTariff} className="space-y-3">
+            <form onSubmit={handleCreateTariff} className="space-y-4">
               <div>
-                <label className="text-slate-400 block mb-1">Nombre de la Tarifa</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Nombre de la Tarifa</label>
                 <input
                   type="text"
-                  placeholder="ej. Pensión Fútbol Fin de Semana"
+                  placeholder="ej. Pensión Fútbol Formativo"
                   value={newTariffName}
                   onChange={(e) => setNewTariffName(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 block mb-1">Tipo de Cobro</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Tipo de Cobro</label>
                   <select
                     value={newTariffType}
                     onChange={(e) => setNewTariffType(e.target.value as any)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   >
                     <option value="MONTHLY">Pensión Mensual</option>
                     <option value="ENROLLMENT">Matrícula Anual</option>
@@ -1044,49 +1074,49 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
                 </div>
 
                 <div>
-                  <label className="text-slate-400 block mb-1">Monto en Soles (PEN)</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Monto en Soles (PEN)</label>
                   <input
                     type="number"
                     step="0.01"
                     value={newTariffAmount}
                     onChange={(e) => setNewTariffAmount(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-emerald-400 font-bold"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-emerald-400 font-bold text-sm focus:border-blue-500 focus:outline-none"
                     required
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 block mb-1">Día de Vencimiento</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Día de Vencimiento</label>
                   <input
                     type="number"
                     min={1}
                     max={31}
                     value={newTariffDueDay}
                     onChange={(e) => setNewTariffDueDay(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-400 block mb-1">Descuento Pago Puntual (S/)</label>
+                  <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Descuento Pago Puntual (S/)</label>
                   <input
                     type="number"
                     step="0.01"
                     value={newTariffDiscount}
                     onChange={(e) => setNewTariffDiscount(e.target.value)}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-amber-300"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-amber-300 text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Disciplina Aplicable</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Disciplina Aplicable</label>
                 <select
                   value={newTariffSport}
                   onChange={(e) => setNewTariffSport(e.target.value)}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                 >
                   <option value="Todos">Todas las Disciplinas</option>
                   {sports.map((s) => (
@@ -1098,27 +1128,27 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-1">Descripción</label>
+                <label className="text-xs md:text-sm font-semibold text-slate-300 block mb-1.5">Descripción</label>
                 <textarea
                   placeholder="Detalles sobre lo que incluye esta tarifa..."
                   value={newTariffDesc}
                   onChange={(e) => setNewTariffDesc(e.target.value)}
                   rows={2}
-                  className="w-full bg-[#161B22] border border-slate-700 rounded p-2 text-white"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-sm focus:border-blue-500 focus:outline-none"
                 ></textarea>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowTariffModal(false)}
-                  className="px-3 py-1.5 bg-slate-800 text-slate-300 rounded"
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-xs md:text-sm transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-black font-bold rounded"
+                  className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs md:text-sm transition cursor-pointer shadow-sm"
                 >
                   Crear Tarifa
                 </button>
