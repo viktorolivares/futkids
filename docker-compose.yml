@@ -32,6 +32,22 @@ services:
     networks:
       - academy-network
 
+  mobile:
+    build:
+      context: ./academy-mobile
+      dockerfile: Dockerfile
+    container_name: academy-mobile
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      - VITE_API_BASE_URL=/api/v1
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - academy-network
+
   api:
     build:
       context: ./academy-api
