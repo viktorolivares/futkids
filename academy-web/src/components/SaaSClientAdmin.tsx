@@ -137,7 +137,6 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
   const handleChangePlan = (client: SaaSClientAcademy, newPlan: 'FREE' | 'PRO' | 'ENTERPRISE') => {
     let mrr = 0;
     let studentsLimit: number | null = null;
-    let sportsLimit = null;
 
     if (newPlan === 'FREE') {
       mrr = 0;
@@ -266,106 +265,106 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
   return (
     <div className="space-y-6 text-slate-100 font-sans">
       {/* 1. Header & Architecture Link Alert */}
-      <div className="bg-[#161B22] border border-slate-800 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-[#111622] border border-slate-800 rounded-3xl p-6 md:p-8 flex flex-wrap items-center justify-between gap-6 shadow-xl">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
-              <Building2 className="w-5 h-5" />
+          <div className="flex items-center gap-3 mb-2">
+            <span className="p-2 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+              <Building2 className="w-6 h-6" />
             </span>
-            <h2 className="text-base font-bold text-white uppercase tracking-tight">
+            <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">
               Panel de Administración de Mis Clientes (SaaS SuperAdmin)
             </h2>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
+            <span className="text-xs px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">
               Multi-Tenant Engine
             </span>
           </div>
-          <p className="text-slate-400 text-xs max-w-3xl">
+          <p className="text-slate-400 text-sm md:text-base max-w-3xl leading-relaxed">
             Gestión centralizada de academias deportivas clientes: estado de suscripción, cuotas de alumnos,
             facturación recurrente MRR, credenciales SUNAT UBL 2.1 y llaves de acceso API.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setIsNewClientModalOpen(true)}
-            className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-black font-bold flex items-center gap-1.5 shadow-lg shadow-sky-500/20 transition"
+            className="px-5 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-slate-950 font-bold flex items-center gap-2 shadow-lg shadow-sky-500/20 transition cursor-pointer text-sm"
           >
-            <Plus className="w-4 h-4" /> Registrar Nueva Academia
+            <Plus className="w-5 h-5" /> Registrar Nueva Academia
           </button>
         </div>
       </div>
 
       {/* 2. Executive SaaS Metrics (MRR, Tenants, Trials, Alumnos) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-            <Building2 className="w-3.5 h-3.5 text-sky-400" /> Clientes Totales
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-slate-400 uppercase font-semibold flex items-center gap-1.5">
+            <Building2 className="w-4 h-4 text-sky-400" /> Clientes Totales
           </span>
-          <div className="text-xl font-bold text-white">{totalClients}</div>
-          <span className="text-[10px] text-slate-400">Academias en Perú</span>
+          <div className="text-2xl font-bold text-white">{totalClients}</div>
+          <span className="text-xs text-slate-400 block">Academias en Perú</span>
         </div>
 
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-purple-400 uppercase font-semibold flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5 text-purple-400" /> En Prueba (14d)
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-purple-400 uppercase font-semibold flex items-center gap-1.5">
+            <Clock className="w-4 h-4 text-purple-400" /> En Prueba (14d)
           </span>
-          <div className="text-xl font-bold text-purple-300">{trialClients}</div>
-          <span className="text-[10px] text-slate-400">Prueba Pro gratuita</span>
+          <div className="text-2xl font-bold text-purple-300">{trialClients}</div>
+          <span className="text-xs text-slate-400 block">Prueba Pro gratuita</span>
         </div>
 
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-amber-400 uppercase font-semibold flex items-center gap-1">
-            <Zap className="w-3.5 h-3.5 text-amber-400" /> Clientes Pro
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-amber-400 uppercase font-semibold flex items-center gap-1.5">
+            <Zap className="w-4 h-4 text-amber-400" /> Clientes Pro
           </span>
-          <div className="text-xl font-bold text-amber-300">{proClients + enterpriseClients}</div>
-          <span className="text-[10px] text-slate-400">S/ 99 - S/ 249/mes</span>
+          <div className="text-2xl font-bold text-amber-300">{proClients + enterpriseClients}</div>
+          <span className="text-xs text-slate-400 block">S/ 99 - S/ 249/mes</span>
         </div>
 
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" /> Plan Free
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-slate-400 uppercase font-semibold flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-slate-400" /> Plan Free
           </span>
-          <div className="text-xl font-bold text-slate-200">{freeClients}</div>
-          <span className="text-[10px] text-slate-400">Hasta 30 alumnos</span>
+          <div className="text-2xl font-bold text-slate-200">{freeClients}</div>
+          <span className="text-xs text-slate-400 block">Hasta 30 alumnos</span>
         </div>
 
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-emerald-400 uppercase font-semibold flex items-center gap-1">
-            <DollarSign className="w-3.5 h-3.5 text-emerald-400" /> MRR Proyectado
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-emerald-400 uppercase font-semibold flex items-center gap-1.5">
+            <DollarSign className="w-4 h-4 text-emerald-400" /> MRR Proyectado
           </span>
-          <div className="text-xl font-bold text-emerald-300">S/ {totalMrr.toFixed(2)}</div>
-          <span className="text-[10px] text-slate-400">Ingreso recurrente</span>
+          <div className="text-2xl font-bold text-emerald-300">S/ {totalMrr.toFixed(2)}</div>
+          <span className="text-xs text-slate-400 block">Ingreso recurrente</span>
         </div>
 
-        <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
-          <span className="text-[10px] text-sky-400 uppercase font-semibold flex items-center gap-1">
-            <Users className="w-3.5 h-3.5 text-sky-400" /> Alumnos Red
+        <div className="bg-[#111622] border border-slate-800/80 rounded-2xl p-5 space-y-2">
+          <span className="text-xs text-sky-400 uppercase font-semibold flex items-center gap-1.5">
+            <Users className="w-4 h-4 text-sky-400" /> Alumnos Red
           </span>
-          <div className="text-xl font-bold text-white">{totalStudents.toLocaleString()}</div>
-          <span className="text-[10px] text-slate-400">En todas las sedes</span>
+          <div className="text-2xl font-bold text-white">{totalStudents.toLocaleString()}</div>
+          <span className="text-xs text-slate-400 block">En todas las sedes</span>
         </div>
       </div>
 
       {/* 3. Filter and Search Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#161B22] border border-slate-800 rounded-xl p-3">
-        <div className="flex items-center gap-2 flex-1 min-w-[240px]">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-[#111622] border border-slate-800/80 rounded-2xl p-4">
+        <div className="flex items-center gap-3 flex-1 min-w-[260px]">
           <div className="relative w-full max-w-md">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
               type="text"
               placeholder="Buscar por academia, RUC, ciudad o contacto..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#0D1117] border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
+              className="w-full bg-[#0B0E14] border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
             />
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setFilterStatus('ALL')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'ALL'
-              ? 'bg-sky-500 text-black font-bold'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${filterStatus === 'ALL'
+              ? 'bg-sky-500 text-slate-950 font-bold'
               : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
           >
@@ -373,7 +372,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           </button>
           <button
             onClick={() => setFilterStatus('TRIAL')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'TRIAL'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${filterStatus === 'TRIAL'
               ? 'bg-purple-500 text-white font-bold'
               : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
@@ -382,8 +381,8 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           </button>
           <button
             onClick={() => setFilterStatus('PRO')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'PRO'
-              ? 'bg-amber-400 text-black font-bold'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${filterStatus === 'PRO'
+              ? 'bg-amber-400 text-slate-950 font-bold'
               : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
           >
@@ -391,7 +390,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           </button>
           <button
             onClick={() => setFilterStatus('FREE')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'FREE'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${filterStatus === 'FREE'
               ? 'bg-slate-700 text-white font-bold'
               : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
@@ -400,7 +399,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           </button>
           <button
             onClick={() => setFilterStatus('OVER_LIMIT')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'OVER_LIMIT'
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${filterStatus === 'OVER_LIMIT'
               ? 'bg-rose-500 text-white font-bold'
               : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
@@ -411,7 +410,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
       </div>
 
       {/* 4. Clients Directory Grid / Table */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredClients.map((client) => {
           const isTrial = client.planStatus === 'TRIALING';
           const isPro = client.plan === 'PRO';
@@ -427,7 +426,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           return (
             <div
               key={client.id}
-              className={`bg-[#161B22] border rounded-xl p-4 transition ${isSuspended
+              className={`bg-[#111622] border rounded-3xl p-6 transition shadow-xl ${isSuspended
                 ? 'border-rose-900/60 opacity-60 bg-rose-950/10'
                 : isTrial
                   ? 'border-purple-500/30 hover:border-purple-500/50'
@@ -438,18 +437,18 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                       : 'border-slate-800 hover:border-slate-700'
                 }`}
             >
-              <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex flex-wrap items-start justify-between gap-6">
                 {/* Academy Basic Details */}
-                <div className="space-y-1.5 flex-1 min-w-[280px]">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-sm font-bold text-white">{client.name}</h3>
-                    <span className="text-[10px] text-slate-400 px-1.5 py-0.5 rounded bg-[#0D1117] border border-slate-700">
+                <div className="space-y-2 flex-1 min-w-[300px]">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <h3 className="text-base font-bold text-white tracking-tight">{client.name}</h3>
+                    <span className="text-xs text-slate-400 px-2.5 py-0.5 rounded-lg bg-[#0B0E14] border border-slate-800 font-mono">
                       RUC: {client.ruc}
                     </span>
 
                     {/* Plan Badge */}
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase border ${isSuspended
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase border ${isSuspended
                         ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
                         : isTrial
                           ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
@@ -473,7 +472,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                     {/* SUNAT Badge */}
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded font-semibold border ${client.sunatStatus === 'CONFIGURED_PROD'
+                      className={`text-xs px-2 py-0.5 rounded-full font-semibold border ${client.sunatStatus === 'CONFIGURED_PROD'
                         ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                         : client.sunatStatus === 'CONFIGURED_BETA'
                           ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
@@ -488,7 +487,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     </span>
                   </div>
 
-                  <div className="text-slate-400 text-xs flex items-center gap-4 flex-wrap">
+                  <div className="text-slate-400 text-sm flex items-center gap-3 flex-wrap leading-relaxed">
                     <span>
                       <strong className="text-slate-300">Razón Social:</strong> {client.legalName}
                     </span>
@@ -503,53 +502,53 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                   </div>
 
                   {/* Tenant ID & API Key snippet */}
-                  <div className="flex items-center gap-2 pt-1 text-[11px] text-slate-400">
-                    <span className="text-slate-500 uppercase text-[10px]">Tenant ID:</span>
-                    <code className="bg-[#0D1117] text-amber-300 px-1.5 py-0.5 rounded border border-slate-800">
+                  <div className="flex items-center gap-3 pt-1 text-xs text-slate-400 flex-wrap">
+                    <span className="text-slate-500 uppercase text-xs font-semibold">Tenant ID:</span>
+                    <code className="bg-[#0B0E14] text-amber-300 px-2 py-1 rounded-lg border border-slate-800 font-mono">
                       {client.id}
                     </code>
 
-                    <span className="text-slate-500 uppercase text-[10px] ml-2">API Key:</span>
-                    <div className="flex items-center gap-1 bg-[#0D1117] px-1.5 py-0.5 rounded border border-slate-800">
-                      <Key className="w-3 h-3 text-sky-400" />
-                      <code className="text-slate-300 text-[10px]">
+                    <span className="text-slate-500 uppercase text-xs font-semibold ml-2">API Key:</span>
+                    <div className="flex items-center gap-1.5 bg-[#0B0E14] px-2 py-1 rounded-lg border border-slate-800">
+                      <Key className="w-3.5 h-3.5 text-sky-400" />
+                      <code className="text-slate-300 font-mono text-xs">
                         {client.apiKey.substring(0, 14)}••••••••
                       </code>
                       <button
                         onClick={() => handleCopyApiKey(client.id, client.apiKey)}
-                        className="p-1 hover:text-white text-slate-400 transition"
+                        className="p-1 hover:text-white text-slate-400 transition cursor-pointer"
                         title="Copiar API Key"
                       >
                         {copiedKeyId === client.id ? (
-                          <Check className="w-3 h-3 text-emerald-400" />
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
                         ) : (
-                          <Copy className="w-3 h-3" />
+                          <Copy className="w-3.5 h-3.5" />
                         )}
                       </button>
                     </div>
 
-                    <span className="text-slate-500 text-[10px] ml-auto">
+                    <span className="text-slate-500 text-xs ml-auto">
                       Actividad: {client.lastActiveAt}
                     </span>
                   </div>
                 </div>
 
                 {/* Resource Stats & Capacity Indicators */}
-                <div className="flex items-center gap-6 border-l border-slate-800 pl-4">
+                <div className="flex items-center gap-6 border-l border-slate-800 pl-6">
                   {/* Students Counter & Limit */}
-                  <div className="w-32">
-                    <div className="flex justify-between items-baseline mb-1">
-                      <span className="text-[10px] text-slate-400 uppercase">Alumnos</span>
-                      <span className="text-xs font-bold text-white">
+                  <div className="w-36">
+                    <div className="flex justify-between items-baseline mb-1.5">
+                      <span className="text-xs text-slate-400 uppercase font-semibold">Alumnos</span>
+                      <span className="text-sm font-bold text-white">
                         {client.studentsCount}
-                        <span className="text-slate-400 font-normal">
+                        <span className="text-slate-400 font-normal text-xs">
                           {client.studentsLimit ? ` / ${client.studentsLimit}` : ' (Ilim.)'}
                         </span>
                       </span>
                     </div>
 
                     {client.studentsLimit ? (
-                      <div className="w-full bg-[#0D1117] h-1.5 rounded-full overflow-hidden border border-slate-800">
+                      <div className="w-full bg-[#0B0E14] h-2 rounded-full overflow-hidden border border-slate-800">
                         <div
                           className={`h-full rounded-full ${usagePercent >= 90 ? 'bg-rose-500' : 'bg-sky-400'
                             }`}
@@ -557,37 +556,37 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                         ></div>
                       </div>
                     ) : (
-                      <div className="text-[9px] text-emerald-400 font-semibold">Sin límite de alumnos</div>
+                      <div className="text-xs text-emerald-400 font-semibold">Sin límite de alumnos</div>
                     )}
                   </div>
 
                   {/* Facturación y Staff */}
-                  <div className="text-right space-y-0.5">
-                    <div className="text-slate-400 text-[10px]">
+                  <div className="text-right space-y-1">
+                    <div className="text-slate-400 text-xs">
                       Comprobantes mes: <strong className="text-white">{client.invoicesThisMonth}</strong>
                     </div>
-                    <div className="text-slate-400 text-[10px]">
+                    <div className="text-slate-400 text-xs">
                       Staff / Coaches: <strong className="text-white">{client.staffCount}</strong>
                     </div>
                   </div>
 
                   {/* Operational Action Buttons */}
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-2">
                     <button
                       onClick={() => setSelectedClient(client)}
-                      className="px-3 py-1.5 bg-[#0D1117] hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 rounded text-xs flex items-center gap-1.5 transition font-semibold"
+                      className="px-4 py-2 bg-[#0B0E14] hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-slate-500 rounded-xl text-xs flex items-center gap-2 transition font-semibold cursor-pointer"
                     >
-                      <Sliders className="w-3.5 h-3.5 text-sky-400" />
+                      <Sliders className="w-4 h-4 text-sky-400" />
                       <span>Gestionar</span>
                     </button>
 
                     {onEnterAcademyPortal && (
                       <button
                         onClick={() => onEnterAcademyPortal(client.id)}
-                        className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded text-xs flex items-center gap-1.5 transition font-semibold"
+                        className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl text-xs flex items-center gap-2 transition font-semibold cursor-pointer"
                         title="Ingresar al portal operativo de esta academia como Super Admin"
                       >
-                        <ExternalLink className="w-3.5 h-3.5" />
+                        <ExternalLink className="w-4 h-4" />
                         <span>Abrir Sede</span>
                       </button>
                     )}
@@ -595,10 +594,10 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     {onSelectClientForApiTesting && (
                       <button
                         onClick={() => onSelectClientForApiTesting(client.id)}
-                        className="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded text-xs flex items-center gap-1.5 transition font-semibold"
+                        className="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-xl text-xs flex items-center gap-2 transition font-semibold cursor-pointer"
                         title="Abrir este tenant en la consola de API"
                       >
-                        <Zap className="w-3.5 h-3.5" />
+                        <Zap className="w-4 h-4" />
                         <span>Probar API</span>
                       </button>
                     )}
@@ -610,7 +609,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
         })}
 
         {filteredClients.length === 0 && (
-          <div className="p-8 text-center bg-[#161B22] border border-slate-800 rounded-xl text-slate-400">
+          <div className="p-12 text-center bg-[#111622] border border-slate-800 rounded-3xl text-slate-400 text-sm">
             No se encontraron academias clientes con el filtro o búsqueda actual.
           </div>
         )}
@@ -618,20 +617,20 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
       {/* 5. Detailed Client Management Drawer/Modal */}
       {selectedClient && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0B0E14] border border-slate-700 rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
             {/* Modal Header */}
-            <div className="border-b border-slate-800 p-5 flex items-start justify-between bg-[#161B22]">
+            <div className="border-b border-slate-800 p-6 flex items-start justify-between bg-[#111622]">
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="p-1 rounded bg-sky-500/20 text-sky-400">
-                    <Building2 className="w-4 h-4" />
+                <div className="flex items-center gap-3">
+                  <span className="p-2 rounded-xl bg-sky-500/20 text-sky-400">
+                    <Building2 className="w-5 h-5" />
                   </span>
-                  <h3 className="text-base font-bold text-white font-mono">
+                  <h3 className="text-lg font-bold text-white tracking-tight">
                     {selectedClient.name}
                   </h3>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${selectedClient.isSuspended
+                    className={`text-xs px-3 py-1 rounded-full font-bold uppercase ${selectedClient.isSuspended
                       ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                       : selectedClient.planStatus === 'TRIALING'
                         ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
@@ -645,102 +644,102 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                         : selectedClient.plan}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 font-mono mt-0.5">
+                <p className="text-sm text-slate-400 font-mono mt-1.5">
                   RUC: {selectedClient.ruc} • {selectedClient.legalName} • ID: {selectedClient.id}
                 </p>
               </div>
 
               <button
                 onClick={() => setSelectedClient(null)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-6">
+            <div className="p-6 md:p-8 space-y-6">
               {/* Plan & Subscription Controls */}
-              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+              <div className="bg-[#111622] border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2 tracking-wider">
                   <CreditCard className="w-4 h-4 text-amber-400" /> Plan SaaS y Suscripción del Cliente
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Plan Free Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'FREE'
+                    className={`p-4 rounded-2xl border cursor-pointer transition ${selectedClient.plan === 'FREE'
                       ? 'border-sky-500 bg-sky-500/10'
-                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      : 'border-slate-800 bg-[#0B0E14] hover:border-slate-700'
                       }`}
                     onClick={() => handleChangePlan(selectedClient, 'FREE')}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-white text-xs">Plan FREE</span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-white text-sm">Plan FREE</span>
                       {selectedClient.plan === 'FREE' && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-sky-400" />
+                        <CheckCircle2 className="w-4 h-4 text-sky-400" />
                       )}
                     </div>
-                    <div className="text-sm font-black text-white">S/ 0.00</div>
-                    <span className="text-[10px] text-slate-400 block mt-1">
+                    <div className="text-base font-black text-white">S/ 0.00</div>
+                    <span className="text-xs text-slate-400 block mt-1 leading-relaxed">
                       Hasta 30 alumnos • Sin SUNAT
                     </span>
                   </div>
 
                   {/* Plan Pro Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'PRO'
+                    className={`p-4 rounded-2xl border cursor-pointer transition ${selectedClient.plan === 'PRO'
                       ? 'border-amber-500 bg-amber-500/10'
-                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      : 'border-slate-800 bg-[#0B0E14] hover:border-slate-700'
                       }`}
                     onClick={() => handleChangePlan(selectedClient, 'PRO')}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-amber-300 text-xs">Plan PRO</span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-amber-300 text-sm">Plan PRO</span>
                       {selectedClient.plan === 'PRO' && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+                        <CheckCircle2 className="w-4 h-4 text-amber-400" />
                       )}
                     </div>
-                    <div className="text-sm font-black text-white">S/ 99.00/mes</div>
-                    <span className="text-[10px] text-slate-400 block mt-1">
+                    <div className="text-base font-black text-white">S/ 99.00/mes</div>
+                    <span className="text-xs text-slate-400 block mt-1 leading-relaxed">
                       Alumnos ilimitados • Facturación SUNAT
                     </span>
                   </div>
 
                   {/* Plan Enterprise Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'ENTERPRISE'
+                    className={`p-4 rounded-2xl border cursor-pointer transition ${selectedClient.plan === 'ENTERPRISE'
                       ? 'border-emerald-500 bg-emerald-500/10'
-                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      : 'border-slate-800 bg-[#0B0E14] hover:border-slate-700'
                       }`}
                     onClick={() => handleChangePlan(selectedClient, 'ENTERPRISE')}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-emerald-300 text-xs">Plan ENTERPRISE</span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-emerald-300 text-sm">Plan ENTERPRISE</span>
                       {selectedClient.plan === 'ENTERPRISE' && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       )}
                     </div>
-                    <div className="text-sm font-black text-white">S/ 249.00/mes</div>
-                    <span className="text-[10px] text-slate-400 block mt-1">
+                    <div className="text-base font-black text-white">S/ 249.00/mes</div>
+                    <span className="text-xs text-slate-400 block mt-1 leading-relaxed">
                       Multisede total • SLA Prioritario
                     </span>
                   </div>
                 </div>
 
                 {/* Trial Extension and Suspension Actions */}
-                <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-400">Extender período de prueba PRO:</span>
+                <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 text-sm">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-slate-400 text-xs md:text-sm">Extender período de prueba PRO:</span>
                     <button
                       onClick={() => handleExtendTrial(selectedClient, 7)}
-                      className="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded transition"
+                      className="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded-xl transition text-xs font-semibold cursor-pointer"
                     >
                       +7 Días
                     </button>
                     <button
                       onClick={() => handleExtendTrial(selectedClient, 14)}
-                      className="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded transition font-bold"
+                      className="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded-xl transition text-xs font-bold cursor-pointer"
                     >
                       +14 Días
                     </button>
@@ -748,18 +747,18 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                   <button
                     onClick={() => handleToggleSuspension(selectedClient)}
-                    className={`px-3 py-1 rounded border transition font-bold flex items-center gap-1.5 ${selectedClient.isSuspended
+                    className={`px-4 py-2 rounded-xl border transition font-bold flex items-center gap-2 text-xs cursor-pointer ${selectedClient.isSuspended
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
                       : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
                       }`}
                   >
                     {selectedClient.isSuspended ? (
                       <>
-                        <PlayCircle className="w-3.5 h-3.5" /> Reactivar Cuenta
+                        <PlayCircle className="w-4 h-4" /> Reactivar Cuenta
                       </>
                     ) : (
                       <>
-                        <PauseCircle className="w-3.5 h-3.5" /> Suspender Cuenta
+                        <PauseCircle className="w-4 h-4" /> Suspender Cuenta
                       </>
                     )}
                   </button>
@@ -767,26 +766,26 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
               </div>
 
               {/* API Access & Tenant Keys */}
-              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-3">
-                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+              <div className="bg-[#111622] border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2 tracking-wider">
                   <Key className="w-4 h-4 text-sky-400" /> Credenciales API & Integración
                 </h4>
 
-                <div className="space-y-2 text-xs">
+                <div className="space-y-3 text-sm">
                   <div>
-                    <span className="text-slate-400 text-[10px] uppercase block mb-1">
+                    <span className="text-slate-400 text-xs uppercase block mb-1.5 font-semibold">
                       Encabezado Multi-Tenant (x-academy-id)
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <input
                         type="text"
                         readOnly
                         value={selectedClient.id}
-                        className="bg-[#0D1117] border border-slate-700 rounded px-3 py-1.5 text-amber-300 font-mono text-xs w-full"
+                        className="bg-[#0B0E14] border border-slate-700 rounded-xl px-4 py-2.5 text-amber-300 font-mono text-sm w-full"
                       />
                       <button
                         onClick={() => handleCopyApiKey('tenant-id', selectedClient.id)}
-                        className="p-1.5 bg-[#0D1117] border border-slate-700 rounded hover:bg-slate-800 transition"
+                        className="p-2.5 bg-[#0B0E14] border border-slate-700 rounded-xl hover:bg-slate-800 transition cursor-pointer text-slate-300"
                       >
                         {copiedKeyId === 'tenant-id' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                       </button>
@@ -794,25 +793,25 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-slate-400 text-[10px] uppercase">API Secret Key</span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-slate-400 text-xs uppercase font-semibold">API Secret Key</span>
                       <button
                         onClick={() => handleRegenerateApiKey(selectedClient)}
-                        className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1"
+                        className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-medium"
                       >
-                        <RefreshCw className="w-3 h-3" /> Regenerar Llave
+                        <RefreshCw className="w-3.5 h-3.5" /> Regenerar Llave
                       </button>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <input
                         type="text"
                         readOnly
                         value={selectedClient.apiKey}
-                        className="bg-[#0D1117] border border-slate-700 rounded px-3 py-1.5 text-white font-mono text-xs w-full"
+                        className="bg-[#0B0E14] border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono text-sm w-full"
                       />
                       <button
                         onClick={() => handleCopyApiKey('api-key', selectedClient.apiKey)}
-                        className="p-1.5 bg-[#0D1117] border border-slate-700 rounded hover:bg-slate-800 transition"
+                        className="p-2.5 bg-[#0B0E14] border border-slate-700 rounded-xl hover:bg-slate-800 transition cursor-pointer text-slate-300"
                       >
                         {copiedKeyId === 'api-key' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                       </button>
@@ -822,27 +821,27 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
               </div>
 
               {/* Fiscal & Contact Data */}
-              <div className="bg-[#161B22] border border-slate-800 rounded-xl p-4 space-y-2 text-xs">
-                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2">
+              <div className="bg-[#111622] border border-slate-800 rounded-2xl p-5 space-y-3 text-sm">
+                <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2 tracking-wider">
                   <Shield className="w-4 h-4 text-emerald-400" /> Datos Fiscales y Certificado Digital
                 </h4>
 
-                <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Dirección Legal:</span>
-                    <span className="text-white">{selectedClient.address}</span>
+                    <span className="text-slate-500 text-xs uppercase block font-semibold">Dirección Legal:</span>
+                    <span className="text-white mt-0.5 block">{selectedClient.address}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Email de Facturación:</span>
-                    <span className="text-white">{selectedClient.email}</span>
+                    <span className="text-slate-500 text-xs uppercase block font-semibold">Email de Facturación:</span>
+                    <span className="text-white mt-0.5 block">{selectedClient.email}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Teléfono / WhatsApp:</span>
-                    <span className="text-white">{selectedClient.phone}</span>
+                    <span className="text-slate-500 text-xs uppercase block font-semibold">Teléfono / WhatsApp:</span>
+                    <span className="text-white mt-0.5 block">{selectedClient.phone}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 text-[10px] uppercase block">Certificado Digital SUNAT:</span>
-                    <span className="text-emerald-400">
+                    <span className="text-slate-500 text-xs uppercase block font-semibold">Certificado Digital SUNAT:</span>
+                    <span className="text-emerald-400 mt-0.5 block font-medium">
                       {selectedClient.certificateExpiresAt
                         ? `Válido hasta ${selectedClient.certificateExpiresAt}`
                         : 'No registrado'}
@@ -857,30 +856,30 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
       {/* 6. New Client Onboarding Modal */}
       {isNewClientModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
-            <div className="border-b border-slate-800 p-5 flex items-start justify-between bg-[#161B22]">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#0B0E14] border border-slate-700 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
+            <div className="border-b border-slate-800 p-6 flex items-start justify-between bg-[#111622]">
               <div>
-                <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
-                  <Plus className="w-4 h-4 text-sky-400" /> Alta de Nueva Academia Cliente (Onboarding)
+                <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
+                  <Plus className="w-5 h-5 text-sky-400" /> Alta de Nueva Academia Cliente (Onboarding)
                 </h3>
-                <p className="text-xs text-slate-400 font-mono mt-0.5">
+                <p className="text-sm text-slate-400 mt-1 leading-relaxed">
                   Registra una nueva academia deportiva con 14 días de prueba PRO ilimitada sin tarjeta.
                 </p>
               </div>
 
               <button
                 onClick={() => setIsNewClientModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateNewClient} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleCreateNewClient} className="p-6 md:p-8 space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Nombre Comercial de la Academia *
                   </label>
                   <input
@@ -889,12 +888,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="Ej. Academia Los Leones FC"
                     value={newForm.name}
                     onChange={(e) => setNewForm({ ...newForm, name: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     RUC (11 Dígitos) *
                   </label>
                   <input
@@ -904,12 +903,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="20XXXXXXXXX"
                     value={newForm.ruc}
                     onChange={(e) => setNewForm({ ...newForm, ruc: e.target.value.replace(/\D/g, '') })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500 font-mono"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500 font-mono"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Razón Social Tributaria *
                   </label>
                   <input
@@ -918,12 +917,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="Ej. ASOCIACIÓN CLUB DEPORTIVO LOS LEONES"
                     value={newForm.legalName}
                     onChange={(e) => setNewForm({ ...newForm, legalName: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500 uppercase"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500 uppercase"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Nombre del Director / Dueño *
                   </label>
                   <input
@@ -932,12 +931,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="Ej. Juan Pérez"
                     value={newForm.contactPerson}
                     onChange={(e) => setNewForm({ ...newForm, contactPerson: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Email de Contacto *
                   </label>
                   <input
@@ -946,12 +945,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="director@losleones.pe"
                     value={newForm.email}
                     onChange={(e) => setNewForm({ ...newForm, email: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Teléfono / Celular *
                   </label>
                   <input
@@ -960,12 +959,12 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="+51 987 654 321"
                     value={newForm.phone}
                     onChange={(e) => setNewForm({ ...newForm, phone: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 text-[10px] uppercase font-semibold mb-1">
+                  <label className="block text-slate-300 text-xs md:text-sm font-semibold mb-1.5">
                     Ciudad / Sede
                   </label>
                   <input
@@ -973,14 +972,14 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     placeholder="Lima / Arequipa / Trujillo..."
                     value={newForm.city}
                     onChange={(e) => setNewForm({ ...newForm, city: e.target.value })}
-                    className="w-full bg-[#161B22] border border-slate-700 rounded px-3 py-2 text-white text-xs focus:outline-none focus:border-sky-500"
+                    className="w-full bg-[#111622] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
               </div>
 
               {/* Automatic Trial notice */}
-              <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg flex items-start gap-2.5 text-xs text-purple-200">
-                <Clock className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+              <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-2xl flex items-start gap-3 text-xs md:text-sm text-purple-200 leading-relaxed">
+                <Clock className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
                 <div>
                   <strong>Activación Instantánea:</strong> La academia iniciará con el{' '}
                   <span className="text-white font-bold">Plan PRO con 14 días de prueba gratuita</span> (sin tarjeta de
@@ -994,16 +993,16 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setIsNewClientModalOpen(false)}
-                  className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition disabled:opacity-50 text-sm cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold shadow-lg shadow-sky-500/20 transition disabled:opacity-60 flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-lg shadow-sky-500/20 transition disabled:opacity-60 flex items-center gap-2 text-sm cursor-pointer"
                 >
-                  {isSubmitting && <RefreshCw className="w-4 h-4 animate-spin text-black" />}
+                  {isSubmitting && <RefreshCw className="w-4 h-4 animate-spin text-slate-950" />}
                   {isSubmitting ? 'Guardando en Base de Datos...' : 'Crear Academia Cliente'}
                 </button>
               </div>
@@ -1014,3 +1013,4 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
     </div>
   );
 };
+export default SaaSClientAdmin;
