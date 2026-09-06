@@ -47,6 +47,7 @@ interface WebAdminPanelProps {
   onAddSport: (sport: WebSportItem) => void;
   onToggleSportStatus: (sportId: string) => void;
   onAddStaff: (member: WebStaffMember) => void;
+  onRemoveStaff?: (staffId: string) => void;
   onAddTariff: (tariff: WebFeeTariff) => void;
   onOpenPlansModal?: () => void;
 }
@@ -63,6 +64,7 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
   onAddSport,
   onToggleSportStatus,
   onAddStaff,
+  onRemoveStaff,
   onAddTariff,
   onOpenPlansModal,
 }) => {
@@ -511,6 +513,7 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
                   <th className="p-3">Deportes Asignados</th>
                   <th className="p-3">Contacto</th>
                   <th className="p-3">Estado</th>
+                  <th className="p-3 text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
@@ -560,6 +563,20 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
                       <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold uppercase">
                         {st.status === 'ACTIVE' ? 'ACTIVO' : st.status}
                       </span>
+                    </td>
+                    <td className="p-3 text-right">
+                      {st.role !== 'OWNER' && onRemoveStaff && (
+                        <button
+                          onClick={() => {
+                            if (window.confirm(`¿Revocar acceso de ${st.name} a esta sede?`)) {
+                              onRemoveStaff(st.id);
+                            }
+                          }}
+                          className="px-2 py-1 rounded bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 text-[10px] text-rose-300 font-bold transition cursor-pointer"
+                        >
+                          Revocar
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

@@ -169,6 +169,7 @@ export class AuthService {
         email: true,
         firstName: true,
         lastName: true,
+        isSuperAdmin: true,
         documentType: true,
         documentNumber: true,
         phone: true,
@@ -216,6 +217,7 @@ export class AuthService {
 
     const tokenPayload = {
       sub: userId,
+      userId,
       email,
       isSuperAdmin,
       memberships,

@@ -23,7 +23,7 @@ class ApiService {
     this.baseUrl = API_BASE_URL;
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('academy_jwt_token');
-      this.academyId = localStorage.getItem('academy_active_id') || 'acad-alianza-01';
+      this.academyId = localStorage.getItem('academy_active_id') || 'acad-demo-01';
     }
   }
 
@@ -38,6 +38,13 @@ class ApiService {
     }
   }
 
+  public getToken(): string | null {
+    if (!this.token && typeof window !== 'undefined') {
+      this.token = localStorage.getItem('academy_jwt_token');
+    }
+    return this.token;
+  }
+
   public setAcademyId(academyId: string) {
     this.academyId = academyId;
     if (typeof window !== 'undefined') {
@@ -46,7 +53,7 @@ class ApiService {
   }
 
   public getAcademyId(): string {
-    return this.academyId || 'acad-alianza-01';
+    return this.academyId || 'acad-demo-01';
   }
 
   public getBaseUrl(): string {
@@ -91,65 +98,346 @@ class ApiService {
 
       return (await response.json()) as T;
     } catch (err: any) {
-      // In development or when API is offline, propagate error with helpful context
       console.warn(`[academy-web] Fallo en petición ${options.method || 'GET'} a ${url}:`, err.message);
       throw err;
     }
   }
 
   // ==========================================
-  // ENDPOINTS DE ACADEMY-API
+  // 1. HEALTHCHECK & CONEXIÓN
   // ==========================================
-
-  // 1. Healthcheck & Conexión
-  public async checkHealth(): Promise<{ status: string; timestamp: string }> {
-    return this.request<{ status: string; timestamp: string }>('/health');
+  public async checkHealth(): Promise<{ status: string; timestamp: string; services?: any }> {
+    return this.request<{ status: string; timestamp: string; services?: any }>('/health');
   }
 
-  // 2. Autenticación (AuthModule)
-  public async login(email: string, password: string): Promise<{ access_token: string; user: any }> {
-    const data = await this.request<{ access_token: string; user: any }>('/auth/login', {
+  // ==========================================
+  // 2. AUTENTICACIÓN (AuthModule)
+  // ==========================================
+  public async login(
+    email: string,
+    password: string
+  ): Promise<{ accessToken: string; user: any; refreshToken?: string }> {
+    const data = await this.request<any>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    if (data?.access_token) {
-      this.setToken(data.access_token);
+    const token = data?.accessToken || data?.access_token;
+    if (token) {
+      this.setToken(token);
     }
-    return data;
+    if (data?.user?.memberships?.[0]?.academyId) {
+      this.setAcademyId(data.user.memberships[0].academyId);
+    }
+    return {
+      accessToken: token,
+      user: data.user,
+      refreshToken: data.refreshToken,
+    };
   }
 
-  // 3. Academias (AcademiesModule)
-  public async getAcademies(): Promise<any[]> {
+  public async getMe(): Promise<any> {
+    return this.request<any>('/auth/me');
+  }
+
+  // ==========================================
+  // 3. ACADEMIAS (AcademiesModule)
+  // ==========================================
+  public async getMyAcademies(): Promise<any[]> {
+    return this.request<any[]>('/academies/my');
+  }
+
+  public async getAllAcademies(): Promise<any[]> {
     return this.request<any[]>('/academies');
+  }
+
+  public async getAcademies(): Promise<any[]> {
+    return this.request<any[]>('/academies').catch(() => this.request<any[]>('/academies/my'));
   }
 
   public async getAcademy(id: string): Promise<any> {
     return this.request<any>(`/academies/${id}`);
   }
 
-  public async updateAcademyProfile(id: string, profile: any): Promise<any> {
-    return this.request<any>(`/academies/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(profile),
+  public async createAcademy(academyDto: any): Promise<any> {
+    return this.request<any>('/academies', {
+      method: 'POST',
+      body: JSON.stringify(academyDto),
     });
   }
 
-  // 4. Suscripciones SaaS (SubscriptionsModule)
-  public async getSubscriptionStatus(academyId?: string): Promise<any> {
-    const targetId = academyId || this.academyId;
-    return this.request<any>(`/subscriptions/status/${targetId}`);
+  public async getStaff(academyId?: string): Promise<any[]> {
+    const id = academyId || this.getAcademyId();
+    return this.request<any[]>(`/academies/${id}/staff`);
   }
 
-  // 5. Facturación SUNAT (SunatModule & InvoicesModule)
-  public async getInvoices(params?: { limit?: number; offset?: number }): Promise<any[]> {
-    const query = params ? `?limit=${params.limit || 20}&offset=${params.offset || 0}` : '';
+  public async addStaff(academyId: string, data: any): Promise<any> {
+    return this.request<any>(`/academies/${academyId}/staff`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  public async removeStaff(academyId: string, membershipId: string): Promise<any> {
+    return this.request<any>(`/academies/${academyId}/staff/${membershipId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  public async getBillingConfig(academyId?: string): Promise<any> {
+    const id = academyId || this.getAcademyId();
+    return this.request<any>(`/academies/${id}/billing-config`);
+  }
+
+  public async updateBillingConfig(academyId: string, data: any): Promise<any> {
+    return this.request<any>(`/academies/${academyId}/billing-config`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ==========================================
+  // 4. SUSCRIPCIONES SAAS (SubscriptionsModule)
+  // ==========================================
+  public async getSubscription(): Promise<any> {
+    return this.request<any>('/subscription');
+  }
+
+  public async getSubscriptionStatus(academyId?: string): Promise<any> {
+    if (academyId && academyId !== this.academyId) {
+      this.setAcademyId(academyId);
+    }
+    return this.request<any>('/subscription');
+  }
+
+  public async upgradeSubscription(planCode: string = 'PRO'): Promise<any> {
+    return this.request<any>('/subscription/upgrade', {
+      method: 'POST',
+      body: JSON.stringify({ planCode }),
+    });
+  }
+
+  public async downgradeSubscription(reason?: string): Promise<any> {
+    return this.request<any>('/subscription/downgrade', {
+      method: 'POST',
+      body: JSON.stringify({ reason: reason || 'Solicitud de downgrade manual' }),
+    });
+  }
+
+  // ==========================================
+  // 5. ESTUDIANTES (StudentsModule)
+  // ==========================================
+  public async getStudents(search?: string): Promise<any[]> {
+    const query = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.request<any[]>(`/students${query}`);
+  }
+
+  public async getStudent(id: string): Promise<any> {
+    return this.request<any>(`/students/${id}`);
+  }
+
+  public async createStudent(payload: any): Promise<any> {
+    return this.request<any>('/students', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async updateStudent(id: string, payload: any): Promise<any> {
+    return this.request<any>(`/students/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async deleteStudent(id: string): Promise<any> {
+    return this.request<any>(`/students/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ==========================================
+  // 6. FAMILIAS & APODERADOS (FamiliesModule)
+  // ==========================================
+  public async getFamilies(search?: string): Promise<any[]> {
+    const query = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.request<any[]>(`/families${query}`);
+  }
+
+  public async getFamily(id: string): Promise<any> {
+    return this.request<any>(`/families/${id}`);
+  }
+
+  public async createFamily(payload: any): Promise<any> {
+    return this.request<any>('/families', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async updateFamily(id: string, payload: any): Promise<any> {
+    return this.request<any>(`/families/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async deleteFamily(id: string): Promise<any> {
+    return this.request<any>(`/families/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ==========================================
+  // 7. ACADÉMICO / DEPORTES / GRUPOS / ASISTENCIA (AcademicModule)
+  // ==========================================
+  public async getSports(): Promise<any[]> {
+    return this.request<any[]>('/academic/sports');
+  }
+
+  public async createSport(payload: any): Promise<any> {
+    return this.request<any>('/academic/sports', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getGroups(): Promise<any[]> {
+    return this.request<any[]>('/academic/groups');
+  }
+
+  public async createGroup(payload: any): Promise<any> {
+    return this.request<any>('/academic/groups', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getSessions(): Promise<any[]> {
+    return this.request<any[]>('/academic/sessions');
+  }
+
+  public async createSession(payload: any): Promise<any> {
+    return this.request<any>('/academic/sessions', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async saveAttendance(sessionId: string, records: any[]): Promise<any> {
+    return this.request<any>(`/academic/sessions/${sessionId}/attendance`, {
+      method: 'PUT',
+      body: JSON.stringify({ records }),
+    });
+  }
+
+  // ==========================================
+  // 8. FINANZAS / CARGOS / PAGOS / CRÉDITOS (FinanceModule)
+  // ==========================================
+  public async getCharges(): Promise<any[]> {
+    return this.request<any[]>('/finance/charges');
+  }
+
+  public async createCharge(payload: any): Promise<any> {
+    return this.request<any>('/finance/charges', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getPayments(): Promise<any[]> {
+    return this.request<any[]>('/finance/payments');
+  }
+
+  public async createPayment(payload: any): Promise<any> {
+    return this.request<any>('/finance/payments', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getCustomerCredits(): Promise<any[]> {
+    return this.request<any[]>('/finance/customer-credits');
+  }
+
+  public async createRefund(payload: any): Promise<any> {
+    return this.request<any>('/finance/refunds', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // ==========================================
+  // 9. COMERCIAL / PAQUETES / PROMOS / TRIALS (CommercialModule)
+  // ==========================================
+  public async getPackages(): Promise<any[]> {
+    return this.request<any[]>('/commercial/packages');
+  }
+
+  public async createPackage(payload: any): Promise<any> {
+    return this.request<any>('/commercial/packages', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getPromotions(): Promise<any[]> {
+    return this.request<any[]>('/commercial/promotions');
+  }
+
+  public async createPromotion(payload: any): Promise<any> {
+    return this.request<any>('/commercial/promotions', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getTrials(): Promise<any[]> {
+    return this.request<any[]>('/commercial/trials');
+  }
+
+  public async convertTrial(trialId: string): Promise<any> {
+    return this.request<any>(`/commercial/trials/${trialId}/convert`, {
+      method: 'POST',
+    });
+  }
+
+  // ==========================================
+  // 10. POLÍTICAS DE ACADEMIA (PoliciesModule)
+  // ==========================================
+  public async getPolicy(): Promise<any> {
+    return this.request<any>('/policies');
+  }
+
+  public async updatePolicy(payload: any): Promise<any> {
+    return this.request<any>('/policies', {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // ==========================================
+  // 11. FACTURACIÓN SUNAT (InvoicesModule)
+  // ==========================================
+  public async getInvoices(params?: { limit?: number; offset?: number; status?: string }): Promise<any[]> {
+    const searchParams = new URLSearchParams();
+    if (params?.limit) searchParams.append('limit', String(params.limit));
+    if (params?.offset) searchParams.append('offset', String(params.offset));
+    if (params?.status) searchParams.append('status', params.status);
+    const query = searchParams.toString() ? `?${searchParams.toString()}` : '';
     return this.request<any[]>(`/invoices${query}`);
   }
 
   public async emitInvoice(invoicePayload: any): Promise<any> {
-    return this.request<any>('/invoices/emit', {
+    return this.request<any>('/invoices', {
       method: 'POST',
       body: JSON.stringify(invoicePayload),
+    });
+  }
+
+  public async testSunatBeta(payload: any): Promise<any> {
+    return this.request<any>('/invoices/test-sunat-beta', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   }
 }

@@ -14,13 +14,14 @@ import {
   Activity,
   Crown,
 } from 'lucide-react';
+import { apiClient } from '../services/apiClient';
 import { DemoUser } from '../types';
 
 interface LoginPageProps {
   onLogin: (user: DemoUser) => void;
 }
 
-// Pre-configured demo credentials for testing all roles
+// Credenciales reales sembradas en PostgreSQL (Prisma Seed)
 const DEMO_ACCOUNTS: Array<{
   id: string;
   email: string;
@@ -30,168 +31,133 @@ const DEMO_ACCOUNTS: Array<{
   isSuperAdmin: boolean;
   academyName?: string;
   academyId?: string;
-  role: 'SUPER_ADMIN' | 'OWNER' | 'ADMIN' | 'COACH' | 'CASHIER';
+  role: 'SUPER_ADMIN' | 'OWNER' | 'ADMIN' | 'COACH' | 'CASHIER' | 'PARENT';
   badgeColor: string;
   description: string;
 }> = [
-  {
-    id: 'usr-superadmin',
-    email: 'superadmin@plataforma-academy.pe',
-    passwordHint: 'Admin1234!',
-    name: 'Viktor Olivares',
-    roleLabel: 'SUPER ADMIN MAESTRO',
-    isSuperAdmin: true,
-    role: 'SUPER_ADMIN',
-    badgeColor: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-    description: 'Gestión global de todas las academias clientes, MRR, planes SaaS y trials.',
-  },
-  {
-    id: 'usr-carlos-alianza',
-    email: 'carlos.mendoza@alianzalima.pe',
-    passwordHint: 'Alianza2026!',
-    name: 'Carlos Mendoza',
-    roleLabel: 'DIRECTOR / OWNER',
-    isSuperAdmin: false,
-    academyId: 'acad-alianza-01',
-    academyName: 'Academia Alianza Lima - Sede Matute',
-    role: 'OWNER',
-    badgeColor: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
-    description: 'Acceso total a la Sede Matute (420 alumnos, caja, clases, facturación SUNAT).',
-  },
-  {
-    id: 'usr-palacios-cristal',
-    email: 'formativas@sportingcristal.pe',
-    passwordHint: 'Cristal2026!',
-    name: 'Roberto Palacios',
-    roleLabel: 'COORDINADOR / ADMIN',
-    isSuperAdmin: false,
-    academyId: 'acad-cristal-02',
-    academyName: 'Sporting Cristal Academy - Rímac',
-    role: 'ADMIN',
-    badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    description: 'Gestión formativa de Sporting Cristal (310 alumnos, grupos y asistencias).',
-  },
-  {
-    id: 'usr-cajero-cantolao',
-    email: 'caja@cantolao.pe',
-    passwordHint: 'Cantolao2026!',
-    name: 'Kiko Mandriotti',
-    roleLabel: 'CAJERO / COBRANZAS',
-    isSuperAdmin: false,
-    academyId: 'acad-cantolao-04',
-    academyName: 'Academia Cantolao - Sede Callao',
-    role: 'CASHIER',
-    badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    description: 'Cobranza y emisión de comprobantes en Academia Cantolao (Plan Free).',
-  },
-];
+    {
+      id: 'usr-superadmin',
+      email: 'superadmin@gesticlub.pe',
+      passwordHint: 'Admin123!',
+      name: 'Super Admin Gesticlub',
+      roleLabel: 'SUPER ADMIN MAESTRO',
+      isSuperAdmin: true,
+      role: 'SUPER_ADMIN',
+      badgeColor: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+      description: 'Gestión global de todas las academias clientes en BD, MRR, planes SaaS y trials.',
+    },
+    {
+      id: 'usr-admin-demo',
+      email: 'admin@demo.pe',
+      passwordHint: 'Admin123!',
+      name: 'Administrador Demo Central',
+      roleLabel: 'DIRECTOR / OWNER',
+      isSuperAdmin: false,
+      academyId: 'acad-demo-01',
+      academyName: 'Academia Deportiva Demo Central',
+      role: 'OWNER',
+      badgeColor: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
+      description: 'Acceso total a la Academia Demo Central (alumnos reales en BD, caja, SUNAT).',
+    },
+    {
+      id: 'usr-coach-valeria',
+      email: 'valeria.coach@demo.pe',
+      passwordHint: 'Admin123!',
+      name: 'Valeria Entrenadora',
+      roleLabel: 'ENTRENADOR / COACH',
+      isSuperAdmin: false,
+      academyId: 'acad-demo-01',
+      academyName: 'Academia Deportiva Demo Central',
+      role: 'COACH',
+      badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+      description: 'Control de sesiones, grupos formativos y toma de asistencia en tiempo real.',
+    },
+    {
+      id: 'usr-cajero-mateo',
+      email: 'mateo.caja@demo.pe',
+      passwordHint: 'Admin123!',
+      name: 'Mateo Cajero',
+      roleLabel: 'CAJERO / COBRANZAS',
+      isSuperAdmin: false,
+      academyId: 'acad-demo-01',
+      academyName: 'Academia Deportiva Demo Central',
+      role: 'CASHIER',
+      badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+      description: 'Cobranza de cuotas mensuales, emisión de boletas/facturas y arqueo.',
+    },
+    {
+      id: 'usr-parent-patricia',
+      email: 'patricia.apoderada@demo.pe',
+      passwordHint: 'Admin123!',
+      name: 'Patricia Apoderada',
+      roleLabel: 'FAMILIA / APODERADO',
+      isSuperAdmin: false,
+      academyId: 'acad-demo-01',
+      academyName: 'Academia Deportiva Demo Central',
+      role: 'PARENT',
+      badgeColor: 'bg-pink-500/10 text-pink-400 border-pink-500/30',
+      description: 'Portal de padres: estado de cuenta del alumno, asistencias y pagos.',
+    },
+  ];
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-  const [email, setEmail] = useState('superadmin@plataforma-academy.pe');
-  const [password, setPassword] = useState('Admin1234!');
+  const [email, setEmail] = useState('admin@demo.pe');
+  const [password, setPassword] = useState('Admin123!');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const performLogin = async (userEmail: string, userPass: string) => {
     setErrorMessage(null);
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      // Check if credentials match any demo account
-      const matched = DEMO_ACCOUNTS.find(
-        (acc) => acc.email.toLowerCase() === email.toLowerCase().trim()
-      );
+    try {
+      const authRes = await apiClient.login(userEmail.trim(), userPass);
+      const backendUser = authRes.user;
 
-      if (matched) {
-        const loggedUser: DemoUser = {
-          id: matched.id,
-          name: matched.name,
-          email: matched.email,
-          roleLabel: matched.roleLabel,
-          isSuperAdmin: matched.isSuperAdmin,
-          role: matched.role,
-          memberships: matched.isSuperAdmin
-            ? []
-            : [
-                {
-                  academyId: matched.academyId || 'acad-alianza-01',
-                  academyName: matched.academyName || 'Academia Alianza Lima',
-                  role: matched.role,
-                  isDefault: true,
-                },
-              ],
-        };
+      const userRole = backendUser.isSuperAdmin
+        ? 'SUPER_ADMIN'
+        : backendUser.memberships?.[0]?.role || 'ADMIN';
 
-        // Persist session locally
-        localStorage.setItem('academy_auth_user', JSON.stringify(loggedUser));
-        onLogin(loggedUser);
-      } else {
-        // Fallback for custom emails
-        if (email.includes('super') || email.includes('admin@plataforma')) {
-          const superAdminUser: DemoUser = {
-            id: 'usr-custom-super',
-            name: email.split('@')[0],
-            email,
-            roleLabel: 'SUPER ADMIN MAESTRO',
-            isSuperAdmin: true,
-            role: 'SUPER_ADMIN',
-            memberships: [],
-          };
-          localStorage.setItem('academy_auth_user', JSON.stringify(superAdminUser));
-          onLogin(superAdminUser);
-        } else {
-          const tenantUser: DemoUser = {
-            id: 'usr-custom-tenant',
-            name: email.split('@')[0],
-            email,
-            roleLabel: 'ADMINISTRADOR DE ACADEMIA',
-            isSuperAdmin: false,
-            role: 'ADMIN',
-            memberships: [
-              {
-                academyId: 'acad-alianza-01',
-                academyName: 'Academia Alianza Lima - Sede Matute',
-                role: 'ADMIN',
-                isDefault: true,
-              },
-            ],
-          };
-          localStorage.setItem('academy_auth_user', JSON.stringify(tenantUser));
-          onLogin(tenantUser);
-        }
+      const mappedUser: DemoUser = {
+        id: backendUser.id,
+        name: `${backendUser.firstName || ''} ${backendUser.lastName || ''}`.trim() || backendUser.email,
+        email: backendUser.email,
+        roleLabel: backendUser.isSuperAdmin ? 'SUPER ADMIN MAESTRO' : `ROL: ${userRole}`,
+        isSuperAdmin: Boolean(backendUser.isSuperAdmin),
+        role: userRole as any,
+        memberships: backendUser.memberships || [],
+      };
+
+      localStorage.setItem('academy_auth_user', JSON.stringify(mappedUser));
+
+      if (backendUser.memberships?.[0]?.academyId) {
+        apiClient.setAcademyId(backendUser.memberships[0].academyId);
       }
-    }, 450);
+
+      onLogin(mappedUser);
+    } catch (err: any) {
+      console.error('[LoginPage] Error durante login real:', err);
+      // Fallback si la API estuviese offline o credenciales
+      setErrorMessage(
+        err.message?.includes('Failed to fetch')
+          ? 'No se pudo conectar con el backend (http://localhost:3001). Asegúrate de que `npm run start:dev` esté corriendo.'
+          : err.message || 'Credenciales inválidas. Verifica tu correo y contraseña.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleQuickLogin = (demo: typeof DEMO_ACCOUNTS[0]) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await performLogin(email, password);
+  };
+
+  const handleQuickLogin = async (demo: typeof DEMO_ACCOUNTS[0]) => {
     setEmail(demo.email);
     setPassword(demo.passwordHint);
-    setErrorMessage(null);
-
-    const loggedUser: DemoUser = {
-      id: demo.id,
-      name: demo.name,
-      email: demo.email,
-      roleLabel: demo.roleLabel,
-      isSuperAdmin: demo.isSuperAdmin,
-      role: demo.role,
-      memberships: demo.isSuperAdmin
-        ? []
-        : [
-            {
-              academyId: demo.academyId || 'acad-alianza-01',
-              academyName: demo.academyName || 'Academia Alianza Lima',
-              role: demo.role,
-              isDefault: true,
-            },
-          ],
-    };
-
-    localStorage.setItem('academy_auth_user', JSON.stringify(loggedUser));
-    onLogin(loggedUser);
+    await performLogin(demo.email, demo.passwordHint);
   };
 
   return (
@@ -200,12 +166,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       <header className="border-b border-slate-800 bg-[#161B22]/90 backdrop-blur px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+            {/* <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
               <Activity className="w-5 h-5 text-white" />
-            </div>
+            </div> */}
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-lg tracking-tight text-white">ACADEMY PLATFORM</span>
+                <span className="font-black text-lg tracking-tight text-white">GESTICLUB PLATFORM</span>
                 <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                   Perú SaaS Multi-Tenant
                 </span>
@@ -363,11 +329,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                     <div
                       key={demo.id}
                       onClick={() => handleQuickLogin(demo)}
-                      className={`p-3.5 rounded-xl border transition cursor-pointer text-left ${
-                        isSuper
-                          ? 'bg-purple-950/20 border-purple-500/40 hover:bg-purple-950/40 hover:border-purple-500/60'
-                          : 'bg-[#0D1117]/80 border-slate-800 hover:border-slate-700 hover:bg-[#0D1117]'
-                      }`}
+                      className={`p-3.5 rounded-xl border transition cursor-pointer text-left ${isSuper
+                        ? 'bg-purple-950/20 border-purple-500/40 hover:bg-purple-950/40 hover:border-purple-500/60'
+                        : 'bg-[#0D1117]/80 border-slate-800 hover:border-slate-700 hover:bg-[#0D1117]'
+                        }`}
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex items-center gap-2">
@@ -406,7 +371,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             </div>
 
             {/* Architecture Explanation Card */}
-            <div className="mt-6 p-3.5 rounded-xl bg-[#0D1117] border border-slate-800 text-xs space-y-2">
+            {/* <div className="mt-6 p-3.5 rounded-xl bg-[#0D1117] border border-slate-800 text-xs space-y-2">
               <div className="flex items-center gap-2 text-slate-200 font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>¿Cómo funciona el Modelo de Seguridad?</span>
@@ -419,7 +384,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   <strong className="text-sky-300">Admin de Academia:</strong> Su token JWT solo tiene acceso a los datos de su propia sede. Si intenta consultar otra sede, el servidor devuelve <code>403 Forbidden</code>.
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>

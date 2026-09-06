@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xs font-bold tracking-tight text-white uppercase font-mono">
-                ACADEMY PLATFORM
+                GESTICLUB PLATFORM
               </h1>
               <span className="bg-sky-500/10 text-sky-400 text-[9px] font-mono font-semibold px-1.5 py-0.2 rounded border border-sky-500/30 uppercase">
                 PERÚ
@@ -113,33 +113,30 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="hidden sm:flex items-center bg-[#090B10] p-1 rounded border border-slate-800 font-mono text-[10px] ml-2">
             <button
               onClick={() => onSelectMode('clients-admin')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${
-                currentMode === 'clients-admin'
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'clients-admin'
                   ? 'bg-sky-500 text-black shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+                }`}
             >
               <Building2 className="w-3 h-3" />
               <span>Mis Clientes (SaaS Admin)</span>
             </button>
             <button
               onClick={() => onSelectMode('api-sandbox')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${
-                currentMode === 'api-sandbox'
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'api-sandbox'
                   ? 'bg-amber-400 text-black shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+                }`}
             >
               <Terminal className="w-3 h-3" />
               <span>API Sandbox & SUNAT</span>
             </button>
             <button
               onClick={() => onSelectMode('mobile-field')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${
-                currentMode === 'mobile-field'
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded font-bold uppercase transition ${currentMode === 'mobile-field'
                   ? 'bg-emerald-400 text-black shadow-sm'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+                }`}
             >
               <Smartphone className="w-3 h-3" />
               <span>App Móvil (APK Campo)</span>
@@ -220,13 +217,12 @@ export const Header: React.FC<HeaderProps> = ({
           {subscription && (
             <button
               onClick={onOpenPlansModal}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer ${
-                subscription.status === 'TRIALING'
+              className={`px-2.5 py-1 rounded text-[11px] font-mono font-bold flex items-center gap-1.5 border transition cursor-pointer ${subscription.status === 'TRIALING'
                   ? 'bg-purple-950/60 border-purple-500/40 text-purple-300 hover:bg-purple-900/60'
                   : subscription.plan.code === 'PRO'
-                  ? 'bg-amber-950/60 border-amber-500/40 text-amber-300 hover:bg-amber-900/60'
-                  : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
-              }`}
+                    ? 'bg-amber-950/60 border-amber-500/40 text-amber-300 hover:bg-amber-900/60'
+                    : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800'
+                }`}
               title="Gestionar Plan y Suscripción SaaS"
             >
               <Sparkles className="w-3 h-3 text-amber-400" />

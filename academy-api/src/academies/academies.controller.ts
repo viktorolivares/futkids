@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -37,6 +39,16 @@ export class AcademiesController {
     return await this.academiesService.create(createDto, user.userId);
   }
 
+  @Get()
+  @ApiOperation({
+    summary: 'Listar Todas las Academias (SuperAdmin / Directorio SaaS)',
+    description: 'Retorna la lista de todas las academias registradas en PostgreSQL con sus métricas para el SuperAdmin.',
+  })
+  @ApiResponse({ status: 200, description: 'Listado completo de academias' })
+  async findAll() {
+    return await this.academiesService.findAll();
+  }
+
   @Get('my')
   @ApiOperation({
     summary: 'Listar mis Academias',
@@ -62,5 +74,45 @@ export class AcademiesController {
   @ApiResponse({ status: 403, description: 'Acceso denegado a este tenant' })
   async findById(@Param('id') id: string) {
     return await this.academiesService.findById(id);
+  }
+
+  @Get(':id/staff')
+  @UseGuards(TenantGuard)
+  @ApiHeader({ name: 'x-academy-id', required: true })
+  @ApiOperation({ summary: 'Listar Personal de la Sede' })
+  async getStaff(@Param('id') id: string) {
+    return await this.academiesService.getStaff(id);
+  }
+
+  @Post(':id/staff')
+  @UseGuards(TenantGuard)
+  @ApiHeader({ name: 'x-academy-id', required: true })
+  @ApiOperation({ summary: 'Asignar o Invitar Colaborador a la Sede' })
+  async addStaff(@Param('id') id: string, @Body() body: any) {
+    return await this.academiesService.addStaff(id, body);
+  }
+
+  @Delete(':id/staff/:membershipId')
+  @UseGuards(TenantGuard)
+  @ApiHeader({ name: 'x-academy-id', required: true })
+  @ApiOperation({ summary: 'Revocar Acceso de Personal a la Sede' })
+  async removeStaff(@Param('id') id: string, @Param('membershipId') membershipId: string) {
+    return await this.academiesService.removeStaff(id, membershipId);
+  }
+
+  @Get(':id/billing-config')
+  @UseGuards(TenantGuard)
+  @ApiHeader({ name: 'x-academy-id', required: true })
+  @ApiOperation({ summary: 'Consultar Configuración Fiscal y SUNAT de la Sede' })
+  async getBillingConfig(@Param('id') id: string) {
+    return await this.academiesService.getBillingConfig(id);
+  }
+
+  @Patch(':id/billing-config')
+  @UseGuards(TenantGuard)
+  @ApiHeader({ name: 'x-academy-id', required: true })
+  @ApiOperation({ summary: 'Actualizar Configuración Fiscal y SUNAT de la Sede' })
+  async updateBillingConfig(@Param('id') id: string, @Body() body: any) {
+    return await this.academiesService.updateBillingConfig(id, body);
   }
 }

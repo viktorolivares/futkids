@@ -1,6 +1,8 @@
 import { Worker, Job } from 'bullmq';
 import Redis from 'ioredis';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { UblGeneratorService } from '../sunat/ubl/ubl-generator.service';
 import { XmlSignerService } from '../sunat/signer/xml-signer.service';
 import { ZipPackagerService } from '../sunat/packager/zip-packager.service';
@@ -25,7 +27,9 @@ const connection = new Redis({
 console.log(` Starting BullMQ Workers connected to Redis at ${redisHost}:${redisPort}...`);
 
 // Initialize Services for Workers
-const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 const ublGenerator = new UblGeneratorService();
 const xmlSigner = new XmlSignerService();
 const zipPackager = new ZipPackagerService();

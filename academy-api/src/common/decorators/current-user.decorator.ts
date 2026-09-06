@@ -2,11 +2,14 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export interface AuthenticatedUser {
   userId: string;
+  sub?: string;
   email: string;
+  isSuperAdmin?: boolean;
   firstName?: string;
   lastName?: string;
   memberships: Array<{
     academyId: string;
+    academyName?: string;
     role: string;
   }>;
 }

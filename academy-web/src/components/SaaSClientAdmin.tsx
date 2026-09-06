@@ -36,7 +36,7 @@ import { SaaSClientAcademy } from '../types';
 interface SaaSClientAdminProps {
   clients: SaaSClientAcademy[];
   onUpdateClient: (updated: SaaSClientAcademy) => void;
-  onAddClient: (newClient: SaaSClientAcademy) => void;
+  onAddClient: (newClient: SaaSClientAcademy) => Promise<any> | void;
   onSelectClientForApiTesting?: (academyId: string) => void;
   onEnterAcademyPortal?: (academyId: string) => void;
 }
@@ -52,6 +52,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
   const [filterStatus, setFilterStatus] = useState<'ALL' | 'TRIAL' | 'PRO' | 'FREE' | 'ENTERPRISE' | 'OVER_LIMIT'>('ALL');
   const [selectedClient, setSelectedClient] = useState<SaaSClientAcademy | null>(null);
   const [isNewClientModalOpen, setIsNewClientModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
 
   // New Client Form state
@@ -82,17 +83,19 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
     return acc;
   }, 0);
 
-  const totalStudents = clients.reduce((acc, c) => acc + c.studentsCount, 0);
-  const totalInvoices = clients.reduce((acc, c) => acc + c.invoicesThisMonth, 0);
+  const totalStudents = clients.reduce((acc, c) => acc + (c.studentsCount || 0), 0);
+  const totalInvoices = clients.reduce((acc, c) => acc + (c.invoicesThisMonth || 0), 0);
 
   // Filter clients
   const filteredClients = clients.filter((c) => {
+    const q = (searchTerm || '').toLowerCase().trim();
     const matchesSearch =
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.legalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.ruc.includes(searchTerm) ||
-      c.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.contactPerson.toLowerCase().includes(searchTerm.toLowerCase());
+      !q ||
+      (c.name || '').toLowerCase().includes(q) ||
+      (c.legalName || '').toLowerCase().includes(q) ||
+      (c.ruc || '').includes(q) ||
+      (c.city || '').toLowerCase().includes(q) ||
+      (c.contactPerson || '').toLowerCase().includes(q);
 
     if (!matchesSearch) return false;
 
@@ -101,7 +104,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
     if (filterStatus === 'FREE') return c.plan === 'FREE';
     if (filterStatus === 'ENTERPRISE') return c.plan === 'ENTERPRISE';
     if (filterStatus === 'OVER_LIMIT') {
-      return c.studentsLimit !== null && c.studentsCount >= c.studentsLimit * 0.9;
+      return c.studentsLimit !== null && (c.studentsCount || 0) >= (c.studentsLimit || 0) * 0.9;
     }
 
     return true;
@@ -189,68 +192,75 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
     }
   };
 
-  const handleCreateNewClient = (e: React.FormEvent) => {
+  const handleCreateNewClient = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newForm.name || !newForm.ruc || newForm.ruc.length !== 11) {
       alert('Por favor ingresa un nombre válido y un RUC de 11 dígitos.');
       return;
     }
 
-    const slug = newForm.name
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+    setIsSubmitting(true);
+    try {
+      const slug = newForm.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
 
-    const newId = `acad-${slug.substring(0, 10)}-${Math.floor(10 + Math.random() * 90)}`;
-    const randomKey = `sk_test_${slug.substring(0, 8)}_${Math.random().toString(36).substring(2, 15)}`;
+      const newId = `acad-${slug.substring(0, 10)}-${Math.floor(10 + Math.random() * 90)}`;
+      const randomKey = `sk_test_${slug.substring(0, 8)}_${Math.random().toString(36).substring(2, 15)}`;
 
-    const newClient: SaaSClientAcademy = {
-      id: newId,
-      slug,
-      name: newForm.name,
-      legalName: newForm.legalName || newForm.name.toUpperCase() + ' S.A.C.',
-      ruc: newForm.ruc,
-      address: newForm.address || 'Av. Principal 123',
-      city: newForm.city,
-      department: newForm.department,
-      phone: newForm.phone,
-      email: newForm.email || `contacto@${slug}.pe`,
-      contactPerson: newForm.contactPerson || 'Administrador Sede',
-      plan: 'PRO',
-      planStatus: 'TRIALING',
-      trialDaysLeft: 14,
-      trialEndsAt: new Date(Date.now() + 14 * 86400000).toISOString(),
-      mrr: 99.0,
-      studentsCount: 0,
-      studentsLimit: null,
-      sportsCount: 1,
-      groupsCount: 0,
-      staffCount: 1,
-      invoicesThisMonth: 0,
-      sunatStatus: 'CONFIGURED_BETA',
-      apiKey: randomKey,
-      createdAt: new Date().toISOString(),
-      lastActiveAt: 'Recién registrado',
-      isSuspended: false,
-    };
+      const newClient: SaaSClientAcademy = {
+        id: newId,
+        slug,
+        name: newForm.name,
+        legalName: newForm.legalName || newForm.name.toUpperCase() + ' S.A.C.',
+        ruc: newForm.ruc,
+        address: newForm.address || 'Av. Principal 123',
+        city: newForm.city,
+        department: newForm.department,
+        phone: newForm.phone,
+        email: newForm.email || `contacto@${slug}.pe`,
+        contactPerson: newForm.contactPerson || 'Administrador Sede',
+        plan: 'PRO',
+        planStatus: 'TRIALING',
+        trialDaysLeft: 14,
+        trialEndsAt: new Date(Date.now() + 14 * 86400000).toISOString(),
+        mrr: 99.0,
+        studentsCount: 0,
+        studentsLimit: null,
+        sportsCount: 1,
+        groupsCount: 0,
+        staffCount: 1,
+        invoicesThisMonth: 0,
+        sunatStatus: 'CONFIGURED_BETA',
+        apiKey: randomKey,
+        createdAt: new Date().toISOString(),
+        lastActiveAt: 'Recién registrado',
+        isSuspended: false,
+      };
 
-    onAddClient(newClient);
-    setIsNewClientModalOpen(false);
-    setSelectedClient(newClient);
-    setNewForm({
-      name: '',
-      legalName: '',
-      ruc: '',
-      address: '',
-      city: 'Lima',
-      department: 'Lima',
-      phone: '+51 ',
-      email: '',
-      contactPerson: '',
-      sportName: 'Fútbol',
-    });
+      await onAddClient(newClient);
+      setIsNewClientModalOpen(false);
+      setSelectedClient(newClient);
+      setNewForm({
+        name: '',
+        legalName: '',
+        ruc: '',
+        address: '',
+        city: 'Lima',
+        department: 'Lima',
+        phone: '+51 ',
+        email: '',
+        contactPerson: '',
+        sportName: 'Fútbol',
+      });
+    } catch (err: any) {
+      alert(`Error al registrar academia en la base de datos: ${err.message || 'Error desconocido'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -285,27 +295,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
         </div>
       </div>
 
-      {/* 2. Decoupled Web App Architecture Info Banner */}
-      <div className="bg-sky-500/[0.04] border border-sky-500/20 rounded-xl p-4 flex items-start justify-between gap-4 text-xs">
-        <div className="flex items-start gap-3">
-          <Sparkles className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <div className="font-bold text-white flex items-center gap-2">
-              <span>Frontend SPA Desacoplado: <strong>academy-web</strong></span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40">
-                Puerto 8080 en Docker
-              </span>
-            </div>
-            <p className="text-slate-400">
-              Cada academia cliente accede a su propio portal operativo en el proyecto independiente{' '}
-              <code className="text-sky-300 bg-sky-950/60 px-1 py-0.5 rounded">/academy-web</code>. Aquí en el{' '}
-              <strong>Sandbox</strong> administras los tenants globales, sus planes y pruebas de API.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Executive SaaS Metrics (MRR, Tenants, Trials, Alumnos) */}
+      {/* 2. Executive SaaS Metrics (MRR, Tenants, Trials, Alumnos) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="bg-[#161B22] border border-slate-800 rounded-xl p-3.5 space-y-1">
           <span className="text-[10px] text-slate-400 uppercase font-semibold flex items-center gap-1">
@@ -356,7 +346,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
         </div>
       </div>
 
-      {/* 4. Filter and Search Controls */}
+      {/* 3. Filter and Search Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#161B22] border border-slate-800 rounded-xl p-3">
         <div className="flex items-center gap-2 flex-1 min-w-[240px]">
           <div className="relative w-full max-w-md">
@@ -374,58 +364,53 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
         <div className="flex items-center gap-1.5 flex-wrap">
           <button
             onClick={() => setFilterStatus('ALL')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
-              filterStatus === 'ALL'
-                ? 'bg-sky-500 text-black font-bold'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'ALL'
+              ? 'bg-sky-500 text-black font-bold'
+              : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
           >
             Todos ({clients.length})
           </button>
           <button
             onClick={() => setFilterStatus('TRIAL')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
-              filterStatus === 'TRIAL'
-                ? 'bg-purple-500 text-white font-bold'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'TRIAL'
+              ? 'bg-purple-500 text-white font-bold'
+              : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
           >
             En Prueba 14d ({trialClients})
           </button>
           <button
             onClick={() => setFilterStatus('PRO')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
-              filterStatus === 'PRO'
-                ? 'bg-amber-400 text-black font-bold'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'PRO'
+              ? 'bg-amber-400 text-black font-bold'
+              : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
           >
             Plan PRO ({proClients})
           </button>
           <button
             onClick={() => setFilterStatus('FREE')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
-              filterStatus === 'FREE'
-                ? 'bg-slate-700 text-white font-bold'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'FREE'
+              ? 'bg-slate-700 text-white font-bold'
+              : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
           >
             Plan FREE ({freeClients})
           </button>
           <button
             onClick={() => setFilterStatus('OVER_LIMIT')}
-            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${
-              filterStatus === 'OVER_LIMIT'
-                ? 'bg-rose-500 text-white font-bold'
-                : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+            className={`px-2.5 py-1 rounded text-[11px] font-semibold transition ${filterStatus === 'OVER_LIMIT'
+              ? 'bg-rose-500 text-white font-bold'
+              : 'bg-slate-800 text-slate-400 hover:text-white'
+              }`}
           >
             Límite Alumnos
           </button>
         </div>
       </div>
 
-      {/* 5. Clients Directory Grid / Table */}
+      {/* 4. Clients Directory Grid / Table */}
       <div className="space-y-3">
         {filteredClients.map((client) => {
           const isTrial = client.planStatus === 'TRIALING';
@@ -442,17 +427,16 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
           return (
             <div
               key={client.id}
-              className={`bg-[#161B22] border rounded-xl p-4 transition ${
-                isSuspended
-                  ? 'border-rose-900/60 opacity-60 bg-rose-950/10'
-                  : isTrial
+              className={`bg-[#161B22] border rounded-xl p-4 transition ${isSuspended
+                ? 'border-rose-900/60 opacity-60 bg-rose-950/10'
+                : isTrial
                   ? 'border-purple-500/30 hover:border-purple-500/50'
                   : isEnterprise
-                  ? 'border-amber-500/40 hover:border-amber-500/60'
-                  : isPro
-                  ? 'border-sky-500/30 hover:border-sky-500/50'
-                  : 'border-slate-800 hover:border-slate-700'
-              }`}
+                    ? 'border-amber-500/40 hover:border-amber-500/60'
+                    : isPro
+                      ? 'border-sky-500/30 hover:border-sky-500/50'
+                      : 'border-slate-800 hover:border-slate-700'
+                }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 {/* Academy Basic Details */}
@@ -465,44 +449,42 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                     {/* Plan Badge */}
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase border ${
-                        isSuspended
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                          : isTrial
+                      className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase border ${isSuspended
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                        : isTrial
                           ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
                           : isEnterprise
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                          : isPro
-                          ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
-                          : 'bg-slate-700/40 text-slate-300 border-slate-600'
-                      }`}
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            : isPro
+                              ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                              : 'bg-slate-700/40 text-slate-300 border-slate-600'
+                        }`}
                     >
                       {isSuspended
                         ? 'SUSPENDIDO'
                         : isTrial
-                        ? `PRO (Prueba ${client.trialDaysLeft}d)`
-                        : isEnterprise
-                        ? 'ENTERPRISE (S/ 249/m)'
-                        : isPro
-                        ? 'PRO (S/ 99/m)'
-                        : 'FREE (S/ 0/m)'}
+                          ? `PRO (Prueba ${client.trialDaysLeft}d)`
+                          : isEnterprise
+                            ? 'ENTERPRISE (S/ 249/m)'
+                            : isPro
+                              ? 'PRO (S/ 99/m)'
+                              : 'FREE (S/ 0/m)'}
                     </span>
 
                     {/* SUNAT Badge */}
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded font-semibold border ${
-                        client.sunatStatus === 'CONFIGURED_PROD'
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                          : client.sunatStatus === 'CONFIGURED_BETA'
+                      className={`text-[9px] px-1.5 py-0.5 rounded font-semibold border ${client.sunatStatus === 'CONFIGURED_PROD'
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                        : client.sunatStatus === 'CONFIGURED_BETA'
                           ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                           : 'bg-slate-800 text-slate-400 border-slate-700'
-                      }`}
+                        }`}
                     >
                       {client.sunatStatus === 'CONFIGURED_PROD'
                         ? 'SUNAT Prod (UBL 2.1)'
                         : client.sunatStatus === 'CONFIGURED_BETA'
-                        ? 'SUNAT Beta'
-                        : 'SOL Pendiente'}
+                          ? 'SUNAT Beta'
+                          : 'SOL Pendiente'}
                     </span>
                   </div>
 
@@ -569,9 +551,8 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     {client.studentsLimit ? (
                       <div className="w-full bg-[#0D1117] h-1.5 rounded-full overflow-hidden border border-slate-800">
                         <div
-                          className={`h-full rounded-full ${
-                            usagePercent >= 90 ? 'bg-rose-500' : 'bg-sky-400'
-                          }`}
+                          className={`h-full rounded-full ${usagePercent >= 90 ? 'bg-rose-500' : 'bg-sky-400'
+                            }`}
                           style={{ width: `${usagePercent}%` }}
                         ></div>
                       </div>
@@ -635,7 +616,7 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
         )}
       </div>
 
-      {/* 6. Detailed Client Management Drawer/Modal */}
+      {/* 5. Detailed Client Management Drawer/Modal */}
       {selectedClient && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
@@ -650,19 +631,18 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                     {selectedClient.name}
                   </h3>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
-                      selectedClient.isSuspended
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
-                        : selectedClient.planStatus === 'TRIALING'
+                    className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${selectedClient.isSuspended
+                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                      : selectedClient.planStatus === 'TRIALING'
                         ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
                         : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                    }`}
+                      }`}
                   >
                     {selectedClient.isSuspended
                       ? 'SUSPENDIDO'
                       : selectedClient.planStatus === 'TRIALING'
-                      ? `Prueba (${selectedClient.trialDaysLeft}d)`
-                      : selectedClient.plan}
+                        ? `Prueba (${selectedClient.trialDaysLeft}d)`
+                        : selectedClient.plan}
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 font-mono mt-0.5">
@@ -689,11 +669,10 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* Plan Free Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${
-                      selectedClient.plan === 'FREE'
-                        ? 'border-sky-500 bg-sky-500/10'
-                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
-                    }`}
+                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'FREE'
+                      ? 'border-sky-500 bg-sky-500/10'
+                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      }`}
                     onClick={() => handleChangePlan(selectedClient, 'FREE')}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -710,11 +689,10 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                   {/* Plan Pro Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${
-                      selectedClient.plan === 'PRO'
-                        ? 'border-amber-500 bg-amber-500/10'
-                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
-                    }`}
+                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'PRO'
+                      ? 'border-amber-500 bg-amber-500/10'
+                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      }`}
                     onClick={() => handleChangePlan(selectedClient, 'PRO')}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -731,11 +709,10 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                   {/* Plan Enterprise Button */}
                   <div
-                    className={`p-3 rounded-lg border cursor-pointer transition ${
-                      selectedClient.plan === 'ENTERPRISE'
-                        ? 'border-emerald-500 bg-emerald-500/10'
-                        : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
-                    }`}
+                    className={`p-3 rounded-lg border cursor-pointer transition ${selectedClient.plan === 'ENTERPRISE'
+                      ? 'border-emerald-500 bg-emerald-500/10'
+                      : 'border-slate-800 bg-[#0D1117] hover:border-slate-700'
+                      }`}
                     onClick={() => handleChangePlan(selectedClient, 'ENTERPRISE')}
                   >
                     <div className="flex items-center justify-between mb-1">
@@ -771,11 +748,10 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
 
                   <button
                     onClick={() => handleToggleSuspension(selectedClient)}
-                    className={`px-3 py-1 rounded border transition font-bold flex items-center gap-1.5 ${
-                      selectedClient.isSuspended
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
-                        : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
-                    }`}
+                    className={`px-3 py-1 rounded border transition font-bold flex items-center gap-1.5 ${selectedClient.isSuspended
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30'
+                      : 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
+                      }`}
                   >
                     {selectedClient.isSuspended ? (
                       <>
@@ -875,31 +851,11 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-800 bg-[#090D13] flex items-center justify-between">
-              <button
-                onClick={() => {
-                  onSelectClientForApiTesting(selectedClient.id);
-                  setSelectedClient(null);
-                }}
-                className="px-3.5 py-1.5 rounded bg-amber-500 text-black font-bold flex items-center gap-1.5 hover:bg-amber-400 transition"
-              >
-                <Zap className="w-4 h-4" /> Probar este Tenant en el API Sandbox
-              </button>
-
-              <button
-                onClick={() => setSelectedClient(null)}
-                className="px-4 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
-              >
-                Cerrar
-              </button>
-            </div>
           </div>
         </div>
       )}
 
-      {/* 7. New Client Onboarding Modal */}
+      {/* 6. New Client Onboarding Modal */}
       {isNewClientModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0D1117] border border-slate-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl text-slate-200">
@@ -1036,16 +992,19 @@ export const SaaSClientAdmin: React.FC<SaaSClientAdminProps> = ({
               <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
+                  disabled={isSubmitting}
                   onClick={() => setIsNewClientModalOpen(false)}
-                  className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                  className="px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold shadow-lg shadow-sky-500/20 transition"
+                  disabled={isSubmitting}
+                  className="px-5 py-2 rounded bg-sky-500 hover:bg-sky-400 text-black font-bold shadow-lg shadow-sky-500/20 transition disabled:opacity-60 flex items-center gap-2"
                 >
-                  Crear Academia Cliente
+                  {isSubmitting && <RefreshCw className="w-4 h-4 animate-spin text-black" />}
+                  {isSubmitting ? 'Guardando en Base de Datos...' : 'Crear Academia Cliente'}
                 </button>
               </div>
             </form>
