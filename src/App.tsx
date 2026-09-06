@@ -16,6 +16,7 @@ import {
   ExternalLink,
   ShieldCheck,
   Smartphone,
+  Globe,
 } from 'lucide-react';
 import {
   DemoUser,
@@ -31,6 +32,7 @@ import { SaaSClientAdmin } from './components/SaaSClientAdmin';
 import { ApiConsoleView } from './components/ApiConsoleView';
 import { SunatTester } from './components/SunatTester';
 import MobileApp from '../academy-mobile/src/App';
+import AcademyWebApp from '../academy-web/src/App';
 
 export default function App() {
   // Current active mode: 'clients-admin' (Panel de Administración de Mis Clientes) or 'api-sandbox' (API Sandbox & SUNAT)
@@ -173,6 +175,28 @@ export default function App() {
                 </button>
               </div>
             </div>
+          ) : appMode === 'academy-web' ? (
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-800 font-semibold rounded-xl text-xs sm:text-sm">
+                  <Globe className="w-4 h-4 text-emerald-700" />
+                  Portal Web Sede (academy-web)
+                </span>
+                <span className="text-slate-500 text-xs sm:text-sm hidden md:inline">
+                  Sistema completo para administración, alumnos, caja, clases y facturación SUNAT con barra de carga superior
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setAppMode('clients-admin')}
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
+                >
+                  <Building2 className="w-4 h-4 text-slate-600" />
+                  <span>Volver a Mis Academias</span>
+                </button>
+              </div>
+            </div>
           ) : appMode === 'clients-admin' ? (
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
@@ -187,11 +211,18 @@ export default function App() {
 
               <div className="flex items-center gap-2.5">
                 <button
-                  onClick={() => setAppMode('mobile-field')}
+                  onClick={() => setAppMode('academy-web')}
                   className="px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
                 >
-                  <Smartphone className="w-4 h-4 text-emerald-700" />
-                  <span>Ver App Móvil</span>
+                  <Globe className="w-4 h-4 text-emerald-700" />
+                  <span>Abrir Portal Sede</span>
+                </button>
+                <button
+                  onClick={() => setAppMode('mobile-field')}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition cursor-pointer"
+                >
+                  <Smartphone className="w-4 h-4 text-blue-600" />
+                  <span>App Móvil</span>
                 </button>
                 <button
                   onClick={() => setAppMode('api-sandbox')}
@@ -250,17 +281,28 @@ export default function App() {
             onUpdateClient={handleUpdateClient}
             onAddClient={handleAddClient}
             onSelectClientForApiTesting={handleSelectClientForApiTesting}
+            onEnterAcademyPortal={(academyId) => {
+              setActiveAcademyId(academyId);
+              setAppMode('academy-web');
+            }}
           />
         )}
 
-        {/* MODO 2: APP MÓVIL DE CAMPO (APK PREVIEW) */}
+        {/* MODO 2: PORTAL WEB OPERATIVO DE SEDE (ACADEMY-WEB) */}
+        {appMode === 'academy-web' && (
+          <div className="w-full bg-white rounded-3xl overflow-hidden shadow-xs border border-slate-200/80">
+            <AcademyWebApp />
+          </div>
+        )}
+
+        {/* MODO 3: APP MÓVIL DE CAMPO (APK PREVIEW) */}
         {appMode === 'mobile-field' && (
           <div className="w-full">
             <MobileApp />
           </div>
         )}
 
-        {/* MODO 3: API SANDBOX & SUNAT TOOLS */}
+        {/* MODO 4: API SANDBOX & SUNAT TOOLS */}
         {appMode === 'api-sandbox' && (
           <div className="space-y-6">
             {sandboxSubTab === 'api-console' && (

@@ -1,4 +1,4 @@
-export type AppMode = 'clients-admin' | 'api-sandbox' | 'mobile-field';
+export type AppMode = 'clients-admin' | 'academy-web' | 'api-sandbox' | 'mobile-field';
 
 export type SandboxTabType =
   | 'clients-admin'

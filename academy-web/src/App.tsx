@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AcademyProvider } from './context/AcademyContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './layouts/AppLayout';
+import { TopLoadingBar } from './components/TopLoadingBar';
 
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -17,6 +18,9 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AcademyProvider>
+        {/* Top Loading Progress Bar - activates on every route change and async fetch */}
+        <TopLoadingBar />
+
         <Routes>
           {/* Public Login Route */}
           <Route path="/login" element={<LoginPage />} />

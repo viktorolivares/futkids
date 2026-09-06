@@ -371,6 +371,7 @@ export interface WebAcademyProfile {
     certificateUploadedAt?: string;
     certificateIssuer?: string;
     certificateSubject?: string;
+    certificateSha1Thumbprint?: string;
     certificateRuc?: string;
     certificatePasswordConfigured?: boolean;
     useCustomCertificate?: boolean;

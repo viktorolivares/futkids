@@ -37,6 +37,7 @@ import {
   SubscriptionStatusInfo,
 } from '../types';
 import { WebSunatCertUploader } from './WebSunatCertUploader';
+import { triggerTopLoading } from './TopLoadingBar';
 
 interface WebAdminPanelProps {
   academyProfile: WebAcademyProfile;
@@ -239,7 +240,10 @@ export const WebAdminPanel: React.FC<WebAdminPanelProps> = ({
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as AdminSubTab)}
+              onClick={() => {
+                triggerTopLoading(250);
+                setActiveTab(tab.id as AdminSubTab);
+              }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'bg-white text-slate-900 font-semibold shadow-xs'

@@ -5,6 +5,7 @@ import { useAcademy } from '../context/AcademyContext';
 import { WebSidebar } from '../components/WebSidebar';
 import { SaaSTrialBanner } from '../components/SaaSTrialBanner';
 import { WebSubscriptionModal } from '../components/WebSubscriptionModal';
+import { triggerTopLoading } from '../components/TopLoadingBar';
 
 export const AppLayout: React.FC = () => {
   const {
@@ -29,6 +30,7 @@ export const AppLayout: React.FC = () => {
   }
 
   const handleReturnToSuperAdmin = () => {
+    triggerTopLoading(380);
     setSuperAdminMode('master');
     navigate('/superadmin');
   };

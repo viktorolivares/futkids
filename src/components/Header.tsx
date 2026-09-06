@@ -7,6 +7,7 @@ import {
   Smartphone,
   Wrench,
   ChevronDown,
+  Globe,
 } from 'lucide-react';
 import { DemoUser, SubscriptionStatusInfo, AppMode } from '../types';
 import { DEMO_USERS, DEMO_ACADEMIES } from '../data/mockApiData';
@@ -99,6 +100,18 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Building2 className="w-4 h-4 text-emerald-600" />
             <span>Mis Academias</span>
+          </button>
+
+          <button
+            onClick={() => onSelectMode('academy-web')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition text-sm cursor-pointer ${
+              currentMode === 'academy-web'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+            }`}
+          >
+            <Globe className="w-4 h-4 text-emerald-600" />
+            <span>Portal Web Sede</span>
           </button>
 
           <button

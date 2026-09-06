@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { SubscriptionStatusInfo, WebAcademyProfile } from '../types';
 import { apiClient } from '../services/apiClient';
+import { triggerTopLoading } from './TopLoadingBar';
 
 interface WebSidebarProps {
   activeAcademy: WebAcademyProfile;
@@ -266,6 +267,7 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
                       <button
                         key={acad.id}
                         onClick={() => {
+                          triggerTopLoading(450);
                           onSelectAcademy(acad.id);
                           setShowAcademyMenu(false);
                         }}
@@ -301,7 +303,10 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
               <NavLink
                 key={item.to}
                 to={item.to}
-                onClick={() => setIsMobileOpen(false)}
+                onClick={() => {
+                  setIsMobileOpen(false);
+                  triggerTopLoading(350);
+                }}
                 className={({ isActive }) =>
                   `w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-left transition duration-150 group cursor-pointer ${
                     isActive
@@ -422,6 +427,7 @@ export const WebSidebar: React.FC<WebSidebarProps> = ({
           {isSuperAdmin && (
             <button
               onClick={() => {
+                triggerTopLoading(350);
                 if (onReturnToSuperAdmin) onReturnToSuperAdmin();
                 navigate('/superadmin');
               }}
